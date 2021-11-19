@@ -16,3 +16,10 @@ This project is a simualtion of an airtransport system that involves:
     - login to update the flight information
   - Airplanes
 
+
+## System Requirements
+- install flask and pymysql modules on Command Prompt (Windows)
+- use Git Bash
+  - clone repo locally
+  - commit changes
+- 
