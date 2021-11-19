@@ -27,6 +27,11 @@ def hello():
 	cursor.close()
 	return render_template('flights.html', name=(session['email'][1]), flights=flight_data)
 
+#Define route for loginfork // this is where we pick is a user or staff log in
+@app.route('/loginfork')
+def loginfork():
+	return render_template('loginfork.html')
+
 #Define route for login
 @app.route('/login')
 def login():

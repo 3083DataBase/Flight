@@ -2,16 +2,12 @@
 <head>
 </head>
 <body>
-<form action="/loginAuth" method="POST">
-	<input type="text" name = "username" placeholder="username" required/> </br>
-	<input type="password" name = "password" placeholder="password" required/></br>
-	<input type="submit" value = Login />
-	{% if error %}
-		<p class="error"><strong>Error:</strong> {{error}}</p>
+	{% if not message %}
+		<a href="/login">User Login</a>
+		<a href="/login">Staff Login</a>
 	{% endif %}
-</form>
 
-<a href="/">Go back</a>
+	<a href="/">Go back</a>
 
 </body>
 
