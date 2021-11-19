@@ -7,16 +7,17 @@ app = Flask(__name__)
 
 #Configure MySQL
 conn = pymysql.connect(host='localhost',
+					   port=3306,
                        user='root',
                        password='',
-                       db='blog',
+                       db='project_sys',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
 
 #Define a route to hello function
 @app.route('/')
 def hello():
-	return render_template('index.html')
+	return render_template('flights.html')
 
 #Define route for login
 @app.route('/login')
@@ -117,4 +118,4 @@ app.secret_key = 'some key that you will never guess'
 #debug = True -> you don't have to restart flask
 #for changes to go through, TURN OFF FOR PRODUCTION
 if __name__ == "__main__":
-	app.run('127.0.0.1', 5000, debug = True)
+	app.run('127.0.0.1', 3306, debug = True)
