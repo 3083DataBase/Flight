@@ -22,7 +22,7 @@ def hello():
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
 	cursor.execute(query) #Runs the query
 	flight_data = cursor.fetchall() #Gets the data from ran SQL query
-	for each in flight_data:   #prints out all the flights we have
+	for each in flight_data:   #prints out all the flights we have THIS IS A TEST
 		print(each['FlightNumber'],each['DepartureDate'], each['DepartureTime'])
 	cursor.close()
 	return render_template('flights.html', name=(session['email'][1]), flights=flight_data)
