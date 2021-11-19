@@ -18,10 +18,14 @@ conn = pymysql.connect(host='localhost',
 @app.route('/', methods=['GET', 'POST'])
 def hello():
 	session['email'] = [None, 'Guest']    # Will hold the email and name of the season
-	email = session['email'][0]
 	cursor = conn.cursor();
+	query = 'SELECT FlightNumber FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
+	cursor.execute(query) #Runs the query
+	flight_data = cursor.fetchall() #Gets the data from ran SQL query
+	for each in flight_data:   #prints out all the flights we have
+		print(each['FlightNumber'])
 	cursor.close()
-	return render_template('flights.html', name=(session['email'][1]))
+	return render_template('flights.html', name=(session['email'][1]), flights=flight_data)
 
 #Define route for login
 @app.route('/login')

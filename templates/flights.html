@@ -19,6 +19,14 @@
 
 		<table>
 			<th>Flight Number</th>
+
+			{% for line in flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+				</tr>
+			{% endfor %}
 		</table>
+
+
 	</body>
 </html>
