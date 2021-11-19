@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<h1>Welcome</h1>
@@ -5,7 +6,9 @@
 
 	<body>
 		<!--Have to change these links to login and Register--> 
-		<a herf="/flights">Login</a>  
-		<a herf="/flights">Register</a>
+		{% if not message %}
+			<a href="/login">Login</a>
+			<a href="/register">Register</a>
+		{% endif %}
 	</body>
 </html>
