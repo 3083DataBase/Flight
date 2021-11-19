@@ -15,8 +15,12 @@ conn = pymysql.connect(host='localhost',
                        cursorclass=pymysql.cursors.DictCursor)
 
 #Define a route to hello function
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def hello():
+	session['email'] = 'guest'
+	username = session['email']
+	cursor = conn.cursor();
+	cursor.close()
 	return render_template('flights.html')
 
 #Define route for login
