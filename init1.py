@@ -17,11 +17,11 @@ conn = pymysql.connect(host='localhost',
 #Define a route to hello function
 @app.route('/', methods=['GET', 'POST'])
 def hello():
-	session['email'] = 'guest'
-	username = session['email']
+	session['email'] = [None, 'Guest']    # Will hold the email and name of the season
+	email = session['email'][0]
 	cursor = conn.cursor();
 	cursor.close()
-	return render_template('flights.html')
+	return render_template('flights.html', name=(session['email'][1]))
 
 #Define route for login
 @app.route('/login')
