@@ -1,34 +1,38 @@
 <html>
-<head>
-</head>
-<body>
-<form action="/post" method="POST">
-	<h1>Welcome {{username}}</h1>
-	<input type="text" name = "blog" placeholder="post" required/> </br>
-	<input type="submit" value = Post />
-</form>
+    <head>
+        <h1>Welcome {{username}}</h1>
+    </head>
 
-<style type="text/css">
-	table, th, td{
-		border: 1px solid black;
-	}
-</style>
+    <body>
+        <!-- Search -->
+        <!-- User's flights -->
+        <h3>View My Flights</h3>
+        
+        <style type="text/css">
+            table, th, td{
+                border: 1px solid black;
+            }
+        </style>
 
-<table>
-	<th>Time</th>
-	<th>Post</th>
+        <table>
+            <th>Flight Number</th>
+            <th>Departure Date</th>
+            <th>Departure Time</th>
+            <th>Review Flight</th>
 
-{% for line in posts %}
-	<tr>
-		<td>{{line['ts']}}</td>
-		<td>{{line['blog_post']}}</td>
-	</tr>
-{% endfor %}
-</table>
+            {% for line in flights %}
+                <tr>
+                    <td>{{line['FlightNumber']}}</td>
+                    <td>{{line['DepartureDate']}}</td>
+                    <td>{{line['DepartureTime']}}</td>
+                    <td>{{line['FlightReviewLink']}}</td>
+                </tr>
+            {% endfor %}
+        </table>
 
-<a href="/logout">Logout</a>
+        <a href="/logout">Logout</a>
 
-</body>
+    </body>
 
 
 </html>
