@@ -109,6 +109,11 @@ def home():
     cursor.close()
     return render_template('home.html', username=username, posts=data1)
 
+####################### CUSTOMER_HOME
+@app.route('/customer_home')
+def customer_home():
+    return render_template('customer_home.html')
+
 		
 @app.route('/post', methods=['GET', 'POST'])
 def post():

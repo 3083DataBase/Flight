@@ -1,34 +1,15 @@
 <html>
     <head>
-        <h1>Welcome {{username}}</h1>
+        <h1>Welcome 'CustomerName'</h1>
     </head>
 
     <body>
         <!-- Search -->
         <!-- User's flights -->
         <h3>View My Flights</h3>
+        <!-- Insert table here -->
+
         
-        <style type="text/css">
-            table, th, td{
-                border: 1px solid black;
-            }
-        </style>
-
-        <table>
-            <th>Flight Number</th>
-            <th>Departure Date</th>
-            <th>Departure Time</th>
-            <th>Review Flight</th>
-
-            {% for line in flights %}
-                <tr>
-                    <td>{{line['FlightNumber']}}</td>
-                    <td>{{line['DepartureDate']}}</td>
-                    <td>{{line['DepartureTime']}}</td>
-                    <td>{{line['FlightReviewLink']}}</td>
-                </tr>
-            {% endfor %}
-        </table>
 
         <a href="/logout">Logout</a>
 
