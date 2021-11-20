@@ -10,28 +10,14 @@ conn = pymysql.connect(host='localhost',
 					   port=3306,
                        user='root',
                        password='',
-                       db='project_sys',
+                       db='blog',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
 
 #Define a route to hello function
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def hello():
-	session['email'] = [None, 'Guest']    # Will hold the email and name of the season
-	cursor = conn.cursor();
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
-	cursor.execute(query) #Runs the query
-	flight_data = cursor.fetchall() #Gets the data from ran SQL query
-	for each in flight_data:   #prints out all the flights we have THIS IS A TEST
-		print(each['FlightNumber'],each['DepartureDate'], each['DepartureTime'])
-	cursor.close()
-	return render_template('flights.html', name=(session['email'][1]), flights=flight_data)
-
-
-#Define route for loginfork // this is where we pick is a user or staff log in
-@app.route('/loginfork')
-def loginfork():
-	return render_template('loginfork.html')
+	return render_template('index.html')
 
 #Define route for login
 @app.route('/login')
@@ -146,4 +132,4 @@ app.secret_key = 'some key that you will never guess'
 #debug = True -> you don't have to restart flask
 #for changes to go through, TURN OFF FOR PRODUCTION
 if __name__ == "__main__":
-	app.run('127.0.0.1', 3306, debug = True)
+	app.run('127.0.0.1', 5000, debug = True)
