@@ -22,4 +22,4 @@ This project is a simualtion of an airtransport system that involves:
 - use Git Bash
   - clone repo locally
   - commit changes
-- 
+- add project requirements
