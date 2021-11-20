@@ -27,6 +27,7 @@ def hello():
 	cursor.close()
 	return render_template('flights.html', name=(session['email'][1]), flights=flight_data)
 
+
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
 def loginfork():
@@ -106,6 +107,20 @@ def home():
     data1 = cursor.fetchall() 
     for each in data1:
         print(each['blog_post'])
+    cursor.close()
+    return render_template('home.html', username=username, posts=data1)
+
+# customer_home
+@app.route('/customer_home')
+def customer_home():
+	#username = session['username']
+    username = 'TestName'
+    cursor = conn.cursor();
+    query = 'SELECT FlightNumber, DepartureDate, DepartureTime FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
+    cursor.execute(query, (username))
+    data1 = cursor.fetchall() 
+    for each in data1:
+        print(each['FlightNumber'],each['DepartureDate'], each['DepartureTime'])
     cursor.close()
     return render_template('home.html', username=username, posts=data1)
 
