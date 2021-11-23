@@ -8,11 +8,11 @@
 			<h1>Welcome {{name1}}</h1>
 
 			<!--One-way check box-->
-			<input type="radio" id = "One-Way" name = "checkbox" onclick="uncheck_roundTrip(Obj);">
+			<input type="radio" id = "One-Way" name = "checkbox" onclick="check();" checked>
 			<label for="One-Way1">One-Way</label>
 
 			<!--Round Trip check box-->
-			<input type="radio" id = "Round Trip" name = "checkbox" onclick="uncheck_OneWay(obj);">
+			<input type="radio" id = "Round Trip" name = "checkbox" onclick="check();">
 			<label for="Round Trip1">Round Trip</label> </br>
 
 			<!--The input area for Departing airports/city-->
@@ -28,8 +28,8 @@
 			<input type="date" name="Departure Date" placeholder="Departure Date"required/> </br>
 
 			<!--The input area for Arriving Date-->
-			<label for="Arriving Date">Arriving Date</label> </br>
-			<input type="date" name="Arriving Date" placeholder="Arriving Date"required/> </br>
+			<label for="Arriving Date" id="Arr_date" Style="display:none">Arriving Date</label>
+			<input type="date" name="Arriving Date" id="Arr_date_input" placeholder="Arriving Date" Style="display:none" required /> </br>
 			<input type="submit" Value = submit />
 
 		</form>
@@ -67,16 +67,18 @@
 		</table>
 
 		<script>
-			function uncheck_roundTrip(Obj){
-				var test = document.getElementsByTagName("One-Way");
-				document.write(test[0]);
-				test.checked = "false";
-			}
-
-			function uncheck_OneWay(){
-				var test = document.getElementsByClassName("")
-				document.write(test[0]);
-				test.checked = "false";
+			function check(){
+				var checkBox = document.getElementById("Round Trip");
+				var text = document.getElementById("Arr_date");
+				var input = document.getElementById("Arr_date_input");
+				if (checkBox.checked == true){
+					text.style.display = "block";
+					input.style.display = "block";
+				} else {
+					text.style.display = "none";
+					input.style.display = "none";
+				}
+				return document.getElementsByID("Round Trip").checked;
 			}
 		</script>
 		
