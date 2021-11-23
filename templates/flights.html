@@ -8,12 +8,12 @@
 			<h1>Welcome {{name1}}</h1>
 
 			<!--One-way check box-->
-			<input type="checkbox" id = "One-Way" name = "One-Way">
-			<label for="One-Way">One-Way</label>
+			<input type="radio" id = "One-Way" name = "checkbox" onclick="uncheck_roundTrip(Obj);">
+			<label for="One-Way1">One-Way</label>
 
 			<!--Round Trip check box-->
-			<input type="checkbox" id = "Round Trip" name = "Round Trip">
-			<label for="Round Trip">Round Trip</label> </br>
+			<input type="radio" id = "Round Trip" name = "checkbox" onclick="uncheck_OneWay(obj);">
+			<label for="Round Trip1">Round Trip</label> </br>
 
 			<!--The input area for Departing airports/city-->
 			<label for="Departing">Departing</label> </br>
@@ -67,7 +67,17 @@
 		</table>
 
 		<script>
-			
+			function uncheck_roundTrip(Obj){
+				var test = document.getElementsByTagName("One-Way");
+				document.write(test[0]);
+				test.checked = "false";
+			}
+
+			function uncheck_OneWay(){
+				var test = document.getElementsByClassName("")
+				document.write(test[0]);
+				test.checked = "false";
+			}
 		</script>
 		
 		<!-- Testcode link to Customer Home page -->
