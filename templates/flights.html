@@ -22,19 +22,23 @@
 		<input type="checkbox" id = "Round Trip" name = "Round Trip">
 		<label for="Round Trip">Round Trip</label>
 
-		<input type="search" id="gsearch" name="gsearch">
+		<input type="City Airport" id="CAsearch" name="CAsearch">
 		<input type="submit">
   
 		<table>
 			<th>Flight Number</th>
 			<th>Departure Date</th>
 			<th>Departure Time</th>
+			<th>Airline</th>
+			<th>Status</th>
 
 			{% for line in flights %}
 				<tr>
 					<td>{{line['FlightNumber']}}</td>
 					<td>{{line['DepartureDate']}}</td>
 					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['AirlineName']}}</td>
+					<td>{{line['Status']}}</td>
 				</tr>
 			{% endfor %}
 		</table>
