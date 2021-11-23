@@ -20,7 +20,6 @@ def hello():
 	session['email'] = [None, 'Guest']    # Will hold the email and name of the season
 	cursor = conn.cursor();
 
-	
 	#after this Kevin needs to change for search
 	query = 'SELECT * FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
 	cursor.execute(query) #Runs the query
@@ -32,7 +31,13 @@ def hello():
 
 
 	cursor.close()
-	return render_template('flights.html', name=(session['email'][1]), flights=flight_data)
+	return render_template('flights.html', name1="guest", flights=flight_data)
+
+#Searches for the flights of the inputs
+@app.route('/search_flights', methods=['GET', 'POST'])
+def search_flights():
+	return render_template('flights.html')
+
 
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')

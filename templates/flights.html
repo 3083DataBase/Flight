@@ -1,10 +1,39 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<h1>Welcome {{name}}</h1>
 	</head>
 
 	<body>
+		<form action="/search_flights" method="POST">
+			<h1>Welcome {{name1}}</h1>
+
+			<!--One-way check box-->
+			<input type="checkbox" id = "One-Way" name = "One-Way">
+			<label for="One-Way">One-Way</label>
+
+			<!--Round Trip check box-->
+			<input type="checkbox" id = "Round Trip" name = "Round Trip">
+			<label for="Round Trip">Round Trip</label> </br>
+
+			<!--The input area for Departing airports/city-->
+			<label for="Departing">Departing</label> </br>
+			<input type="text" name="City or Airline Name" placeholder="City or Airline Nam" required/> </br>
+
+			<!--The input area for Arriving airports/city-->
+			<label for="Arriving">Arriving</label> </br>
+			<input type="text" name="City or Airline Name" placeholder="City or Airline Name" required/> </br>
+
+			<!--The input area for Departing Date-->
+			<label for="Departing Date">Departing Date</label> </br>
+			<input type="date" name="Departure Date" placeholder="Departure Date"required/> </br>
+
+			<!--The input area for Arriving Date-->
+			<label for="Arriving Date">Arriving Date</label> </br>
+			<input type="date" name="Arriving Date" placeholder="Arriving Date"required/> </br>
+			<input type="submit" Value = submit />
+
+		</form>
+
 		{% if not message %}
 			<a href="/loginfork">Login</a>
 			<a href="/register">Register</a>
@@ -15,12 +44,6 @@
 				border: 1px solid black;
 			}
 		</style>
-
-		<input type="checkbox" id = "One-Way" name = "One-Way">
-		<label for="One-Way">One-Way</label>
-
-		<input type="checkbox" id = "Round Trip" name = "Round Trip">
-		<label for="Round Trip">Round Trip</label>
 
 		<input type="City Airport" id="CAsearch" name="CAsearch">
 		<input type="submit">
@@ -42,6 +65,10 @@
 				</tr>
 			{% endfor %}
 		</table>
+
+		<script>
+			
+		</script>
 		
 		<!-- Testcode link to Customer Home page -->
 		</br>
