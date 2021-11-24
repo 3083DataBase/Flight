@@ -37,7 +37,15 @@ def hello():
 @app.route('/search_flights', methods=['GET', 'POST'])
 def search_flights():
 	checkbox = request.form["checkbox"]
-	print("THis is a test" + checkbox)
+	departing = request.form["Departing"]
+	departing_date = request.form["Departure Date"]
+	arriving = None
+	arriving_date = None
+
+	if(checkbox == "RoundTrip"):
+		arriving = request.form["Arriving"]
+		arriving_date = request.form["Arriving Date"]
+
 	return render_template('flights.html')
 	
 
