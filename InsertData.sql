@@ -17,8 +17,8 @@ INSERT INTO phonenumber VALUES('MisterBrightside', '2123336565'), ('SoulRider', 
 
 --#F - Insert Flights and Flight Statuses
 INSERT INTO flight VALUES ('00684', '2021-11-11', '10:23:00', 'China Eastern', '2021-11-12', '1:30:00', '800.00', 'on-time', '001'), ('09231', '2021-11-24', '09:10:00', 'China Eastern', '2021-11-25', '12:10:00', '300.00', 'delayed', '002'), ('00732', '2021-11-25', '02:48:00', 'China Eastern', '2021-11-26', '14:30:00', '1200.00', 'on-time', '003');
-INSERT INTO depart VALUES ()
-INSERT INTO arrive VALUES ()
+INSERT INTO depart VALUES ('00684', '001', '2021-11-11', '10:23:00'), ('00732', '002', '2021-11-24', '09:10:00' ), ('9231', '001', '2021-11-25', '02:48:00');
+INSERT INTO arrive VALUES ('00684', '002', '2021-11-12', '1:30:00'), ('00732', '001', '2021-11-25', '12:10:00' ), ('9231', '002', '2021-11-26', '14:30:00');
 --#G - Insert tickets for corresponding flight and purchase records
 INSERT INTO ticket VALUES ('42012', '00684', 'China Eastern', 'my1590@nyu.edu', '800.00', '2021-09-01', '01:12:23'), ('22121', '09231', 'China Eastern', 'kp2327@nyu.edu', '300.00', '2021-10-20', '05:10:30'), ('55437', '00732', 'China Eastern', 'kei231@nyu.edu', '1200.00', '2021-01-24', '06:46:12');
 
