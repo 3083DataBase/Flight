@@ -36,7 +36,10 @@ def hello():
 #Searches for the flights of the inputs
 @app.route('/search_flights', methods=['GET', 'POST'])
 def search_flights():
+	checkbox = request.form["checkbox"]
+	print("THis is a test" + checkbox)
 	return render_template('flights.html')
+	
 
 
 #Define route for loginfork // this is where we pick is a user or staff log in

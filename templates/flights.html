@@ -8,11 +8,11 @@
 			<h1>Welcome {{name1}}</h1>
 
 			<!--One-way check box-->
-			<input type="radio" id = "One-Way" name = "checkbox" onclick="check();" checked>
+			<input type="radio" id = "One-Way" name = "checkbox" onclick="check();" checked value=1>
 			<label for="One-Way1">One-Way</label>
 
 			<!--Round Trip check box-->
-			<input type="radio" id = "Round Trip" name = "checkbox" onclick="check();">
+			<input type="radio" id = "Round Trip" name = "checkbox" onclick="check();" value=0>
 			<label for="Round Trip1">Round Trip</label> </br>
 
 			<!--The input area for Departing airports/city-->
@@ -44,9 +44,6 @@
 				border: 1px solid black;
 			}
 		</style>
-
-		<input type="City Airport" id="CAsearch" name="CAsearch">
-		<input type="submit">
   
 		<table>
 			<th>Flight Number</th>
@@ -74,6 +71,7 @@
 				if (checkBox.checked == true){
 					text.style.display = "block";
 					input.style.display = "block";
+					input.required = false;
 				} else {
 					text.style.display = "none";
 					input.style.display = "none";
