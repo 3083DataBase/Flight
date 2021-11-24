@@ -29,7 +29,7 @@
 
 			<!--The input area for Arriving Date-->
 			<label for="Arriving Date" id="Arr_date" Style="display:none">Arriving Date</label>
-			<input type="date" name="Arriving Date" id="Arr_date_input" placeholder="Arriving Date" Style="display:none" required /> </br>
+			<input type="date" name="Arriving Date" id="Arr_date_input" placeholder="Arriving Date" Style="display:none" disabled /> </br>
 			<input type="submit" Value = submit />
 
 		</form>
@@ -71,10 +71,11 @@
 				if (checkBox.checked == true){
 					text.style.display = "block";
 					input.style.display = "block";
-					input.required = false;
+					input.disabled = false;
 				} else {
 					text.style.display = "none";
 					input.style.display = "none";
+					input.disabled = true;
 				}
 				return document.getElementsByID("Round Trip").checked;
 			}
