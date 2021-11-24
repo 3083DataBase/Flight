@@ -42,9 +42,12 @@ def search_flights():
 	arriving = None
 	arriving_date = None
 
+	cursor = conn.curso()
 	if(checkbox == "RoundTrip"):
 		arriving = request.form["Arriving"]
 		arriving_date = request.form["Arriving Date"]
+	else:
+		query = "SELECT FlightNumber FROM `depart` NATURAL JOIN `airport` WHERE City = NYC"
 
 	return render_template('flights.html')
 	
