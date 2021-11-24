@@ -102,9 +102,9 @@ CREATE TABLE Flight (
 
 CREATE TABLE Depart (
     FlightNumber bigint,
-    AirportID varchar(100),
     DepartureTime time,
     DepartureDate date,
+    AirportID varchar(100),
 
     PRIMARY KEY (FlightNumber, DepartureDate, DepartureTime),
     FOREIGN KEY (FlightNumber, DepartureDate, DepartureTime) references Flight(FlightNumber, DepartureDate, DepartureTime),
@@ -113,9 +113,9 @@ CREATE TABLE Depart (
 
 CREATE TABLE Arrive (
   FlightNumber bigint,
-  AirportID varchar(100),
   DepartureTime time,
   DepartureDate date,
+  AirportID varchar(100),
 
   PRIMARY KEY (FlightNumber, DepartureDate, DepartureTime),
   FOREIGN KEY (FlightNumber, DepartureDate, DepartureTime) references Flight(FlightNumber, DepartureDate, DepartureTime),
