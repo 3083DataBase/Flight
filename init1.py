@@ -135,6 +135,8 @@ def home():
     cursor.close()
     return render_template('home.html', username=username, posts=data1)
 
+
+
 ####################### CUSTOMERHOME
 @app.route('/customerhome')
 def customerhome():
@@ -153,13 +155,17 @@ def customerhome():
 
 	cursor.close()
 
-	return render_template('customerhome.html', flights=flight_data)
+	return render_template('CustomerHome.html', flights=flight_data)
 
 ####################### CUSTOMERREVIEW
 @app.route('/customerreview')
 def customerreview():
-	return render_template('customerreview.html')
+	return render_template('CustomerReview.html')
 
+####################### CUSTOMERREVIEW
+@app.route('/customersearchflights')
+def customersearchflights():
+	return render_template('CustomerSearchFlights.html')
 	
 
 		
