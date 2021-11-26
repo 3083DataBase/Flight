@@ -135,10 +135,38 @@ def home():
     cursor.close()
     return render_template('home.html', username=username, posts=data1)
 
-####################### CUSTOMER_HOME
-@app.route('/customer_home')
-def customer_home():
-    return render_template('customer_home.html')
+
+
+####################### CUSTOMERHOME
+@app.route('/customerhome')
+def customerhome():
+	#username = session['username']
+	cursor = conn.cursor();
+
+	# duplicate of Kevin's flights code
+	# need to update to limit to purchased flights
+	query = 'SELECT * FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
+	cursor.execute(query) #Runs the query
+	flight_data = cursor.fetchall() #Gets the data from ran SQL query
+
+	#Tests
+	for each in flight_data:   #prints out all the flights
+		print(each['FlightNumber'],each['DepartureDate'], each['DepartureTime'])
+
+	cursor.close()
+
+	return render_template('CustomerHome.html', flights=flight_data)
+
+####################### CUSTOMERREVIEW
+@app.route('/customerreview')
+def customerreview():
+	return render_template('CustomerReview.html')
+
+####################### CUSTOMERREVIEW
+@app.route('/customersearchflights')
+def customersearchflights():
+	return render_template('CustomerSearchFlights.html')
+	
 
 		
 @app.route('/post', methods=['GET', 'POST'])

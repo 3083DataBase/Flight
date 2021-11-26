@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <!-- <h1>Welcome {{username}}</h1> -->
+        <h1>Welcome NamePlaceholder</h1>
+    </head>
+
+    <body>
+        <!-- Search -->
+        <!-- User's flights -->
+        <h3>View My Flights</h3>
+        <!-- Insert table here -->
+
+        <style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+  
+		<table>
+            <!-- Need to include Reviews -->
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Airline</th>
+			<th>Status</th>
+            <th>Review</th>
+
+			{% for line in flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['AirlineName']}}</td>
+					<td>{{line['Status']}}</td>
+                    <td>{{line['Review']}}</td>
+				</tr>
+			{% endfor %}
+
+
+            {% for row in flights %}
+			    <a href="/customerreview">Add Review</a>
+            {% endfor %}
+
+
+		</table>
+		
+		</br>
+		<hr>	<!-- line break -->
+		
+		<h3>What would you like to do?</a></h3>
+
+		
+		<a href="/customersearchflights">Search Flights</a>
+		</br>
+
+		<!-- <hr> -->	<!-- line break -->
+		<!-- <h3>Rate a Past Flight: <a href="/customerreview">Add Review</a></h3> -->
+		<a href="/customerreview">Add Review for a Past Flight</a>
+		
+		</br>
+		
+		<hr>	<!-- line break -->
+		</br>
+        <a href="/logout">Logout</a> <!-- Logout -- DO NOT TOUCH -->
+
+    </body>
+
+
+</html>
