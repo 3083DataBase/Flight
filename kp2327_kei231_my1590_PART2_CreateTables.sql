@@ -1,6 +1,6 @@
-#Kathy Pan, Kevin Iza, Michelle Yang
-#kp2327, kei231, my1590
-#Part 2.2 -- Create tables
+--#Kathy Pan, Kevin Iza, Michelle Yang
+--#kp2327, kei231, my1590
+--#Part 2.2 -- Create tables
 
 CREATE TABLE Customer(
         CustomerEmail varchar(100),
@@ -25,6 +25,7 @@ CREATE TABLE Airport(
     City varchar(100) NOT NULL,
 
     PRIMARY KEY (AirportID)
+    UNIQUE(AirportID)
 );
 
 CREATE TABLE Airline(
@@ -96,7 +97,8 @@ CREATE TABLE Flight (
 
     PRIMARY KEY (FlightNumber, DepartureDate, DepartureTime),
     FOREIGN KEY (AirlineName) references Airline(AirlineName),
-    FOREIGN KEY (AirplaneID) references Airplane(AirplaneID)
+    FOREIGN KEY (AirplaneID) references Airplane(AirplaneID),
+    UNIQUE(FlightNumber, DepartureDate, DepartureTime)
 );
 
 
