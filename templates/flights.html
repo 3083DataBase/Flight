@@ -55,7 +55,31 @@
 			<th>Departing Airport</th>
 			<th>Arriving Airport</th>
 
-			{% for line in flights %}
+			{% for line in depart_flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['ArrivalDate']}}</td>
+					<td>{{line['ArrivalTime']}}</td>
+					<td>{{line['AirlineName']}}</td>
+					<td>{{line['AirportName']}}</td>
+					<td>{{line['a.AirportName']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+
+		<table>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Arrival Date</th>
+			<th>Arrival Time</th>
+			<th>Airline</th>
+			<th>Departing Airport</th>
+			<th>Arriving Airport</th>
+
+			{% for line in arrival_flights %}
 				<tr>
 					<td>{{line['FlightNumber']}}</td>
 					<td>{{line['DepartureDate']}}</td>

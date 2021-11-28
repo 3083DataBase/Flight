@@ -46,16 +46,22 @@ def search_flights():
 	if(checkbox == "RoundTrip"):
 		arriving = request.form["Arriving"]
 		arriving_date = request.form["Arriving Date"]
+		query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = "PVG" or a.City = "PVG") AND DepartureDate = "2021-11-11"'
+		query2 = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = d.AirportID AND (d.AirportName = "PVG" or d.City = "PVG") AND (a.AirportName = %s or a.City = %s) AND DepartureDate = "2021-11-11"'
+		cursor.execute(query, (departing, departing)) #Runs the query
+		depart_data = cursor.fetchall() #Gets the data from ran SQL query
+		cursor.execute(query, (arriving, arriving)) #Runs the query
+		arriving_data = cursor.fetchall()
 
-	else:
+	else:    #Is the one way search
 		query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = "PVG" or a.City = "PVG") AND DepartureDate = "2021-11-11"'
 		cursor.execute(query, (departing, departing) ) #Runs the query
-		flight_data = cursor.fetchall() #Gets the data from ran SQL query
-		for each in flight_data:   #prints out all the flights we have THIS IS A TEST
+		depart_data = cursor.fetchall() #Gets the data from ran SQL query
+		for each in depart_data:   #prints out all the flights we have THIS IS A TEST
 			print(each)
 
 	cursor.close()
-	return render_template('flights.html', flights=flight_data)
+	return render_template('flights.html', depart_flights=depart_data, arrival_flights=arriving_data)
 	
 
 
