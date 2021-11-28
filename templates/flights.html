@@ -44,21 +44,27 @@
 				border: 1px solid black;
 			}
 		</style>
-  
+
 		<table>
 			<th>Flight Number</th>
 			<th>Departure Date</th>
 			<th>Departure Time</th>
+			<th>Arrival Date</th>
+			<th>Arrival Time</th>
 			<th>Airline</th>
-			<th>Status</th>
+			<th>Departing Airport</th>
+			<th>Arriving Airport</th>
 
 			{% for line in flights %}
 				<tr>
 					<td>{{line['FlightNumber']}}</td>
 					<td>{{line['DepartureDate']}}</td>
 					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['ArrivalDate']}}</td>
+					<td>{{line['ArrivalTime']}}</td>
 					<td>{{line['AirlineName']}}</td>
-					<td>{{line['Status']}}</td>
+					<td>{{line['AirportName']}}</td>
+					<td>{{line['a.AirportName']}}</td>
 				</tr>
 			{% endfor %}
 		</table>

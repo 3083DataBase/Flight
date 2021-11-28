@@ -18,20 +18,20 @@ conn = pymysql.connect(host='localhost',
 @app.route('/', methods=['GET', 'POST'])
 def hello():
 	session['email'] = [None, 'Guest']    # Will hold the email and name of the season
-	cursor = conn.cursor();
+	#cursor = conn.cursor();
 
 	#after this Kevin needs to change for search
-	query = 'SELECT * FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
-	cursor.execute(query) #Runs the query
-	flight_data = cursor.fetchall() #Gets the data from ran SQL query
+	#query = 'SELECT * FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
+	#cursor.execute(query) #Runs the query
+	#flight_data = cursor.fetchall() #Gets the data from ran SQL query
 
 	#Tests
-	for each in flight_data:   #prints out all the flights we have THIS IS A TEST
-		print(each['FlightNumber'],each['DepartureDate'], each['DepartureTime'])
+	#for each in flight_data:   #prints out all the flights we have THIS IS A TEST
+	#	print(each['FlightNumber'],each['DepartureDate'], each['DepartureTime'])
 
 
-	cursor.close()
-	return render_template('flights.html', name1="guest", flights=flight_data)
+	#cursor.close()
+	return render_template('flights.html', name1="guest")
 
 #Searches for the flights of the inputs
 @app.route('/search_flights', methods=['GET', 'POST'])
@@ -42,14 +42,20 @@ def search_flights():
 	arriving = None
 	arriving_date = None
 
-	cursor = conn.curso()
+	cursor = conn.cursor()
 	if(checkbox == "RoundTrip"):
 		arriving = request.form["Arriving"]
 		arriving_date = request.form["Arriving Date"]
-	else:
-		query = "SELECT FlightNumber FROM `depart` NATURAL JOIN `airport` WHERE City = NYC"
 
-	return render_template('flights.html')
+	else:
+		query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = "PVG" or a.City = "PVG") AND DepartureDate = "2021-11-11"'
+		cursor.execute(query, (departing, departing) ) #Runs the query
+		flight_data = cursor.fetchall() #Gets the data from ran SQL query
+		for each in flight_data:   #prints out all the flights we have THIS IS A TEST
+			print(each)
+
+	cursor.close()
+	return render_template('flights.html', flights=flight_data)
 	
 
 
