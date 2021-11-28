@@ -69,30 +69,31 @@
 			{% endfor %}
 		</table>
 
-		<table>
-			<th>Flight Number</th>
-			<th>Departure Date</th>
-			<th>Departure Time</th>
-			<th>Arrival Date</th>
-			<th>Arrival Time</th>
-			<th>Airline</th>
-			<th>Departing Airport</th>
-			<th>Arriving Airport</th>
+		{% if arrival_flights %}
+			<table>
+				<th>Flight Number</th>
+				<th>Departure Date</th>
+				<th>Departure Time</th>
+				<th>Arrival Date</th>
+				<th>Arrival Time</th>
+				<th>Airline</th>
+				<th>Departing Airport</th>
+				<th>Arriving Airport</th>
 
-			{% for line in arrival_flights %}
-				<tr>
-					<td>{{line['FlightNumber']}}</td>
-					<td>{{line['DepartureDate']}}</td>
-					<td>{{line['DepartureTime']}}</td>
-					<td>{{line['ArrivalDate']}}</td>
-					<td>{{line['ArrivalTime']}}</td>
-					<td>{{line['AirlineName']}}</td>
-					<td>{{line['AirportName']}}</td>
-					<td>{{line['a.AirportName']}}</td>
-				</tr>
-			{% endfor %}
-		</table>
-
+				{% for line in arrival_flights %}
+					<tr>
+						<td>{{line['FlightNumber']}}</td>
+						<td>{{line['DepartureDate']}}</td>
+						<td>{{line['DepartureTime']}}</td>
+						<td>{{line['ArrivalDate']}}</td>
+						<td>{{line['ArrivalTime']}}</td>
+						<td>{{line['AirlineName']}}</td>
+						<td>{{line['AirportName']}}</td>
+						<td>{{line['a.AirportName']}}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% endif %}
 		<script>
 			function check(){
 				var checkBox = document.getElementById("Round Trip");
@@ -108,6 +109,14 @@
 					input.disabled = true;
 				}
 				return document.getElementsByID("Round Trip").checked;
+			}
+
+			function table_display(){
+				var table = document.getElemntsByID("arriving");
+				if (arrival_flights != None){
+					table.style.display = "none"
+					table.disabled = true;
+				}
 			}
 		</script>
 		
