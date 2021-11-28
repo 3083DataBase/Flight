@@ -17,13 +17,11 @@
 		</style>
   
 		<table>
-            <!-- Need to include Reviews -->
 			<th>Flight Number</th>
 			<th>Departure Date</th>
 			<th>Departure Time</th>
 			<th>Airline</th>
 			<th>Status</th>
-            <th>Review</th>
 
 			{% for line in flights %}
 				<tr>
@@ -32,16 +30,8 @@
 					<td>{{line['DepartureTime']}}</td>
 					<td>{{line['AirlineName']}}</td>
 					<td>{{line['Status']}}</td>
-                    <td>{{line['Review']}}</td>
 				</tr>
 			{% endfor %}
-
-
-            {% for row in flights %}
-			    <a href="/customerreview">Add Review</a>
-            {% endfor %}
-
-
 		</table>
 		
 		</br>
@@ -57,7 +47,7 @@
 		<!-- <h3>Rate a Past Flight: <a href="/customerreview">Add Review</a></h3> -->
 		<a href="/customerreview">Add Review for a Past Flight</a>
 		
-		</br>
+		</br></br>
 		
 		<hr>	<!-- line break -->
 		</br>
