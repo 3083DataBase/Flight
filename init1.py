@@ -33,9 +33,15 @@ def loginfork():
 	return render_template('loginfork.html')
 
 #Define route for login
-@app.route('/login')
+@app.route('/userlogin', methods=['GET', 'POST'])
 def login():
-	return render_template('login.html')
+	error = None
+	if request.method == 'POST':
+		if request.form['username'] != 'admin' or request.form['password'] != 'admin':
+			error = 'Invalid Credential'
+		else:
+			return redirect(url_for(home))
+	return render_template('userlogin.html', error = error)
 
 #Define route for register
 @app.route('/register')
@@ -52,7 +58,7 @@ def loginAuth():
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT * FROM user WHERE username = %s and password = %s'
+	query = 'SELECT * FROM customer WHERE CustomerEmail = %s and password = %s'
 	cursor.execute(query, (username, password))
 	#stores the results in a variable
 	data = cursor.fetchone()
@@ -79,7 +85,7 @@ def registerAuth():
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT * FROM user WHERE username = %s'
+	query = 'SELECT * FROM customer WHERE CustomerEmail = %s'
 	cursor.execute(query, (username))
 	#stores the results in a variable
 	data = cursor.fetchone()
@@ -90,24 +96,26 @@ def registerAuth():
 		error = "This user already exists"
 		return render_template('register.html', error = error)
 	else:
-		ins = 'INSERT INTO user VALUES(%s, %s)'
-		cursor.execute(ins, (username, password))
+		# TODO 
+		ins = 'INSERT INTO customer VALUES(%s, %s)'
+		cursor.execute(ins, (CustomerEmail, password))
 		conn.commit()
 		cursor.close()
 		return render_template('index.html')
 
 @app.route('/home')
 def home():
-    
-    username = session['username']
-    cursor = conn.cursor();
-    query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
-    cursor.execute(query, (username))
-    data1 = cursor.fetchall() 
-    for each in data1:
-        print(each['blog_post'])
-    cursor.close()
-    return render_template('home.html', username=username, posts=data1)
+    print("hihi")
+    # username = session['username']
+    # cursor = conn.cursor();
+    # query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
+    # cursor.execute(query, (username))
+    # data1 = cursor.fetchall() 
+    # for each in data1:
+    #     print(each['blog_post'])
+    # cursor.close()
+    # return render_template('home.html', username=username, posts=data1)
+    return render_template('home.html')
 
 		
 @app.route('/post', methods=['GET', 'POST'])

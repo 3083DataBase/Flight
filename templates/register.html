@@ -1,15 +1,28 @@
 <html>
+
 <head>
 </head>
+
 <body>
-<form action="/registerAuth" method="POST">
-	<input type="text" name = "username" placeholder="username" required/> </br>
-	<input type="password" name = "password" placeholder="password" required/></br>
-	<input type="submit" value = Register />
-	{% if error %}
-		<p class="error"><strong>Error:</strong> {{error}}</p>
-	{% endif %}
-</form>
-<a href="/">Go back</a>
+    User Registration
+    <form action="/registerAuth" method="POST">
+        <input type="email" name="email" placeholder="Email" required/> </br>
+        <input type="password" name="password" placeholder="password" required/></br>
+        <input type="text" name="fullname" placeholder="Full Name" required/> </br>
+        <input type="text" name="BuildingNo" placeholder="Building Number" required/> </br>
+        <input type="text" name="street" placeholder="Street" required/> </br>
+        <input type="text" name="state" placeholder="State" required/> </br>
+        <input type="text" name="phoneNo" placeholder="Phone Number" required/> </br>
+        <input type="text" name="passportNo" placeholder="Passport Number" required/> </br>
+        <input type="text" name="passportExp" placeholder="Passport Expiration" required/> </br>
+        <input type="text" name="passportCntry" placeholder="Passport Country" required/> </br>
+        <input type="text" name="dob" placeholder="Date Of Birth" required/> </br>
+
+        <input type="submit" value=Register /> {% if error %}
+        <p class="error"><strong>Error:</strong> {{error}}</p>
+        {% endif %}
+    </form>
+    <a href="/">Go back</a>
 </body>
+
 </html>
