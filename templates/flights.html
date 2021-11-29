@@ -30,7 +30,7 @@
 			<!--The input area for Arriving Date-->
 			<label for="Arriving Date" id="Arr_date" Style="display:none">Arriving Date</label>
 			<input type="date" name="Arriving Date" id="Arr_date_input" placeholder="Arriving Date" Style="display:none" disabled /> </br>
-			<input type="submit" Value = submit />
+			<input type="submit" Value = submit/>
 
 		</form>
 
@@ -44,6 +44,8 @@
 				border: 1px solid black;
 			}
 		</style>
+
+		<h1>Departure Flights</h1>
 
 		<table>
 			<th>Flight Number</th>
@@ -69,31 +71,32 @@
 			{% endfor %}
 		</table>
 
-		{% if arrival_flights %}
-			<table>
-				<th>Flight Number</th>
-				<th>Departure Date</th>
-				<th>Departure Time</th>
-				<th>Arrival Date</th>
-				<th>Arrival Time</th>
-				<th>Airline</th>
-				<th>Departing Airport</th>
-				<th>Arriving Airport</th>
+		<h1>Returning Flights</h1>
 
-				{% for line in arrival_flights %}
-					<tr>
-						<td>{{line['FlightNumber']}}</td>
-						<td>{{line['DepartureDate']}}</td>
-						<td>{{line['DepartureTime']}}</td>
-						<td>{{line['ArrivalDate']}}</td>
-						<td>{{line['ArrivalTime']}}</td>
-						<td>{{line['AirlineName']}}</td>
-						<td>{{line['AirportName']}}</td>
-						<td>{{line['a.AirportName']}}</td>
-					</tr>
-				{% endfor %}
-			</table>
-		{% endif %}
+		<table>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Arrival Date</th>
+			<th>Arrival Time</th>
+			<th>Airline</th>
+			<th>Departing Airport</th>
+			<th>Arriving Airport</th>
+
+			{% for line in arrival_flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['ArrivalDate']}}</td>
+					<td>{{line['ArrivalTime']}}</td>
+					<td>{{line['AirlineName']}}</td>
+					<td>{{line['AirportName']}}</td>
+					<td>{{line['a.AirportName']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+
 		<script>
 			function check(){
 				var checkBox = document.getElementById("Round Trip");
@@ -112,11 +115,16 @@
 			}
 
 			function table_display(){
-				var table = document.getElemntsByID("arriving");
-				if (arrival_flights != None){
-					table.style.display = "none"
-					table.disabled = true;
+				var depart = document.getElemntsByID("depart");
+				var arrive = document.getElemntsByID("arrive");
+				var checkBox = document.getElementById("Round Trip");
+				if (checkBox.checked == true){
+					depart.style.display = "none";
+					arrive.style.display = "none";
+				} else {
+					depart.style.display = "none";
 				}
+				return
 			}
 		</script>
 		

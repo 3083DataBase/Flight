@@ -42,7 +42,7 @@ def search_flights():
 	arriving = request.form["Arriving"]
 	arriving_date = None
 
-	arriving_data = None
+	arriving_data = ()
 
 	cursor = conn.cursor()
 	if(checkbox == "RoundTrip"):
