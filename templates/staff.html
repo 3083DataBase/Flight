@@ -34,11 +34,12 @@
 			{% endfor %}
 		</table>
 
+		<h1>Adding new flight</h1><br>
+
 		<form action="/staffinput" method="POST">
-			<h1>{{name1}}</h1>
 
 			<!--The input area for Flight Number-->
-			<label for="Flight Number">New Flight Number</label> </br>
+			<label for="Flight Number">Flight Number</label> </br>
 			<input type="number" name="Flight Number" placeholder="Flight Number" required/> </br>
 
 			<!--The input area for Departing Date-->
