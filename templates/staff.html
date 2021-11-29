@@ -25,18 +25,7 @@
 				</tr>
 			{% endfor %}
 		</table>
-		
-FlightNumber	
-DepartureDate	
-DepartureTime	
-AirlineName	
-ArrivalDate	
-ArrivalTime	
-BasePrice	
-Status	
-AirplaneID	
-DepartAirportID	
-ArrivalAirportID
+					
 		<form action="/staff" method="POST">
 			<h1>{{name1}}</h1>
 
@@ -44,21 +33,41 @@ ArrivalAirportID
 			<label for="FlightNumber">New Flight Number</label> </br>
 			<input type="text" name="FlightNumber" placeholder="Flight Number" required/> </br>
 
-			<!--The input area for Flight Number-->
-			<label for="FlightNumber">New Flight Number</label> </br>
-			<input type="text" name="FlightNumber" placeholder="Flight Number" required/> </br>
+			<!--The input area for Departing Date-->
+			<label for="Departing Date">Departing Date</label> </br>
+			<input type="date" name="Departing Date" placeholder="Departing Date"required/> </br>
 
+			<!--The input area for Departing Time-->
+			<label for="Departing Time">Departing Time</label> </br>
+			<input type="time" name="Departing Time" placeholder="Departing Time" required/> </br>
 
+			<!--The input area for Arrival Date-->
+			<label for="Arrival Date">Arrival Date</label> </br>
+			<input type="date" name="Arrival Date" placeholder="Arrival Date" required/> </br>
 
+			<!--The input area for Arrival Time-->
+			<label for="Arrival Time">Arrival Time</label> </br>
+			<input type="time" name="Arrival Time" placeholder="Arrival Time" required/> </br>
+
+			<!--The input area for Base Price-->
+			<label for="Base Price">Base Price</label> </br>
+			<input type="text" name="Base Price" placeholder="Base Price" required/> </br>
+
+			<!--The input area for Status-->
+			<label for="status">Status</label> </br>
+			<input type="text" name="Status" placeholder="Status" required/> </br>
+
+			<!--The input area for Status-->
+			<label for="Airplane ID">Airplane ID</label> </br>
+			<input type="text" name="Airplane ID" placeholder="Airplane ID" required/> </br>
 			
-
 			<!--The input area for Departing airports/city-->
 			<label for="Departing">Departing Airport</label> </br>
-			<input type="text" name="Departing" placeholder="City or Airline Nam" required/> </br>
+			<input type="text" name="Departing" placeholder="Departing Airport ID" required/> </br>
 
 			<!--The input area for Arriving airports/city-->
 			<label for="Arriving">Arriving Airport</label> </br>
-			<input type="text" name="Arriving" placeholder="City or Airline Name" required/> </br>
+			<input type="text" name="Arriving" placeholder="Arriving Airport ID" required/> </br>
 
 			<!--The input area for Departing Date-->
 			<label for="Departing Date">Departing Date</label> </br>
