@@ -43,10 +43,7 @@ def login():
 			return redirect(url_for(home))
 	return render_template('userlogin.html', error = error)
 
-#Define route for register
-@app.route('/register')
-def register():
-	return render_template('register.html')
+
 
 #Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
@@ -75,18 +72,34 @@ def loginAuth():
 		error = 'Invalid login or username'
 		return render_template('login.html', error=error)
 
+
+#Define route for register
+@app.route('/register')
+def register():
+	return render_template('register.html')
+
 #Authenticates the register
 @app.route('/registerAuth', methods=['GET', 'POST'])
 def registerAuth():
 	#grabs information from the forms
-	username = request.form['username']
+	email = request.form['email']
 	password = request.form['password']
+	username = request.form['username']
+	fullname = request.form['fullname']
+	BuildingNo = request.form['BuildingNo']
+	street = request.form['street']
+	state = request.form['state']
+	phoneNo = request.form['phoneNo']
+	passportNo = request.form['passportNo']
+	passportExp = request.form['passportExp']
+	passportCntry = request.form['passportCntry']
+	dob = request.form['dob']
 
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
 	query = 'SELECT * FROM customer WHERE CustomerEmail = %s'
-	cursor.execute(query, (username))
+	cursor.execute(query, (email))
 	#stores the results in a variable
 	data = cursor.fetchone()
 	#use fetchall() if you are expecting more than 1 data row
@@ -97,8 +110,8 @@ def registerAuth():
 		return render_template('register.html', error = error)
 	else:
 		# TODO 
-		ins = 'INSERT INTO customer VALUES(%s, %s)'
-		cursor.execute(ins, (CustomerEmail, password))
+		ins = 'INSERT INTO customer VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+		cursor.execute(ins, (email, password, username, fullname, BuildingNo, street, state, phoneNo, passportNo, passportExp, passportCntry, dob))
 		conn.commit()
 		cursor.close()
 		return render_template('index.html')
