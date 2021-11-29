@@ -20,6 +20,7 @@
 			<th>Arrival Time</th>
 			<th>Departing Airport</th>
 			<th>Arriving Airport</th>
+			<th>Status</th>
 
 			{% for line in flights %}
 				<tr>
@@ -30,11 +31,12 @@
 					<td>{{line['ArrivalTime']}}</td>
 					<td>{{line['AirportName']}}</td>
 					<td>{{line['a.AirportName']}}</td>
+					<td>{{line['status']}}</td>
 				</tr>
 			{% endfor %}
 		</table>
 
-		<h1>Adding new flight</h1><br>
+		<br><h1>Adding new flight</h1><br>
 
 		<form action="/staffinput" method="POST">
 
@@ -78,6 +80,18 @@
 			<label for="Arriving Airport ID">Arriving Airport ID</label> </br>
 			<input type="text" name="Arriving Airport ID" placeholder="Arriving Airport ID" required/> </br>
 
+			<input type="submit" Value = submit/>
+
+		</form>
+
+		<br><h1>Change flight Status</h1><br>
+		<form action="/staffinput" method="POST">
+
+			<!--The input area for new flight status-->
+			<label for="Flight Number">Flight Number</label> </br>
+			<input type="number" name="Flight Number" placeholder="Flight Number" required/> </br>
+
+			
 			<input type="submit" Value = submit/>
 
 		</form>

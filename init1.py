@@ -69,7 +69,7 @@ def search_flights():
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
 	cursor = conn.cursor()
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = "China Eastern"'
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = "China Eastern"'
 	cursor.execute(query)
 	airline_flights = cursor.fetchall()
 	cursor.close()
@@ -93,6 +93,7 @@ def staffinput():
 	query = 'INSERT INTO flight VALUES (%s, %s, %s, "China Eastern", %s, %s, %s, %s, %s, %s, %s)'
 	cursor.execute(query, (FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, BasePrice, Status, AirplaneID, DepartingAirport, ArrivingAirport))
 	depart_data = cursor.fetchall()
+
 	for each in depart_data:   #prints out all the flights we have THIS IS A TEST
 			print(each)
 	cursor.close()
