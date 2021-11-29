@@ -4,23 +4,60 @@
 	</head>
 
 	<body>
-		<form action="/search_flights" method="POST">
+		<table>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Arrival Date</th>
+			<th>Arrival Time</th>
+			<th>Departing Airport</th>
+			<th>Arriving Airport</th>
+
+			{% for line in depart_flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['ArrivalDate']}}</td>
+					<td>{{line['ArrivalTime']}}</td>
+					<td>{{line['AirportName']}}</td>
+					<td>{{line['a.AirportName']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		
+FlightNumber	
+DepartureDate	
+DepartureTime	
+AirlineName	
+ArrivalDate	
+ArrivalTime	
+BasePrice	
+Status	
+AirplaneID	
+DepartAirportID	
+ArrivalAirportID
+		<form action="/staff" method="POST">
 			<h1>{{name1}}</h1>
 
-			<!--One-way check box-->
-			<input type="radio" id = "One-Way" name = "checkbox" onclick="check();" checked value="OneWay">
-			<label for="One-Way1">One-Way</label>
+			<!--The input area for Flight Number-->
+			<label for="FlightNumber">New Flight Number</label> </br>
+			<input type="text" name="FlightNumber" placeholder="Flight Number" required/> </br>
 
-			<!--Round Trip check box-->
-			<input type="radio" id = "Round Trip" name = "checkbox" onclick="check();" value="RoundTrip">
-			<label for="Round Trip1">Round Trip</label> </br>
+			<!--The input area for Flight Number-->
+			<label for="FlightNumber">New Flight Number</label> </br>
+			<input type="text" name="FlightNumber" placeholder="Flight Number" required/> </br>
+
+
+
+			
 
 			<!--The input area for Departing airports/city-->
-			<label for="Departing">Departing</label> </br>
+			<label for="Departing">Departing Airport</label> </br>
 			<input type="text" name="Departing" placeholder="City or Airline Nam" required/> </br>
 
 			<!--The input area for Arriving airports/city-->
-			<label for="Arriving">Arriving</label> </br>
+			<label for="Arriving">Arriving Airport</label> </br>
 			<input type="text" name="Arriving" placeholder="City or Airline Name" required/> </br>
 
 			<!--The input area for Departing Date-->
@@ -40,29 +77,6 @@
 			}
 		</style>
 
-		<table>
-			<th>Flight Number</th>
-			<th>Departure Date</th>
-			<th>Departure Time</th>
-			<th>Arrival Date</th>
-			<th>Arrival Time</th>
-			<th>Airline</th>
-			<th>Departing Airport</th>
-			<th>Arriving Airport</th>
-
-			{% for line in depart_flights %}
-				<tr>
-					<td>{{line['FlightNumber']}}</td>
-					<td>{{line['DepartureDate']}}</td>
-					<td>{{line['DepartureTime']}}</td>
-					<td>{{line['ArrivalDate']}}</td>
-					<td>{{line['ArrivalTime']}}</td>
-					<td>{{line['AirlineName']}}</td>
-					<td>{{line['AirportName']}}</td>
-					<td>{{line['a.AirportName']}}</td>
-				</tr>
-			{% endfor %}
-		</table>
 
 		<script>
 			function check(){
