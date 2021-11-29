@@ -14,9 +14,6 @@ conn = pymysql.connect(host='localhost',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
 
-flights = 'flights.html'
-login = 'login.html'
-loginfork = 'loginfork.html'
 
 #Define a route to hello function
 @app.route('/', methods=['GET', 'POST'])
@@ -35,7 +32,7 @@ def hello():
 
 
 	#cursor.close()
-	return render_template(flights, name1="guest")
+	return render_template('flights.html', name1="guest")
 
 #Searches for the flights of the inputs
 @app.route('/search_flights', methods=['GET', 'POST'])
@@ -66,19 +63,22 @@ def search_flights():
 			print(each)
 
 	cursor.close()
-	return render_template(flights, depart_flights=depart_data, arrival_flights=arriving_data)
-	
+	return render_template('flights.html', depart_flights=depart_data, arrival_flights=arriving_data)
 
+#Searches for the flights of the inputs
+@app.route('/staff', methods=['GET', 'POST'])
+def staff():
+	return render_template('staff.html')
 
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
 def loginfork():
-	return render_template(loginfork)
+	return render_template('loginfork.html')
 
 #Define route for login
 @app.route('/login')
 def login():
-	return render_template(login)
+	return render_template('login.html')
 
 #Define route for register
 @app.route('/register')
