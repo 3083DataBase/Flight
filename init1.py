@@ -79,20 +79,19 @@ def staff():
 @app.route('/staffinput', methods=['GET', 'POST'])
 def staffinput():
 	FlightNumber = request.form["Flight Number"]
-	DepartureDate = request.form["Departure Date"]
-	DepartureTime = request.form["Departure Time"]
+	DepartureDate = request.form["Departing Date"]
+	DepartureTime = request.form["Departing Time"]
 	ArrivalDate = request.form["Arrival Date"]
 	ArrivalTime = request.form["Arrival Time"]
-	DepartingAirport = request.form["Departing Airport"]
-	ArrivingAirport = request.form["Arriving Airport"]
+	#DepartingAirport = request.form["Departing Airport ID"]
+	#ArrivingAirport = request.form["Arriving Airport ID"]
 
 	cursor = conn.cursor()
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = "China Eastern"'
-	cursor.execute(query)
-	airline_flights = cursor.fetchall()
+	query = 'INSERT INTO flight VALUES (%s, %s, %s, %s, "China Eastern", "JFK", "PVG")'
+	cursor.execute(query, (FlightNumber, DepartureDate, DepartureTime, ArrivalTime))
 	cursor.close()
 
-	return render_template('staff.html', flights = airline_flights)
+	return redirect(url_for('staff'))
 
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
