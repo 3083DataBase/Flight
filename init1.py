@@ -18,7 +18,7 @@ conn = pymysql.connect(host='localhost',
 #Define a route to hello function
 @app.route('/', methods=['GET', 'POST'])
 def hello():
-	session['email'] = [None, 'Guest']    # Will hold the email and name of the season
+	session['email'] = [None, 'Guest', 0]    # Will hold the email and name of the season
 	#cursor = conn.cursor();
 
 	#after this Kevin needs to change for search
@@ -65,10 +65,34 @@ def search_flights():
 	cursor.close()
 	return render_template('flights.html', depart_flights=depart_data, arrival_flights=arriving_data)
 
-#Searches for the flights of the inputs
+#Holds all the code for the staff to input into flights
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
-	return render_template('staff.html')
+	cursor = conn.cursor()
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = "China Eastern"'
+	cursor.execute(query)
+	airline_flights = cursor.fetchall()
+	cursor.close()
+
+	return render_template('staff.html', flights = airline_flights, Airline = "China Eastern")
+
+@app.route('/staffinput', methods=['GET', 'POST'])
+def staffinput():
+	FlightNumber = request.form["Flight Number"]
+	DepartureDate = request.form["Departure Date"]
+	DepartureTime = request.form["Departure Time"]
+	ArrivalDate = request.form["Arrival Date"]
+	ArrivalTime = request.form["Arrival Time"]
+	DepartingAirport = request.form["Departing Airport"]
+	ArrivingAirport = request.form["Arriving Airport"]
+
+	cursor = conn.cursor()
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = "China Eastern"'
+	cursor.execute(query)
+	airline_flights = cursor.fetchall()
+	cursor.close()
+
+	return render_template('staff.html', flights = airline_flights)
 
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
