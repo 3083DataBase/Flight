@@ -83,12 +83,18 @@ def staffinput():
 	DepartureTime = request.form["Departing Time"]
 	ArrivalDate = request.form["Arrival Date"]
 	ArrivalTime = request.form["Arrival Time"]
-	#DepartingAirport = request.form["Departing Airport ID"]
-	#ArrivingAirport = request.form["Arriving Airport ID"]
+	BasePrice = request.form["Base Price"]
+	Status = request.form["Status"]
+	AirplaneID = request.form["Airplane ID"]
+	DepartingAirport = request.form["Departing Airport ID"]
+	ArrivingAirport = request.form["Arriving Airport ID"]
 
 	cursor = conn.cursor()
-	query = 'INSERT INTO flight VALUES (%s, %s, %s, %s, "China Eastern", "JFK", "PVG")'
-	cursor.execute(query, (FlightNumber, DepartureDate, DepartureTime, ArrivalTime))
+	query = 'INSERT INTO flight VALUES (%s, %s, %s, "China Eastern", %s, %s, %s, %s, %s, %s, %s)'
+	cursor.execute(query, (FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, BasePrice, Status, AirplaneID, DepartingAirport, ArrivingAirport))
+	depart_data = cursor.fetchall()
+	for each in depart_data:   #prints out all the flights we have THIS IS A TEST
+			print(each)
 	cursor.close()
 
 	return redirect(url_for('staff'))
