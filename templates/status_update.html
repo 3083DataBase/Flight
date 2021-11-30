@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<h1>{{Airline}}</h1>
+	</head>
+
+	<body>
+
+		<style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+
+		<table>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Arrival Date</th>
+			<th>Arrival Time</th>
+			<th>Departing Airport</th>
+			<th>Arriving Airport</th>
+			<th>Status</th>
+
+			{% for line in flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['ArrivalDate']}}</td>
+					<td>{{line['ArrivalTime']}}</td>
+					<td>{{line['AirportName']}}</td>
+					<td>{{line['a.AirportName']}}</td>
+					<td>{{line['status']}}</td>
+					<td><input type="submit" Value =update onclick=> </td>
+				</tr>
+			{% endfor %}
+		</table>
+
+		<br><h1>Adding new flight</h1><br>
+
+		<form action="/staffinput" method="POST">
+
+			<!--The input area for Flight Number-->
+			<label for="Flight Number">Flight Number</label> </br>
+			<input type="number" name="Flight Number" placeholder="Flight Number" required/> </br>
+
+			<!--The input area for Departing Date-->
+			<label for="Departing Date">Departing Date</label> </br>
+			<input type="date" name="Departing Date" placeholder="Departing Date"required/> </br>
+
+			<!--The input area for Departing Time-->
+			<label for="Departing Time">Departing Time</label> </br>
+			<input type="time" name="Departing Time" placeholder="Departing Time" required/> </br>
+
+			<!--The input area for Arrival Date-->
+			<label for="Arrival Date">Arrival Date</label> </br>
+			<input type="date" name="Arrival Date" placeholder="Arrival Date" required/> </br>
+
+			<!--The input area for Arrival Time-->
+			<label for="Arrival Time">Arrival Time</label> </br>
+			<input type="time" name="Arrival Time" placeholder="Arrival Time" required/> </br>
+
+			<!--The input area for Base Price-->
+			<label for="Base Price">Base Price</label> </br>
+			<input type="number" name="Base Price" placeholder="Base Price" required/> </br>
+
+			<!--The input area for Status-->
+			<label for="status">Status</label> </br>
+			<input type="text" name="Status" placeholder="Status" required/> </br>
+
+			<!--The input area for Status-->
+			<label for="Airplane ID">Airplane ID</label> </br>
+			<input type="text" name="Airplane ID" placeholder="Airplane ID" required/> </br>
+			
+			<!--The input area for Departing airports/city-->
+			<label for="Departing Airport ID">Departing Airport ID</label> </br>
+			<input type="text" name="Departing Airport ID" placeholder="Departing Airport ID" required/> </br>
+
+			<!--The input area for Arriving airports/city-->
+			<label for="Arriving Airport ID">Arriving Airport ID</label> </br>
+			<input type="text" name="Arriving Airport ID" placeholder="Arriving Airport ID" required/> </br>
+
+			<input type="submit" Value = submit/>
+
+		</form>
+
+		<br><h1>Change flight Status</h1><br>
+		<form action="/staffinput" method="POST">
+
+			<!--The input area for new flight status-->
+			<label for="Flight Number">Flight Number</label> </br>
+			<input type="number" name="Flight Number" placeholder="Flight Number" required/> </br>
+
+			
+			<input type="submit" Value = submit/>
+
+		</form>
+
+	</body>
+</html>
