@@ -32,7 +32,9 @@
 					<td>{{line['AirportName']}}</td>
 					<td>{{line['a.AirportName']}}</td>
 					<td>{{line['status']}}</td>
-					<td><input type="submit" Value =update onclick=> </td>
+					<td>
+						<input type="submit" Value = update onclick="update()">
+					</td>
 				</tr>
 			{% endfor %}
 		</table>
@@ -97,5 +99,10 @@
 
 		</form>
 
+		<Script>
+			function update(){
+				staff_update_status();
+			}
+		</Script>
 	</body>
 </html>
