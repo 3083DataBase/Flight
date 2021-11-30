@@ -18,7 +18,7 @@ conn = pymysql.connect(host='localhost',
 #Define a route to hello function
 @app.route('/', methods=['GET', 'POST'])
 def hello():
-	session['email'] = [None, 'Guest', 0]    # Will hold the email and name of the season
+	session['email'] = [None, 'Guest', 0, None]    # Will hold the email and name of the season
 	#cursor = conn.cursor();
 
 	#after this Kevin needs to change for search
@@ -87,13 +87,15 @@ def get_flight():
 #Holds all the code for the staff to input into flights
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
+	session['email'][2] = "China Eastern"
 	cursor = conn.cursor()
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = "China Eastern"'
-	cursor.execute(query)
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) > 0'
+	#query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s'
+	cursor.execute(query, (session['email'][2]))
 	airline_flights = cursor.fetchall()
 	cursor.close()
 
-	return render_template('staff.html', flights = airline_flights, Airline = "China Eastern")
+	return render_template('staff.html', flights = airline_flights, Airline = session['email'][2])
 
 @app.route('/staffinput', methods=['GET', 'POST'])
 def staffinput():
@@ -117,6 +119,11 @@ def staffinput():
 			print(each)
 	cursor.close()
 
+	return redirect(url_for('staff'))
+
+#Update the status of the flight
+@app.route('/staff_update_status', methods=['GET', 'POST'])
+def staff_update_status():
 	return redirect(url_for('staff'))
 
 #Define route for loginfork // this is where we pick is a user or staff log in
