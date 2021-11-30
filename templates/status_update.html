@@ -6,13 +6,20 @@
 	<body>
 		<br><h1>Change flight Status</h1><br>
 		<form action="/update_status" method="POST">
-			
-			<!--The input area for new flight status-->
+
 			<input type="hidden" name="FlightNumber" Value = FlightName required Style="display:none">
 			<input type="hidden" name="DepartureDate" Value = Date required Style="display:none">
 			<input type="hidden" name="DepartureTime" Value = Time required Style="display:none">
 
-			<input type="submit" Value = submit/>
+			<label for="Status">Choose Status</label>
+
+				<select name="Status" id="Status">
+				<option value="On-time">On-Time</option>
+				<option value="Delayed">Delayed</option>
+				</select>
+
+
+			<input type="submit" Value = submit>
 
 		</form>
 

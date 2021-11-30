@@ -127,19 +127,25 @@ def staff_update_status():
 	FlightNumber = request.form["FlightNumber"]
 	Date = request.form["DepartureDate"]
 	Time = request.form["DepartureTime"]
-	print(FlightNumber)
-	print(Date)
-	print(Time)
 	return render_template('status_update.html', FlightNumber = FlightNumber, Date = Date, Time = Time)
 
-@app.route('/update_status', methods=['GET', 'POST'])
+@app.route('/update_status', methods=['PUT', 'POST'])
 def update_status():
 	FlightNumber = request.form["FlightNumber"]
 	Date = request.form["DepartureDate"]
 	Time = request.form["DepartureTime"]
+	Status = request.form["Status"]
+
 	print(FlightNumber)
 	print(Date)
 	print(Time)
+	print(Status)
+
+	cursor = conn.cursor()
+	query = 'UPDATE flight SET Status = %s WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
+	cursor.execute(query, (Status, FlightNumber, Date, Time))
+	conn.commit()
+	cursor.close()
 	return redirect(url_for('staff'))
 
 #Define route for loginfork // this is where we pick is a user or staff log in
