@@ -123,8 +123,16 @@ def staffinput():
 
 #Update the status of the flight
 @app.route('/staff_update_status', methods=['GET', 'POST'])
-def staff_update_status(FlightNumber, DepartureDate, DepartureTime):
+def staff_update_status():
+	FlightNumber = request.form["FlightNumber"]
+	#Date = request.form["DepartureDate"]
+	#Time = request.form["DepartureTime"]
+	print(FlightNumber)
+	#print(Date)
+	#print(time)
 	return render_template('status_update.html')
+
+
 
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
