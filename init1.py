@@ -65,6 +65,25 @@ def search_flights():
 	cursor.close()
 	return render_template('flights.html', depart_flights=depart_data, arrival_flights=arriving_data)
 
+#Searches for a flight to see the status
+@app.route('/flight_status', methods=['GET', 'POST'])
+def flight_status():
+	return render_template('flight_status.html')
+
+@app.route('/get_flight', methods=['GET', 'POST'])
+def get_flight():
+	FlightNumber = request.form["FlightNumber"]
+	Date = request.form["Date"]
+	Airline = request.form["AirlineName"]
+
+	cursor = conn.cursor()
+	query = 'Select FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, Status FROM `flight` WHERE FlightNumber = %s AND (DepartureDate = %s or ArrivalDate = %s) AND AirlineName = %s'
+	cursor.execute(query, (FlightNumber, Date, Date, Airline))
+	flight = cursor.fetchall()
+
+	cursor.close()
+	return render_template('flight_status.html', flight = flight)
+
 #Holds all the code for the staff to input into flights
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
@@ -79,7 +98,7 @@ def staff():
 @app.route('/staffinput', methods=['GET', 'POST'])
 def staffinput():
 	FlightNumber = request.form["Flight Number"]
-	DepartureDate = request.form["Departing Date"]
+	Date = request.form["Departing Date"]
 	DepartureTime = request.form["Departing Time"]
 	ArrivalDate = request.form["Arrival Date"]
 	ArrivalTime = request.form["Arrival Time"]
