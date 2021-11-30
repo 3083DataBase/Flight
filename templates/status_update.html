@@ -5,12 +5,14 @@
 
 	<body>
 		<br><h1>Change flight Status</h1><br>
-		<form action="/staffinput" method="POST">
-			<input type="submit" Value = submit/>
+		<form action="/update_status" method="POST">
+			
 			<!--The input area for new flight status-->
-			<label for="Flight Number">Flight Number</label> </br>
-			<input type="number" name="Flight Number" placeholder="Flight Number" required/> </br>
+			<input type="hidden" name="FlightNumber" Value = FlightName required Style="display:none">
+			<input type="hidden" name="DepartureDate" Value = Date required Style="display:none">
+			<input type="hidden" name="DepartureTime" Value = Time required Style="display:none">
 
+			<input type="submit" Value = submit/>
 
 		</form>
 
