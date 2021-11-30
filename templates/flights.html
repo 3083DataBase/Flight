@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<h1>Welcome {{name1}}</h1>
 	</head>
 
 	<body>
+		<a href="/loginfork">Flight Status</a>
+
 		<form action="/search_flights" method="POST">
-			<h1>Welcome {{name1}}</h1>
 
 			<!--One-way check box-->
 			<input type="radio" id = "One-Way" name = "checkbox" onclick="check();" checked value="OneWay">
