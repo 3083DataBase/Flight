@@ -127,7 +127,10 @@ def staff_update_status():
 	FlightNumber = request.form["FlightNumber"]
 	Date = request.form["DepartureDate"]
 	Time = request.form["DepartureTime"]
-	return render_template('status_update.html', FlightNumber = FlightNumber, Date = Date, Time = Time)
+	print(FlightNumber)
+	print(Date)
+	print(Time)
+	return render_template('status_update.html', FNumber = FlightNumber, date = Date, time = Time)
 
 @app.route('/update_status', methods=['PUT', 'POST'])
 def update_status():

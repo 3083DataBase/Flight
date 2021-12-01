@@ -7,9 +7,9 @@
 		<br><h1>Change flight Status</h1><br>
 		<form action="/update_status" method="POST">
 
-			<input type="hidden" name="FlightNumber" Value = FlightName required Style="display:none">
-			<input type="hidden" name="DepartureDate" Value = Date required Style="display:none">
-			<input type="hidden" name="DepartureTime" Value = Time required Style="display:none">
+			<input type="hidden" name="FlightNumber" Value = {{FNumber}} required Style="display:none">
+			<input type="hidden" name="DepartureDate" Value = {{date}} required Style="display:none">
+			<input type="hidden" name="DepartureTime" Value = {{time}} required Style="display:none">
 
 			<label for="Status">Choose Status</label>
 
