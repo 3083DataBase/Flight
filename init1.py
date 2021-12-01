@@ -151,6 +151,11 @@ def update_status():
 	cursor.close()
 	return redirect(url_for('staff'))
 
+@app.route('/add_airplane', methods=['PUT', 'POST'])
+def add_airplane():
+	
+	
+
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
 def loginfork():
