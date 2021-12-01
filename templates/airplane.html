@@ -13,34 +13,24 @@
 		</style>
 
 		<table>
-			<th>Flight Number</th>
-			<th>Departure Date</th>
-			<th>Departure Time</th>
-			<th>Arrival Date</th>
-			<th>Arrival Time</th>
-			<th>Departing Airport</th>
-			<th>Arriving Airport</th>
-			<th>Status</th>
+			<th>Airplane ID</th>
+			<th>Number of Seats</th>
 
-			{% for line in flights %}
+			{% for line in airplanes %}
 				<tr>
-					<td>{{line['FlightNumber']}}</td>
-					<td>{{line['DepartureDate']}}</td>
-					<td>{{line['DepartureTime']}}</td>
-					<td>{{line['ArrivalDate']}}</td>
-					<td>{{line['ArrivalTime']}}</td>
-					<td>{{line['AirportName']}}</td>
-					<td>{{line['a.AirportName']}}</td>
-					<td>{{line['status']}}</td>
+					<td>{{line['AirplaneID']}}</td>
+					<td>{{line['NumSeats']}}</td>
 				</tr>
 			{% endfor %}
 		</table>
 
-		<br><h1>Adding new flight</h1><br>
+		<br><h1>Confirmation to add flight</h1><br>
 
-		<form action="/staffinput" method="POST">
-
-			<input type="submit" Value = submit/>
+		<form action="/add_airplane" method="POST">
+			<input type="hidden" name="Airline" Value = {{Airline}} required Style="display:none">
+			<input type="hidden" name="AirplaneID" Value = {{AirplaneID}} required Style="display:none">
+			<input type="hidden" name="NumSeats" Value = {{NumSeats}} required Style="display:none">
+			<input type="submit" Value = submit  Style="z-index :-1"> 
 
 		</form>
 

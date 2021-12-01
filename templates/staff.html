@@ -91,23 +91,20 @@
 			<input type="submit" Value = submit/>
 
 		</form>
-
+	
 		<br><h1>Input airplane</h1><br>
-		<form action="/staffinput" method="POST">
+		<form action="/add_airplane_confirmation" method="POST">
 
-			<!--The input area for new flight status-->
-			<label for="Flight Number">Flight Number</label> </br>
-			<input type="number" name="Flight Number" placeholder="Flight Number" required/> </br>
-
+			<input type="hidden" name="Airline" Value = {{Airline}} required Style="display:none">
 			
-			<input type="submit" Value = submit/>
+			<label for="AirplaneID">AirPlane ID</label> </br>
+			<input type="text" name="AirplaneID" placeholder="AirplaneID" required/> </br>
+
+			<label for="NumSeats">Number of Seats</label> </br>
+			<input type="number" name="NumSeats" placeholder="Number Of Seats" required/> </br>
+			
+			<input type="submit" Value = submit>
 
 		</form>
-
-		<Script>
-			function update(){
-				staffinput();
-			}
-		</Script>
 	</body>
 </html>

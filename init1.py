@@ -127,9 +127,7 @@ def staff_update_status():
 	FlightNumber = request.form["FlightNumber"]
 	Date = request.form["DepartureDate"]
 	Time = request.form["DepartureTime"]
-	print(FlightNumber)
-	print(Date)
-	print(Time)
+
 	return render_template('status_update.html', FNumber = FlightNumber, date = Date, time = Time)
 
 @app.route('/update_status', methods=['PUT', 'POST'])
@@ -139,11 +137,6 @@ def update_status():
 	Time = request.form["DepartureTime"]
 	Status = request.form["Status"]
 
-	print(FlightNumber)
-	print(Date)
-	print(Time)
-	print(Status)
-
 	cursor = conn.cursor()
 	query = 'UPDATE flight SET Status = %s WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
 	cursor.execute(query, (Status, FlightNumber, Date, Time))
@@ -151,9 +144,32 @@ def update_status():
 	cursor.close()
 	return redirect(url_for('staff'))
 
+#Shows all the planes the airline has and the confirmation button
+@app.route('/add_airplane_confirmation', methods=['GET', 'POST'])
+def add_airplane_confirmation():
+	Airline = request.form["Airline"]
+	AirplaneID = request.form["AirplaneID"]
+	NumSeats = request.form["NumSeats"]
+
+	cursor = conn.cursor()
+	query = 'SELECT AirplaneID, NumSeats FROM airplane WHERE AirlineName = %s'
+	airplanes = cursor.execute(query, Airline)
+	print(airplanes)
+	cursor.close()
+
+	return render_template('airplane.html', airplanes = airplanes, Airline = Airline, AirplaneID = AirplaneID, NumSeats = NumSeats)
+
 @app.route('/add_airplane', methods=['PUT', 'POST'])
 def add_airplane():
-	
+	Airline = request.form["Airline"]
+	AirplaneID = request.form["AirplaneID"]
+	NumSeats = request.form["NumSeats"]
+
+	cursor = conn.cursor()
+	query = 'INSERT INTO airplane VALUES (%s, %s, %s)'
+	cursor.execute(query, (Airline, AirplaneID, NumSeats))
+	cursor.close()
+	return redirect(url_for('staff'))
 	
 
 #Define route for loginfork // this is where we pick is a user or staff log in
