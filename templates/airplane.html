@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<h1>{{Airline}}</h1>
+	</head>
+
+	<body>
+
+		<style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+
+		<table>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Arrival Date</th>
+			<th>Arrival Time</th>
+			<th>Departing Airport</th>
+			<th>Arriving Airport</th>
+			<th>Status</th>
+
+			{% for line in flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['ArrivalDate']}}</td>
+					<td>{{line['ArrivalTime']}}</td>
+					<td>{{line['AirportName']}}</td>
+					<td>{{line['a.AirportName']}}</td>
+					<td>{{line['status']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+
+		<br><h1>Adding new flight</h1><br>
+
+		<form action="/staffinput" method="POST">
+
+			<input type="submit" Value = submit/>
+
+		</form>
+
+	</body>
+</html>
