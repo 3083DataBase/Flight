@@ -18,7 +18,7 @@ conn = pymysql.connect(host='localhost',
 #Define a route to hello function
 @app.route('/', methods=['GET', 'POST'])
 def hello():
-	session['email'] = [None, 'Guest', 0, None]    # Will hold the email and name of the season
+	session['user'] = [None, 'Guest', 0]    #Creates a session, will hold [staffusername / customer email, name of the customer or just Guest if not logged in / airline, 0 for customers, 1 for flight staff]
 	#cursor = conn.cursor();
 
 	#after this Kevin needs to change for search
@@ -34,7 +34,7 @@ def hello():
 	#cursor.close()
 	return render_template('flights.html', name1="guest")
 
-#Searches for the flights of the inputs
+#Searches for the flights of the inputs (Works for guests or for people logged in)
 @app.route('/search_flights', methods=['GET', 'POST'])
 def search_flights():
 	checkbox = request.form["checkbox"]
@@ -84,19 +84,27 @@ def get_flight():
 	cursor.close()
 	return render_template('flight_status.html', flight = flight)
 
-#Holds all the code for the staff to input into flights
+#Holds all the code for the staff to input into flights (Required for staff to be logged in)
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
-	session['email'][2] = "China Eastern"
+	Airline = session['test'][1]
 	cursor = conn.cursor()
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) > 0'
+	
+	query_airport = 'SELECT * FROM airport'
 	#query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s'
-	cursor.execute(query, (session['email'][2]))
+	cursor.execute(query, (Airline))
 	airline_flights = cursor.fetchall()
+
+	cursor.execute(query_airport)
+
+	airports = cursor.fetchall()
+	
 	cursor.close()
 
-	return render_template('staff.html', flights = airline_flights, Airline = session['email'][2])
+	return render_template('staff.html', flights = airline_flights, Airports = airports, Airline = session['test'][1])
 
+#Inserts the Flight into the data base
 @app.route('/staffinput', methods=['GET', 'POST'])
 def staffinput():
 	FlightNumber = request.form["Flight Number"]
@@ -121,7 +129,7 @@ def staffinput():
 
 	return redirect(url_for('staff'))
 
-#Update the status of the flight
+#Transfers the data to status_update.html (opens status_update.html)
 @app.route('/staff_update_status', methods=['GET', 'POST'])
 def staff_update_status():
 	FlightNumber = request.form["FlightNumber"]
@@ -130,6 +138,7 @@ def staff_update_status():
 
 	return render_template('status_update.html', FNumber = FlightNumber, date = Date, time = Time)
 
+#Updates the Status of the plane (redirects to '/staff')
 @app.route('/update_status', methods=['PUT', 'POST'])
 def update_status():
 	FlightNumber = request.form["FlightNumber"]
@@ -144,32 +153,68 @@ def update_status():
 	cursor.close()
 	return redirect(url_for('staff'))
 
-#Shows all the planes the airline has and the confirmation button
+#Shows all the planes the airline has and the confirmation button (Opens airplane.html)
 @app.route('/add_airplane_confirmation', methods=['GET', 'POST'])
 def add_airplane_confirmation():
-	Airline = request.form["Airline"]
+	Airline = session['test'][1]
 	AirplaneID = request.form["AirplaneID"]
 	NumSeats = request.form["NumSeats"]
 
 	cursor = conn.cursor()
-	query = 'SELECT AirplaneID, NumSeats FROM airplane WHERE AirlineName = %s'
-	airplanes = cursor.execute(query, Airline)
-	print(airplanes)
-	cursor.close()
+	query_check = 'SELECT AirplaneID FROM airplane WHERE AirlineName = %s AND AirplaneID = %s'
+	cursor.execute(query_check, (Airline, AirplaneID))
+	check = cursor.fetchall()
 
-	return render_template('airplane.html', airplanes = airplanes, Airline = Airline, AirplaneID = AirplaneID, NumSeats = NumSeats)
+	if(check == ()):
+		query = 'SELECT AirplaneID, NumSeats FROM airplane WHERE AirlineName = %s'
+		cursor.execute(query, Airline)
+		airplanes = cursor.fetchall()
+		cursor.close()
+		return render_template('airplane.html', airplanes = airplanes, Airline = Airline, AirplaneID = AirplaneID, NumSeats = NumSeats)
+	else:
+		cursor.close()
+		return redirect(url_for('staff'))
 
+#Adds the plane to the database (redirects to '/staff')
 @app.route('/add_airplane', methods=['PUT', 'POST'])
 def add_airplane():
-	Airline = request.form["Airline"]
+	Airline = session['test'][1]
 	AirplaneID = request.form["AirplaneID"]
 	NumSeats = request.form["NumSeats"]
-
+	
 	cursor = conn.cursor()
-	query = 'INSERT INTO airplane VALUES (%s, %s, %s)'
-	cursor.execute(query, (Airline, AirplaneID, NumSeats))
+	query = 'INSERT INTO airplane VALUES (%s, %s, %s)' 
+	cursor.execute(query, ( AirplaneID, Airline, NumSeats))
+	conn.commit()
 	cursor.close()
 	return redirect(url_for('staff'))
+
+@app.route('/add_airport', methods=['PUT', 'POST'])
+def add_airport():
+	AirportID = request.form["AirportID"]
+	AirportName	= request.form["AirportName"]
+	City = request.form["City"]
+	
+	print(AirportID)
+	cursor = conn.cursor()
+	query_check = 'SELECT AirportID FROM airport WHERE AirportID = %s'
+	cursor.execute(query_check, AirportID)
+	check = cursor.fetchall()
+
+	print(check)
+
+	if(check == ()):
+		print()
+		query = 'INSERT INTO airport VALUES (%s, %s, %s)'
+		cursor.execute(query, (AirportID, AirportName, City))
+		conn.commit()
+		cursor.close()
+		return redirect(url_for('staff'))
+	else:
+		cursor.close()
+		print("didnt work")
+		error = 'Invalid login or username'
+		return redirect(url_for('staff'))
 	
 
 #Define route for loginfork // this is where we pick is a user or staff log in
@@ -180,6 +225,9 @@ def loginfork():
 #Define route for login
 @app.route('/login')
 def login():
+
+	session['test'] = ['test_username', "China Eastern", 1]       #FOR TESTING GOTTA DELETE
+
 	return render_template('login.html')
 
 #Define route for register
