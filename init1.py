@@ -234,14 +234,14 @@ def staff_info():
 	frequent_flyer = cursor.fetchall()
 	frequent_flyer = frequent_flyer[0]['CustomerName']
 
-	customer_query = 'SELECT CustomerName, TicketID, FlightNumber FROM ticket WHERE AirlineName = %s'
+	customer_query = 'SELECT CustomerName, CustomerEmail FROM customer NATURAL JOIN ticket WHERE AirlineName = %s'
 	
 	cursor.execute(customer_query, (Airline))
 	customers = cursor.fetchall()
 	cursor.close()
 
 	return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, customers = customers, Airline = Airline)
-
+	
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
 
@@ -262,7 +262,26 @@ def reviews():
 
 	cursor.close()
 
-	return render_template('staff_view_review.html', flights = comments, Avg = avg)
+	return render_template('staff_view_review.html', comments = comments, Avg = avg)
+
+@app.route('/customer_flights', methods=['GET', 'POST'])
+def customer_flights():
+
+	Email = request.form["CustomerEmail"]
+	Airline = session['test'][1]
+
+	print(Airline)
+	print(Email)
+
+	cursor = conn.cursor()
+	query = 'SELECT TicketID, FlightNumber, DepartureDate, SoldPrice FROM ticket NATURAL JOIN flight WHERE AirlineName = %s AND CustomerEmail = %s'
+	cursor.execute(query, (Airline, Email))
+	customer_flights = cursor.fetchall()
+	cursor.close()
+
+	print(customer_flights)
+
+	return render_template('staff_customer_view.html', flights = customer_flights)
 
 
 #Define route for loginfork // this is where we pick is a user or staff log in

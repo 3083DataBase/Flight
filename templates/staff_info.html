@@ -5,6 +5,8 @@
 	</head>
 
 	<body>
+		
+		<br><a href="/staff">Input Values</a><br>
 
 		<style type="text/css">
 			table, th, td{
@@ -12,6 +14,7 @@
 			}
 		</style>
 
+		<h2>Flight Ratings</h2>
 		<table>
 			<th>Flight Number</th>
 			<th>Departure Date</th>
@@ -48,6 +51,7 @@
 
 		<p>Most Frequent Flyer: {{flyer}}</p>
 
+		<h3>Customers</h3>
 		<table>
 			<th>Customer</th>
 			<th>See Flights</th>
@@ -56,11 +60,9 @@
 				<tr>
 					<td>{{line['CustomerName']}}</td>
 					<td>
-						<form action="/reviews" method="POST">
-							<input type="hidden" name="CustomerName" Value = "{{line['CustomerName']}}" required Style="display:none">
-							<input type="hidden" name="TicketID" Value = "{{line['TicketID']}}" required Style="display:none">
-							<input type="hidden" name="FlightNumber" Value = "{{line['FlightNumber']}}" required Style="display:none">
-							<input type="submit" Value = Select Style="z-index :-1">
+						<form action="/customer_flights" method="POST">
+							<input type="hidden" name="CustomerEmail" Value = "{{line['CustomerEmail']}}" required Style="display:none">
+							<input type="submit" Value = View Style="z-index :-1">
 						</form>
 					</td>
 				</tr>

@@ -13,26 +13,21 @@
 		</style>
 
 		<table>
-			<th>Airplane ID</th>
-			<th>Number of Seats</th>
+			<th>Ticket ID</th>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Sold Price</th>
 
-			{% for line in airplanes %}
+			{% for line in flights %}
 				<tr>
-					<td>{{line['AirplaneID']}}</td>
-					<td>{{line['NumSeats']}}</td>
+					<td>{{line['TicketID']}}</td>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['SoldPrice']}}</td>
 				</tr>
 			{% endfor %}
 		</table>
 
-		<br><h1>Confirmation to add flight</h1><br>
-
-		<form action="/add_airplane" method="POST">
-			<input type="hidden" name="Airline" Value = {{Airline}} required Style="display:none">
-			<input type="hidden" name="AirplaneID" Value = {{AirplaneID}} required Style="display:none">
-			<input type="hidden" name="NumSeats" Value = {{NumSeats}} required Style="display:none">
-			<input type="submit" Value = submit  Style="z-index :-1"> 
-
-		</form>
-
+		<br><a href="/staff_info">Go Back</a><br>
 	</body>
 </html>
