@@ -89,7 +89,7 @@ def get_flight():
 def staff():
 	Airline = session['test'][1]
 	cursor = conn.cursor()
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) > 0'
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
 	
 	query_airport = 'SELECT * FROM airport'
 	#query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s'
@@ -216,6 +216,39 @@ def add_airport():
 		error = 'Invalid login or username'
 		return redirect(url_for('staff'))
 	
+#Staff_info gets the info that the staff should be able to see
+@app.route('/staff_info', methods=['GET', 'POST'])
+def staff_info():
+	
+	Airline = session['test'][1]
+	cursor = conn.cursor()
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
+	
+	cursor.execute(query, (Airline))
+	airline_flights = cursor.fetchall()
+	
+	cursor.close()
+
+	return render_template('staff_info.html', flights = airline_flights, Airline = Airline)
+
+@app.route('/reviews', methods=['GET', 'POST'])
+def reviews():
+
+	FlightNumber = request.form["FlightNumber"]
+	Date = request.form["DepartureDate"]
+	Time = request.form["DepartureTime"]
+
+	cursor = conn.cursor()
+	query = 'SELECT Comment FROM views WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
+	
+	average_aquery = 'SELECT AVG(rating) FROM views WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
+	cursor.execute(query, (FlightNumber, Date, Time))
+	comments = cursor.fetchall()
+	
+	cursor.close()
+
+	return render_template('staff_view_review.html', flights = comments)
+
 
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
