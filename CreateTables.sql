@@ -1,7 +1,3 @@
---#Kathy Pan, Kevin Iza, Michelle Yang
---#kp2327, kei231, my1590
---#Part 2.2 -- Create tables
-
 CREATE TABLE Customer(
         CustomerEmail varchar(100),
         Password varchar(300) NOT NULL,
@@ -25,7 +21,6 @@ CREATE TABLE Airport(
     City varchar(100) NOT NULL,
 
     PRIMARY KEY (AirportID)
-    UNIQUE(AirportID)
 );
 
 CREATE TABLE Airline(
@@ -94,34 +89,46 @@ CREATE TABLE Flight (
     BasePrice float (10, 2) NOT NULL,
     Status varchar(100) NOT NULL,
     AirplaneID varchar(100) NOT NULL,
+    DepartAirportID varchar(100) NOT NULL,
+    ArrivalAirportID varchar(100) NOT NULL,
 
     PRIMARY KEY (FlightNumber, DepartureDate, DepartureTime),
     FOREIGN KEY (AirlineName) references Airline(AirlineName),
     FOREIGN KEY (AirplaneID) references Airplane(AirplaneID),
+    FOREIGN KEY (DepartAirportID) references Airport(AirportID),
+    FOREIGN KEY (ArrivalAirportID) references Airport(AirportID),
     UNIQUE(FlightNumber, DepartureDate, DepartureTime)
 );
 
 
 CREATE TABLE Depart (
     FlightNumber bigint,
-    DepartureTime time,
     DepartureDate date,
+    DepartureTime time,
     AirportID varchar(100),
 
-    PRIMARY KEY (FlightNumber, DepartureDate, DepartureTime),
-    FOREIGN KEY (FlightNumber, DepartureDate, DepartureTime) references Flight(FlightNumber, DepartureDate, DepartureTime),
+    PRIMARY KEY (FlightNumber, DepartureDate, DepartureTime, AirportID),
     FOREIGN KEY (AirportID) references Airport(AirportID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (FlightNumber, DepartureDate, DepartureTime) references Flight(FlightNumber, DepartureDate, DepartureTime)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 CREATE TABLE Arrive (
-  FlightNumber bigint,
-  DepartureTime time,
-  DepartureDate date,
-  AirportID varchar(100),
+    FlightNumber bigint,
+    DepartureDate date,
+    DepartureTime time,
+    AirportID varchar(100),
 
-  PRIMARY KEY (FlightNumber, DepartureDate, DepartureTime),
-  FOREIGN KEY (FlightNumber, DepartureDate, DepartureTime) references Flight(FlightNumber, DepartureDate, DepartureTime),
-  FOREIGN KEY (AirportID) references Airport(AirportID)
+    PRIMARY KEY (FlightNumber, DepartureDate, DepartureTime),
+    FOREIGN KEY (AirportID) references Airport(AirportID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (FlightNumber, DepartureDate, DepartureTime) references Flight(FlightNumber, DepartureDate, DepartureTime)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 CREATE TABLE views (

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<h1>Welcome {{name1}}</h1>
+	</head>
+
+	<body>
+		<a href="/">Flight Search</a> <br>
+
+		<form action="/get_flight" method="POST">
+
+			<!--The input area for Flight Number-->
+			<label for="FlightNumber">Flight Number</label> </br>
+			<input type="number" name="FlightNumber" placeholder="Flight Number" required/> </br>
+
+			<!--The input area for the arrival or departing Date-->
+			<label for="Date">Departing or Arrival Date</label> </br>
+			<input type="date" name="Date" placeholder="Departing or Arrival Date" required/> </br>
+
+			<!--The input area for Departing airports/city-->
+			<label for="AirlineName">Airline Name</label> </br>
+			<input type="text" name="AirlineName" placeholder="Airline Name" required/> </br>
+
+			<input type="submit" Value = submit/>
+
+		</form>
+
+		{% if not message %}
+			<a href="/loginfork">Login</a>
+			<a href="/register">Register</a>
+		{% endif %}
+
+		<style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+		<table>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Arrival Date</th>
+			<th>Arrival Time</th>
+			<th>Airline Name</th>
+			<th>Status</th>
+
+			{% for line in flight %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['ArrivalDate']}}</td>
+					<td>{{line['ArrivalTime']}}</td>
+					<td>{{line['AirlineName']}}</td>
+					<td>{{line['Status']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+
+		
+		
+		<!-- Testcode link to Customer Home page -->
+		</br>
+		{% if not message %}
+			<a href="/customerhome">TestCustomerHome</a>
+		{% endif %}
+
+
+	</body>
+</html>

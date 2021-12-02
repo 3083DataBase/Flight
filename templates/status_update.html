@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+
+	<body>
+		<br><h1>Change flight Status</h1><br>
+		<form action="/update_status" method="POST">
+
+			<input type="hidden" name="FlightNumber" Value = {{FNumber}} required Style="display:none">
+			<input type="hidden" name="DepartureDate" Value = {{date}} required Style="display:none">
+			<input type="hidden" name="DepartureTime" Value = {{time}} required Style="display:none">
+
+			<label for="Status">Choose Status</label>
+
+				<select name="Status" id="Status">
+				<option value="On-time">On-Time</option>
+				<option value="Delayed">Delayed</option>
+				</select>
+
+
+			<input type="submit" Value = submit>
+
+		</form>
+
+	</body>
+</html>
