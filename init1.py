@@ -222,6 +222,7 @@ def staff_info():
 	
 	Airline = session['test'][1]
 	cursor = conn.cursor()
+
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
 	
 	cursor.execute(query, (Airline))
@@ -230,15 +231,16 @@ def staff_info():
 	frequent_flyer_query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket WHERE DATEDIFF(PurchaseDate, CURRENT_DATE) < 365 AND AirlineName = %s ORDER BY SoldPrice DESC'
 	
 	cursor.execute(frequent_flyer_query, (Airline))
-	
-
 	frequent_flyer = cursor.fetchall()
-
 	frequent_flyer = frequent_flyer[0]['CustomerName']
 
+	customer_query = 'SELECT CustomerName, TicketID, FlightNumber FROM ticket WHERE AirlineName = %s'
+	
+	cursor.execute(customer_query, (Airline))
+	customers = cursor.fetchall()
 	cursor.close()
 
-	return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, Airline = Airline)
+	return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, customers = customers, Airline = Airline)
 
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():

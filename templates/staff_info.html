@@ -48,5 +48,23 @@
 
 		<p>Most Frequent Flyer: {{flyer}}</p>
 
+		<table>
+			<th>Customer</th>
+			<th>See Flights</th>
+
+			{% for line in customers %}
+				<tr>
+					<td>{{line['CustomerName']}}</td>
+					<td>
+						<form action="/reviews" method="POST">
+							<input type="hidden" name="CustomerName" Value = "{{line['CustomerName']}}" required Style="display:none">
+							<input type="hidden" name="TicketID" Value = "{{line['TicketID']}}" required Style="display:none">
+							<input type="hidden" name="FlightNumber" Value = "{{line['FlightNumber']}}" required Style="display:none">
+							<input type="submit" Value = Select Style="z-index :-1">
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
 	</body>
 </html>
