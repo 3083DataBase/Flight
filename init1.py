@@ -240,14 +240,17 @@ def reviews():
 
 	cursor = conn.cursor()
 	query = 'SELECT Comment FROM views WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
-	
-	average_aquery = 'SELECT AVG(rating) FROM views WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
 	cursor.execute(query, (FlightNumber, Date, Time))
 	comments = cursor.fetchall()
+
+	average_query = 'SELECT AVG(Rate) average FROM views WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
+	cursor.execute(average_query, (FlightNumber, Date, Time))
+	avg = cursor.fetchall()
 	
+	print(avg)
 	cursor.close()
 
-	return render_template('staff_view_review.html', flights = comments)
+	return render_template('staff_view_review.html', flights = comments, Avg = avg)
 
 
 #Define route for loginfork // this is where we pick is a user or staff log in
