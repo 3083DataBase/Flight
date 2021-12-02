@@ -226,10 +226,19 @@ def staff_info():
 	
 	cursor.execute(query, (Airline))
 	airline_flights = cursor.fetchall()
+
+	frequent_flyer_query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket WHERE DATEDIFF(PurchaseDate, CURRENT_DATE) < 365 AND AirlineName = %s ORDER BY SoldPrice DESC'
 	
+	cursor.execute(frequent_flyer_query, (Airline))
+	
+
+	frequent_flyer = cursor.fetchall()
+
+	frequent_flyer = frequent_flyer[0]['CustomerName']
+
 	cursor.close()
 
-	return render_template('staff_info.html', flights = airline_flights, Airline = Airline)
+	return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, Airline = Airline)
 
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
@@ -243,11 +252,12 @@ def reviews():
 	cursor.execute(query, (FlightNumber, Date, Time))
 	comments = cursor.fetchall()
 
-	average_query = 'SELECT AVG(Rate) average FROM views WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
+	average_query = 'SELECT AVG(Rate) FROM views WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
 	cursor.execute(average_query, (FlightNumber, Date, Time))
 	avg = cursor.fetchall()
-	
-	print(avg)
+
+	avg = avg[0]['AVG(Rate)']
+
 	cursor.close()
 
 	return render_template('staff_view_review.html', flights = comments, Avg = avg)
