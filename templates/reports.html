@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<h1>Welcome {{name1}}</h1>
+	</head>
+
+	<body>
+		<a href="/flight_status">Flight Status</a> <br>
+
+		<form action="/search_flights" method="POST">
+
+			<!--One-way check box-->
+			<input type="radio" id = "One-Way" name = "checkbox" onclick="check();" checked value="OneWay">
+			<label for="One-Way1">One-Way</label>
+
+			<!--Round Trip check box-->
+			<input type="radio" id = "Round Trip" name = "checkbox" onclick="check();" value="RoundTrip">
+			<label for="Round Trip1">Round Trip</label> </br>
+
+			<!--The input area for Departing airports/city-->
+			<label for="Departing">Departing</label> </br>
+			<input type="text" name="Departing" placeholder="City or Airport Name" required/> </br>
+
+			<!--The input area for Arriving airports/city-->
+			<label for="Arriving">Arriving</label> </br>
+			<input type="text" name="Arriving" placeholder="City or Airport Name" required/> </br>
+
+			<!--The input area for Departing Date-->
+			<label for="Departing Date">Departing Date</label> </br>
+			<input type="date" name="Departure Date" placeholder="Departure Date"required/> </br>
+
+			<!--The input area for Arriving Date-->
+			<label for="Arriving Date" id="Arr_date" Style="display:none">Arriving Date</label>
+			<input type="date" name="Arriving Date" id="Arr_date_input" placeholder="Arriving Date" Style="display:none" disabled /> </br>
+			<input type="submit" Value = submit/>
+
+		</form>
+
+		{% if not message %}
+			<a href="/loginfork">Login</a>
+			<a href="/register">Register</a>
+		{% endif %}
+
+		<style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+
+		<h1>Departure Flights</h1>
+
+		<table>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Arrival Date</th>
+			<th>Arrival Time</th>
+			<th>Airline</th>
+			<th>Departing Airport</th>
+			<th>Arriving Airport</th>
+
+			{% for line in depart_flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['ArrivalDate']}}</td>
+					<td>{{line['ArrivalTime']}}</td>
+					<td>{{line['AirlineName']}}</td>
+					<td>{{line['AirportName']}}</td>
+					<td>{{line['a.AirportName']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+
+		<h1>Returning Flights</h1>
+
+		<table>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Arrival Date</th>
+			<th>Arrival Time</th>
+			<th>Airline</th>
+			<th>Departing Airport</th>
+			<th>Arriving Airport</th>
+
+			{% for line in arrival_flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['ArrivalDate']}}</td>
+					<td>{{line['ArrivalTime']}}</td>
+					<td>{{line['AirlineName']}}</td>
+					<td>{{line['AirportName']}}</td>
+					<td>{{line['a.AirportName']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+
+		<script>
+			function check(){
+				var checkBox = document.getElementById("Round Trip");
+				var text = document.getElementById("Arr_date");
+				var input = document.getElementById("Arr_date_input");
+				if (checkBox.checked == true){
+					text.style.display = "block";
+					input.style.display = "block";
+					input.disabled = false;
+				} else {
+					text.style.display = "none";
+					input.style.display = "none";
+					input.disabled = true;
+				}
+				return document.getElementsByID("Round Trip").checked;
+			}
+
+			function table_display(){
+				var depart = document.getElemntsByID("depart");
+				var arrive = document.getElemntsByID("arrive");
+				var checkBox = document.getElementById("Round Trip");
+				if (checkBox.checked == true){
+					depart.style.display = "none";
+					arrive.style.display = "none";
+				} else {
+					depart.style.display = "none";
+				}
+				return
+			}
+		</script>
+		
+		<!-- Testcode link to Customer Home page -->
+		</br>
+		{% if not message %}
+			<a href="/customerhome">TestCustomerHome</a>
+		{% endif %}
+
+
+	</body>
+</html>

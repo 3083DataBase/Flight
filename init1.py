@@ -283,6 +283,10 @@ def customer_flights():
 
 	return render_template('staff_customer_view.html', flights = customer_flights)
 
+@app.route('/reports', methods=['GET', 'POST'])
+def reports():
+	return render_template('reports.html')
+
 
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
