@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<h1>{{Airline}}</h1>
+	</head>
+
+	<body>
+
+		<style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+
+		<table>
+			<th>Airplane ID</th>
+			<th>Number of Seats</th>
+
+			{% for line in airplanes %}
+				<tr>
+					<td>{{line['AirplaneID']}}</td>
+					<td>{{line['NumSeats']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+
+		<br><h1>Confirmation to add flight</h1><br>
+
+		<form action="/add_airplane" method="POST">
+			<input type="hidden" name="Airline" Value = {{Airline}} required Style="display:none">
+			<input type="hidden" name="AirplaneID" Value = {{AirplaneID}} required Style="display:none">
+			<input type="hidden" name="NumSeats" Value = {{NumSeats}} required Style="display:none">
+			<input type="submit" Value = submit  Style="z-index :-1"> 
+
+		</form>
+
+	</body>
+</html>
