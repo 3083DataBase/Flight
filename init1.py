@@ -32,7 +32,7 @@ def hello():
 
 
 	#cursor.close()
-	return render_template('flights.html', name1="guest")
+	return render_template('flights.html', name1=session['user'][1])
 
 #Searches for the flights of the inputs (Works for guests or for people logged in)
 @app.route('/search_flights', methods=['GET', 'POST'])
@@ -68,7 +68,7 @@ def search_flights():
 #Searches for a flight to see the status
 @app.route('/flight_status', methods=['GET', 'POST'])
 def flight_status():
-	return render_template('flight_status.html')
+	return render_template('flight_status.html',  name1=session['user'][1])
 
 @app.route('/get_flight', methods=['GET', 'POST'])
 def get_flight():

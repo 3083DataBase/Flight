@@ -5,7 +5,12 @@
 	</head>
 
 	<body>
-		<a href="/">Flight Search</a> <br>
+
+		<form action="/">
+			<input type="submit" value="Flight Search" />
+		</form>
+
+		<br>
 
 		<form action="/get_flight" method="POST">
 
@@ -25,11 +30,18 @@
 
 		</form>
 
+		<br>
+
 		{% if not message %}
-			<a href="/loginfork">Login</a>
-			<a href="/register">Register</a>
+			<form action="/loginfork">
+				<input type="submit" value="Login" />
+			</form>
+			<form action="/register">
+				<input type="submit" value="Register" />
+			</form>
 		{% endif %}
 
+		<br>
 		<style type="text/css">
 			table, th, td{
 				border: 1px solid black;

@@ -2,12 +2,22 @@
 <head>
 </head>
 <body>
-	{% if not message %}
-		<a href="/login">User Login</a>
-		<a href="/login">Staff Login</a>
-	{% endif %}
+	<!--User login Link-->
+	<form action="/login">
+		<input type="submit" value="User Login" />
+	</form>
 
-	<a href="/">Go back</a>
+	<!--Staff login Link-->
+	<form action="/login">
+		<input type="submit" value="Staff Login" />
+	</form>
+
+	<br>
+
+	<!--Back Button Link-->
+	<form action="/">
+		<input type="submit" value="Go Back"/>
+	</form>
 
 </body>
 
