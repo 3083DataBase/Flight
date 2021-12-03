@@ -19,7 +19,7 @@ conn = pymysql.connect(host='localhost',
 #Define a route to hello function
 @app.route('/', methods=['GET', 'POST'])
 def hello():
-	session['email'] = [None, 'Guest', 0, None]    # Will hold the email and name of the season
+	session['user'] = [None, 'Guest', 0]    #Creates a session, will hold [staffusername / customer email, name of the customer or just Guest if not logged in / airline, 0 for customers, 1 for flight staff]
 	#cursor = conn.cursor();
 
 	#after this Kevin needs to change for search
@@ -35,7 +35,7 @@ def hello():
 	#cursor.close()
 	return render_template('flights.html', name1="guest")
 
-#Searches for the flights of the inputs
+#Searches for the flights of the inputs (Works for guests or for people logged in)
 @app.route('/search_flights', methods=['GET', 'POST'])
 def search_flights():
 	checkbox = request.form["checkbox"]
@@ -85,18 +85,27 @@ def get_flight():
 	cursor.close()
 	return render_template('flight_status.html', flight = flight)
 
-#Holds all the code for the staff to input into flights
+#Holds all the code for the staff to input into flights (Required for staff to be logged in)
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
-	session['email'][2] = "China Eastern"
+	Airline = session['user'][1]
 	cursor = conn.cursor()
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) > 0'
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
+	
+	query_airport = 'SELECT * FROM airport'
 	#query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s'
-	cursor.execute(query, (session['email'][2]))
+	cursor.execute(query, (Airline))
 	airline_flights = cursor.fetchall()
-	cursor.close()
-	return render_template('staff.html', flights = airline_flights, Airline = session['email'][2])
 
+	cursor.execute(query_airport)
+
+	airports = cursor.fetchall()
+	
+	cursor.close()
+
+	return render_template('staff.html', flights = airline_flights, Airports = airports, Airline = Airline)
+
+#Inserts the Flight into the data base
 @app.route('/staffinput', methods=['GET', 'POST'])
 def staffinput():
 	FlightNumber = request.form["Flight Number"]
@@ -121,17 +130,16 @@ def staffinput():
 
 	return redirect(url_for('staff'))
 
-#Update the status of the flight
+#Transfers the data to status_update.html (opens status_update.html)
 @app.route('/staff_update_status', methods=['GET', 'POST'])
 def staff_update_status():
 	FlightNumber = request.form["FlightNumber"]
 	Date = request.form["DepartureDate"]
 	Time = request.form["DepartureTime"]
-	print(FlightNumber)
-	print(Date)
-	print(Time)
+
 	return render_template('status_update.html', FNumber = FlightNumber, date = Date, time = Time)
 
+#Updates the Status of the plane (redirects to '/staff')
 @app.route('/update_status', methods=['PUT', 'POST'])
 def update_status():
 	FlightNumber = request.form["FlightNumber"]
@@ -139,17 +147,211 @@ def update_status():
 	Time = request.form["DepartureTime"]
 	Status = request.form["Status"]
 
-	print(FlightNumber)
-	print(Date)
-	print(Time)
-	print(Status)
-
 	cursor = conn.cursor()
 	query = 'UPDATE flight SET Status = %s WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
 	cursor.execute(query, (Status, FlightNumber, Date, Time))
 	conn.commit()
 	cursor.close()
 	return redirect(url_for('staff'))
+
+#Shows all the planes the airline has and the confirmation button (Opens airplane.html)
+@app.route('/add_airplane_confirmation', methods=['GET', 'POST'])
+def add_airplane_confirmation():
+	Airline = session['user'][1]
+	AirplaneID = request.form["AirplaneID"]
+	NumSeats = request.form["NumSeats"]
+
+	cursor = conn.cursor()
+	query_check = 'SELECT AirplaneID FROM airplane WHERE AirlineName = %s AND AirplaneID = %s'
+	cursor.execute(query_check, (Airline, AirplaneID))
+	check = cursor.fetchall()
+
+	if(check == ()):
+		query = 'SELECT AirplaneID, NumSeats FROM airplane WHERE AirlineName = %s'
+		cursor.execute(query, Airline)
+		airplanes = cursor.fetchall()
+		cursor.close()
+		return render_template('airplane.html', airplanes = airplanes, Airline = Airline, AirplaneID = AirplaneID, NumSeats = NumSeats)
+	else:
+		cursor.close()
+		return redirect(url_for('staff'))
+
+#Adds the plane to the database (redirects to '/staff')
+@app.route('/add_airplane', methods=['PUT', 'POST'])
+def add_airplane():
+	Airline = session['user'][1]
+	AirplaneID = request.form["AirplaneID"]
+	NumSeats = request.form["NumSeats"]
+	
+	cursor = conn.cursor()
+	query = 'INSERT INTO airplane VALUES (%s, %s, %s)' 
+	cursor.execute(query, ( AirplaneID, Airline, NumSeats))
+	conn.commit()
+	cursor.close()
+	return redirect(url_for('staff'))
+
+@app.route('/add_airport', methods=['PUT', 'POST'])
+def add_airport():
+	AirportID = request.form["AirportID"]
+	AirportName	= request.form["AirportName"]
+	City = request.form["City"]
+	
+	print(AirportID)
+	cursor = conn.cursor()
+	query_check = 'SELECT AirportID FROM airport WHERE AirportID = %s'
+	cursor.execute(query_check, AirportID)
+	check = cursor.fetchall()
+
+	print(check)
+
+	if(check == ()):
+		print()
+		query = 'INSERT INTO airport VALUES (%s, %s, %s)'
+		cursor.execute(query, (AirportID, AirportName, City))
+		conn.commit()
+		cursor.close()
+		return redirect(url_for('staff'))
+	else:
+		cursor.close()
+		print("didnt work")
+		error = 'Invalid login or username'
+		return redirect(url_for('staff'))
+	
+#Staff_info gets the info that the staff should be able to see
+@app.route('/staff_info', methods=['GET', 'POST'])
+def staff_info():
+	
+	Airline = session['user'][1]
+	cursor = conn.cursor()
+
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
+	
+	cursor.execute(query, (Airline))
+	airline_flights = cursor.fetchall()
+
+	frequent_flyer_query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket WHERE DATEDIFF(CURRENT_DATE,PurchaseDate) < 365 AND AirlineName = %s ORDER BY SoldPrice DESC'
+	
+	cursor.execute(frequent_flyer_query, (Airline))
+	frequent_flyer = cursor.fetchall()
+	frequent_flyer = frequent_flyer[0]['CustomerName']
+
+	customer_query = 'SELECT CustomerName, CustomerEmail FROM customer NATURAL JOIN ticket WHERE AirlineName = %s'
+	
+	cursor.execute(customer_query, (Airline))
+	customers = cursor.fetchall()
+
+	query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 30'
+	cursor.execute(query, Airline)
+	total_month = cursor.fetchall()
+	total_month = total_month[0]['SUM(SoldPrice)']
+
+	query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 365'
+	cursor.execute(query, Airline)
+	total_year = cursor.fetchall()
+	total_year= total_year[0]['SUM(SoldPrice)']
+
+	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 365 GROUP BY b.City ORDER BY COUNT(*) DESC'
+	cursor.execute(query, Airline)
+	popular_year = cursor.fetchall()
+	popular_year = popular_year[0]['City']
+
+	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 90 GROUP BY b.City ORDER BY COUNT(*) DESC'
+	cursor.execute(query, Airline)
+	popular_month = cursor.fetchall()
+	if(popular_month != ()):
+		popular_month = popular_month[0]['City']
+	else:
+		popular_month = None
+	cursor.close()
+
+
+	return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, customers = customers, Airline = Airline, Year = total_year, Month = total_month, pop_year = popular_year, pop_month = popular_month)
+	
+@app.route('/reviews', methods=['GET', 'POST'])
+def reviews():
+
+	FlightNumber = request.form["FlightNumber"]
+	Date = request.form["DepartureDate"]
+	Time = request.form["DepartureTime"]
+
+	cursor = conn.cursor()
+	query = 'SELECT Comment FROM views WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
+	cursor.execute(query, (FlightNumber, Date, Time))
+	comments = cursor.fetchall()
+
+	average_query = 'SELECT AVG(Rate) FROM views WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
+	cursor.execute(average_query, (FlightNumber, Date, Time))
+	avg = cursor.fetchall()
+
+	avg = avg[0]['AVG(Rate)']
+
+	cursor.close()
+
+	return render_template('staff_view_review.html', comments = comments, Avg = avg)
+
+@app.route('/customer_flights', methods=['GET', 'POST'])
+def customer_flights():
+
+	Email = request.form["CustomerEmail"]
+	Airline = session['user'][1]
+
+	print(Airline)
+	print(Email)
+
+	cursor = conn.cursor()
+	query = 'SELECT TicketID, FlightNumber, DepartureDate, SoldPrice FROM ticket NATURAL JOIN flight WHERE AirlineName = %s AND CustomerEmail = %s'
+	cursor.execute(query, (Airline, Email))
+	customer_flights = cursor.fetchall()
+	cursor.close()
+
+	print(customer_flights)
+
+	return render_template('staff_customer_view.html', flights = customer_flights)
+
+@app.route('/reports', methods=['GET', 'POST'])
+def reports():
+	Airline = session['user'][1]
+
+	cursor = conn.cursor()
+	year_query = 'SELECT COUNT(TicketID) FROM ticket WHERE AirlineName = %s AND YEAR(PurchaseDate) = (YEAR(CURRENT_DATE) - 1)'
+	cursor.execute(year_query, Airline)
+	year_tickets = cursor.fetchall()
+
+	month_query = 'SELECT COUNT(TicketID) FROM ticket WHERE AirlineName = %s AND MONTH(PurchaseDate) = (MONTH(CURRENT_DATE) - 1)'
+	cursor.execute(month_query, Airline)
+	month_tickets = cursor.fetchall()
+
+	year_tickets = year_tickets[0]['COUNT(TicketID)']
+	month_tickets = month_tickets[0]['COUNT(TicketID)']
+
+	cursor.close()
+	return render_template('reports.html', year = year_tickets, month = month_tickets)
+
+@app.route('/reports_inrange', methods=['GET', 'POST'])
+def reports_inrange():
+	Airline = session['user'][1]
+	start = request.form["StartingDate"]
+	end = request.form["EndingDate"]
+
+	cursor = conn.cursor()
+
+	year_query = 'SELECT COUNT(TicketID) FROM ticket WHERE AirlineName = %s AND YEAR(PurchaseDate) = (YEAR(CURRENT_DATE) - 1)'
+	cursor.execute(year_query, Airline)
+	year_tickets = cursor.fetchall()
+
+	month_query = 'SELECT COUNT(TicketID) FROM ticket WHERE AirlineName = %s AND MONTH(PurchaseDate) = (MONTH(CURRENT_DATE) - 1)'
+	cursor.execute(month_query, Airline)
+	month_tickets = cursor.fetchall()
+
+	year_tickets = year_tickets[0]['COUNT(TicketID)']
+	month_tickets = month_tickets[0]['COUNT(TicketID)']
+
+	query = 'SELECT COUNT(TicketID) FROM ticket WHERE AirlineName = %s AND PurchaseDate > %s AND PurchaseDate < %s'
+	cursor.execute(query, (Airline, start, end))
+	tickets = cursor.fetchall()
+	tickets = tickets[0]['COUNT(TicketID)']
+
+	return render_template('reports.html',year = year_tickets, month = month_tickets, tickets = tickets)
 
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
@@ -343,6 +545,8 @@ def staffRegisterAuth():
 
 
 
+
+# NOT USED
 @app.route('/home')
 def home():
     print("hihi")
@@ -365,7 +569,6 @@ def customerhome():
 	#username = session['username']
 	cursor = conn.cursor();
 
-	# duplicate of Kevin's flights code
 	# need to update to limit to purchased flights
 	query = 'SELECT * FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
 	cursor.execute(query) #Runs the query
@@ -379,18 +582,46 @@ def customerhome():
 
 	return render_template('CustomerHome.html', flights=flight_data)
 
+####################### CUSTOMERPASTFLIGHT
+@app.route('/customerpastflightsview', methods=['GET', 'POST'])
+def customerpastflightsview():
+	#username = session['username']
+	cursor = conn.cursor();
+
+	# need to update to limit to purchased flights
+	# need to take from purchase table instead of flights table
+	query_past = 'SELECT * FROM flight WHERE DepartureDate < CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime < CURRENT_TIMESTAMP)'
+	cursor.execute(query_past) #Runs the query
+	past_flight_data = cursor.fetchall()
+
+	#Tests
+	for each in past_flight_data:   #prints out all the flights
+		print(each['FlightNumber'],each['DepartureDate'], each['DepartureTime'])
+
+	cursor.close()
+
+	return render_template('CustomerPastFlight.html', flights=past_flight_data)
+
 ####################### CUSTOMERREVIEW
-@app.route('/customerreview')
+@app.route('/customerreview', methods=['GET', 'POST'])
 def customerreview():
+	'''
+	cursor = conn.cursor();
+	blog = request.form['view']
+	query = 'INSERT INTO view (Rate, Comment) VALUES(%d, %s)'
+	cursor.execute(query, (blog))
+	conn.commit()
+	cursor.close()
+	'''
 	return render_template('CustomerReview.html')
 
 ####################### CUSTOMERREVIEW
-@app.route('/customersearchflights')
+@app.route('/customersearchflights', methods=['GET', 'POST'])
 def customersearchflights():
 	return render_template('CustomerSearchFlights.html')
 	
 
-		
+#NOT USED
 @app.route('/post', methods=['GET', 'POST'])
 def post():
 	username = session['username']
@@ -404,8 +635,9 @@ def post():
 
 @app.route('/logout')
 def logout():
-	session.pop('username')
-	return redirect('/')
+	session.pop('user')
+	session['user'] = [None, 'Guest', 0]
+	return redirect('/login')
 		
 app.secret_key = 'some key that you will never guess'
 #Run the app on localhost port 5000

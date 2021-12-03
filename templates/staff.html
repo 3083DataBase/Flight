@@ -6,6 +6,10 @@
 
 	<body>
 
+		<br><a href="/logout">Logout</a><br>
+
+		<br><a href="/staff_info">Information</a> <br> <br>
+
 		<style type="text/css">
 			table, th, td{
 				border: 1px solid black;
@@ -91,23 +95,52 @@
 			<input type="submit" Value = submit/>
 
 		</form>
-
-		<br><h1>Change flight Status</h1><br>
-		<form action="/staffinput" method="POST">
-
-			<!--The input area for new flight status-->
-			<label for="Flight Number">Flight Number</label> </br>
-			<input type="number" name="Flight Number" placeholder="Flight Number" required/> </br>
-
+	
+		<br><h1>Input airplane</h1><br>
+		<form action="/add_airplane_confirmation" method="POST">
+			<input type="hidden" name="Airline" Value = "{{Airline}}" required Style="display:none">
 			
-			<input type="submit" Value = submit/>
+			<label for="AirplaneID">AirPlane ID</label> </br>
+			<input type="text" name="AirplaneID" placeholder="AirplaneID" required/> </br>
+
+			<label for="NumSeats">Number of Seats</label> </br>
+			<input type="number" name="NumSeats" placeholder="Number Of Seats" required/> </br>
+			
+			<input type="submit" Value = submit>
 
 		</form>
 
-		<Script>
-			function update(){
-				staffinput();
-			}
-		</Script>
+	</form>
+	
+	<br>
+
+	<table>
+		<th>Airport ID</th>
+		<th>Airport Name</th>
+		<th>City</th>
+
+		{% for line in Airports %}
+			<tr>
+				<td>{{line['AirportID']}}</td>
+				<td>{{line['AirportName']}}</td>
+				<td>{{line['City']}}</td>
+			</tr>
+		{% endfor %}
+	</table>
+
+	<br><h1>Input Airport</h1><br>
+	<form action="/add_airport" method="POST">
+		<label for="AirportID">AirPort ID</label> </br>
+		<input type="text" name="AirportID" placeholder="Airport ID" required/> </br>
+		
+		<label for="AirportName">AirPort Name</label> </br>
+		<input type="text" name="AirportName" placeholder="Airport Name" required/> </br>
+
+		<label for="City">City</label> </br>
+		<input type="City" name="City" placeholder="City" required/> </br>
+		
+		<input type="submit" Value = submit>
+
+	</form><br>
 	</body>
 </html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<h1>{{Airline}}</h1>
+	</head>
+
+	<body>
+		<style>
+			div {
+			  background-color: lightgrey;
+			  width: 300px;
+			  border: 5px solid black;
+			  padding: 50px;
+			  margin: 20px;
+			}
+			</style>
+
+		<p>Average rating = {{Avg}}</p>
+
+		<h2>Comments:</h2>
+		{% for line in comments %}
+			<div>line</div>
+		{% endfor %}
+
+		<br><a href="/staff_info">Go Back</a><br>
+	</body>
+
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+
+	<body>
+
+		<form action="/reports_inrange" method="POST">
+			<!--The input area for starting Date-->
+			<label for="StartingDate">Starting Date</label> </br>
+			<input type="date" name="StartingDate" placeholder="StartingDate"required/> </br>
+
+			<!--The input area for ending Date-->
+			<label for="EndingDate">Ending Date</label></br>
+			<input type="date" name="EndingDate" placeholder="EndingDate"> </br>
+
+			<input type="submit" Value = submit>
+
+		</form>
+
+		<p id="search">Tickets sold within dates: {{tickets}}</p>
+
+		<br>
+		
+		<p>
+			Tickets sold last year: {{year}} <br>
+			Tickets sold last month: {{month}}
+		</p>
+
+
+		<a href="/staff_info">Go Back</a> <br>
+
+	</body>
+</html>

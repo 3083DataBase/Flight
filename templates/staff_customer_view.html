@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<h1>{{Airline}}</h1>
+	</head>
+
+	<body>
+
+		<style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+
+		<table>
+			<th>Ticket ID</th>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Sold Price</th>
+
+			{% for line in flights %}
+				<tr>
+					<td>{{line['TicketID']}}</td>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['SoldPrice']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+
+		<br><a href="/staff_info">Go Back</a><br>
+	</body>
+</html>
