@@ -228,7 +228,7 @@ def staff_info():
 	cursor.execute(query, (Airline))
 	airline_flights = cursor.fetchall()
 
-	frequent_flyer_query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket WHERE DATEDIFF(PurchaseDate, CURRENT_DATE) < 365 AND AirlineName = %s ORDER BY SoldPrice DESC'
+	frequent_flyer_query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket WHERE DATEDIFF(CURRENT_DATE,PurchaseDate) < 365 AND AirlineName = %s ORDER BY SoldPrice DESC'
 	
 	cursor.execute(frequent_flyer_query, (Airline))
 	frequent_flyer = cursor.fetchall()
@@ -238,9 +238,19 @@ def staff_info():
 	
 	cursor.execute(customer_query, (Airline))
 	customers = cursor.fetchall()
+
+	query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 30'
+	cursor.execute(query, Airline)
+	total_month = cursor.fetchall()
+	total_month = total_month[0]['SUM(SoldPrice)']
+
+	query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 365'
+	cursor.execute(query, Airline)
+	total_year = cursor.fetchall()
+	total_year= total_year[0]['SUM(SoldPrice)']
 	cursor.close()
 
-	return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, customers = customers, Airline = Airline)
+	return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, customers = customers, Airline = Airline, Year = total_year, Month = total_month)
 	
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
@@ -285,8 +295,48 @@ def customer_flights():
 
 @app.route('/reports', methods=['GET', 'POST'])
 def reports():
-	return render_template('reports.html')
+	Airline = session['test'][1]
 
+	cursor = conn.cursor()
+	year_query = 'SELECT COUNT(TicketID) FROM ticket WHERE AirlineName = %s AND YEAR(PurchaseDate) = (YEAR(CURRENT_DATE) - 1)'
+	cursor.execute(year_query, Airline)
+	year_tickets = cursor.fetchall()
+
+	month_query = 'SELECT COUNT(TicketID) FROM ticket WHERE AirlineName = %s AND MONTH(PurchaseDate) = (MONTH(CURRENT_DATE) - 1)'
+	cursor.execute(month_query, Airline)
+	month_tickets = cursor.fetchall()
+
+	year_tickets = year_tickets[0]['COUNT(TicketID)']
+	month_tickets = month_tickets[0]['COUNT(TicketID)']
+
+	cursor.close()
+	return render_template('reports.html', year = year_tickets, month = month_tickets)
+
+@app.route('/reports_inrange', methods=['GET', 'POST'])
+def reports_inrange():
+	Airline = session['test'][1]
+	start = request.form["StartingDate"]
+	end = request.form["EndingDate"]
+
+	cursor = conn.cursor()
+
+	year_query = 'SELECT COUNT(TicketID) FROM ticket WHERE AirlineName = %s AND YEAR(PurchaseDate) = (YEAR(CURRENT_DATE) - 1)'
+	cursor.execute(year_query, Airline)
+	year_tickets = cursor.fetchall()
+
+	month_query = 'SELECT COUNT(TicketID) FROM ticket WHERE AirlineName = %s AND MONTH(PurchaseDate) = (MONTH(CURRENT_DATE) - 1)'
+	cursor.execute(month_query, Airline)
+	month_tickets = cursor.fetchall()
+
+	year_tickets = year_tickets[0]['COUNT(TicketID)']
+	month_tickets = month_tickets[0]['COUNT(TicketID)']
+
+	query = 'SELECT COUNT(TicketID) FROM ticket WHERE AirlineName = %s AND PurchaseDate > %s AND PurchaseDate < %s'
+	cursor.execute(query, (Airline, start, end))
+	tickets = cursor.fetchall()
+	tickets = tickets[0]['COUNT(TicketID)']
+
+	return render_template('reports.html',year = year_tickets, month = month_tickets, tickets = tickets)
 
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
