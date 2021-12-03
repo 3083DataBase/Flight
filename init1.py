@@ -33,7 +33,7 @@ def hello():
 
 
 	#cursor.close()
-	return render_template('flights.html', name1="guest")
+	return render_template('flights.html', name1=session['user'][1])
 
 #Searches for the flights of the inputs (Works for guests or for people logged in)
 @app.route('/search_flights', methods=['GET', 'POST'])
@@ -69,8 +69,9 @@ def search_flights():
 #Searches for a flight to see the status
 @app.route('/flight_status', methods=['GET', 'POST'])
 def flight_status():
-	return render_template('flight_status.html')
+	return render_template('flight_status.html',  name1=session['user'][1])
 
+#Gets the Flight from the data base
 @app.route('/get_flight', methods=['GET', 'POST'])
 def get_flight():
 	FlightNumber = request.form["FlightNumber"]
@@ -88,6 +89,10 @@ def get_flight():
 #Holds all the code for the staff to input into flights (Required for staff to be logged in)
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
+
+	if(session['user'][2] != 1):
+		return redirect(url_for('login'))
+		
 	Airline = session['user'][1]
 	cursor = conn.cursor()
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
@@ -220,6 +225,12 @@ def add_airport():
 #Staff_info gets the info that the staff should be able to see
 @app.route('/staff_info', methods=['GET', 'POST'])
 def staff_info():
+
+	if(session['user'][2] != 1):
+		return redirect(url_for('login'))
+
+	print("In Staff Info")
+	print(session['user'])
 	
 	Airline = session['user'][1]
 	cursor = conn.cursor()
@@ -590,7 +601,7 @@ def customerpastflightsview():
 
 	# need to update to limit to purchased flights
 	# need to take from purchase table instead of flights table
-	query_past = 'SELECT * FROM flight WHERE DepartureDate < CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime < CURRENT_TIMESTAMP)'
+	query_past = 'SELECT * FROM flight WHERE DepartureDate < CURRENT_DATE or (DepartureDate = CURRENT_DATE and ArrivalTime < CURRENT_TIMESTAMP)'
 	cursor.execute(query_past) #Runs the query
 	past_flight_data = cursor.fetchall()
 
@@ -605,14 +616,35 @@ def customerpastflightsview():
 ####################### CUSTOMERREVIEW
 @app.route('/customerreview', methods=['GET', 'POST'])
 def customerreview():
+	# the update statsus
 	'''
-	cursor = conn.cursor();
-	blog = request.form['view']
-	query = 'INSERT INTO view (Rate, Comment) VALUES(%d, %s)'
-	cursor.execute(query, (blog))
+	FlightNumber = request.form["FlightNumber"]
+	Date = request.form["DepartureDate"]
+	Time = request.form["DepartureTime"]
+	Status = request.form["Status"]
+
+	cursor = conn.cursor()
+	query = 'UPDATE flight SET Status = %s WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
+	cursor.execute(query, (Status, FlightNumber, Date, Time))
 	conn.commit()
 	cursor.close()
+	return redirect(url_for('staff'))
 	'''
+
+	# attempt
+	CustomerEmail = request.form["CustomerEmail"]
+	FlightNumber = request.form["FlightNumber"]
+	DepartureDate = request.form["DepartureDate"]
+	DepartureTime = request.form["DepartureTime"]
+
+	cursor = conn.cursor();
+	rate = request.form['rating']
+	comment = request.form['comment']
+	query = 'UPDATE views SET Rate = %s, Comment = %s WHERE CustomerEmail = %s AND FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
+	cursor.execute(query, (rate, comment))
+	conn.commit()
+	cursor.close()
+	
 	return render_template('CustomerReview.html')
 
 ####################### CUSTOMERREVIEW

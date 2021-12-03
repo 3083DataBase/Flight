@@ -6,9 +6,18 @@
 
 	<body>
 
-		<br><a href="/logout">Logout</a><br>
+		<!--Logout button-->
+		<form action="/logout">
+			<input type="submit" value="Log Out"/>
+		</form>
 
-		<br><a href="/staff_info">Information</a> <br> <br>
+		<br>
+
+		<form action="/staff_info">
+			<input type="submit" value="Information"/>
+		</form>
+
+		<br>
 
 		<style type="text/css">
 			table, th, td{
@@ -48,6 +57,8 @@
 			{% endfor %}
 		</table>
 
+
+		<!--Addes a new flight to the system-->
 		<br><h1>Adding new flight</h1><br>
 
 		<form action="/staffinput" method="POST">
@@ -92,7 +103,7 @@
 			<label for="Arriving Airport ID">Arriving Airport ID</label> </br>
 			<input type="text" name="Arriving Airport ID" placeholder="Arriving Airport ID" required/> </br>
 
-			<input type="submit" Value = submit/>
+			<input type="submit" Value = submit>
 
 		</form>
 	
