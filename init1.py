@@ -248,9 +248,22 @@ def staff_info():
 	cursor.execute(query, Airline)
 	total_year = cursor.fetchall()
 	total_year= total_year[0]['SUM(SoldPrice)']
+
+	query = 'SELECT City FROM ticket NATURAL JOIN flight, airport WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 365 GROUP BY City ORDER BY COUNT(*) DESC LIMIT 1'
+	cursor.execute(query, Airline)
+	popular_year = cursor.fetchall()
+
+	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 365 GROUP BY b.City ORDER BY COUNT(*) DESC LIMIT 1'
+	cursor.execute(query, Airline)
+	popular_year = cursor.fetchall()
+
+	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 30 GROUP BY b.City ORDER BY COUNT(*) DESC LIMIT 1'
+	cursor.execute(query, Airline)
+	popular_month = cursor.fetchall()
 	cursor.close()
 
-	return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, customers = customers, Airline = Airline, Year = total_year, Month = total_month)
+
+	return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, customers = customers, Airline = Airline, Year = total_year, Month = total_month, pop_year = popular_year, pop_month = popular_month)
 	
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
