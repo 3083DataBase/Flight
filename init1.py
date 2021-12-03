@@ -624,22 +624,6 @@ def customerpastflightsview():
 ####################### CUSTOMERREVIEW
 @app.route('/customerreview', methods=['GET', 'POST'])
 def customerreview():
-	# the update statsus
-	'''
-	FlightNumber = request.form["FlightNumber"]
-	Date = request.form["DepartureDate"]
-	Time = request.form["DepartureTime"]
-	Status = request.form["Status"]
-
-	cursor = conn.cursor()
-	query = 'UPDATE flight SET Status = %s WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
-	cursor.execute(query, (Status, FlightNumber, Date, Time))
-	conn.commit()
-	cursor.close()
-	return redirect(url_for('staff'))
-	'''
-
-	# attempt
 	CustomerEmail = request.form["CustomerEmail"]
 	FlightNumber = request.form["FlightNumber"]
 	DepartureDate = request.form["DepartureDate"]

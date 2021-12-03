@@ -4,7 +4,45 @@
     </head>
 
     <body>
-        <!-- insert all flights table -->
+        <h3>View Past Flights</h3>
+
+        <style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+  
+		<table>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Airline</th>
+			<th>Status</th>
+			<th>Purchase Ticket</th>
+
+			{% for line in flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['AirlineName']}}</td>
+					<td>{{line['Status']}}</td>
+
+					<td>
+						<form action="/customersearchflights" method="POST">
+							<input type="submit" Value = "Purchase Ticket" Style="z-index :-1">
+						</form>
+					</td>
+				</tr>
+
+				
+			{% endfor %}
+		</table>
+		
+
+		</br>
+		<hr>	<!-- line break -->
+        </br>
 
 
         <!-- <a href="/">Go back</a> -->
