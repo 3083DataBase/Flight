@@ -431,7 +431,6 @@ def customerhome():
 	#username = session['username']
 	cursor = conn.cursor();
 
-	# duplicate of Kevin's flights code
 	# need to update to limit to purchased flights
 	query = 'SELECT * FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
 	cursor.execute(query) #Runs the query
@@ -444,6 +443,26 @@ def customerhome():
 	cursor.close()
 
 	return render_template('CustomerHome.html', flights=flight_data)
+
+####################### CUSTOMERPASTFLIGHT
+@app.route('/customerpastflightsview')
+def customerpastflightsview():
+	#username = session['username']
+	cursor = conn.cursor();
+
+	# need to update to limit to purchased flights
+	# need to take from purchase table instead of flights table
+	query_past = 'SELECT * FROM flight WHERE DepartureDate < CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime < CURRENT_TIMESTAMP)'
+	cursor.execute(query_past) #Runs the query
+	past_flight_data = cursor.fetchall()
+
+	#Tests
+	for each in past_flight_data:   #prints out all the flights
+		print(each['FlightNumber'],each['DepartureDate'], each['DepartureTime'])
+
+	cursor.close()
+
+	return render_template('CustomerPastFlight.html', flights=past_flight_data)
 
 ####################### CUSTOMERREVIEW
 @app.route('/customerreview')

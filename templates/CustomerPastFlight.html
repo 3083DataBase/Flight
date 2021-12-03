@@ -1,14 +1,11 @@
 <html>
     <head>
         <!-- <h1>Welcome {{username}}</h1> -->
-        <h1>Welcome NamePlaceholder</h1>
+        <h1>View Your Past Flights</h1>
     </head>
 
     <body>
-        <!-- Search -->
-        <!-- User's flights -->
-        <h3>View My Flights</h3>
-        <!-- Insert table here -->
+		<h3>View Past Flights</h3>
 
         <style type="text/css">
 			table, th, td{
@@ -22,6 +19,7 @@
 			<th>Departure Time</th>
 			<th>Airline</th>
 			<th>Status</th>
+			<th>Review</th>
 
 			{% for line in flights %}
 				<tr>
@@ -30,33 +28,24 @@
 					<td>{{line['DepartureTime']}}</td>
 					<td>{{line['AirlineName']}}</td>
 					<td>{{line['Status']}}</td>
+
+					<td>
+						<form action="/customerreview" method="POST">
+							<input type="submit" Value = update Style="z-index :-1">
+						</form>
+					</td>
 				</tr>
 
 				
 			{% endfor %}
 		</table>
+		
 		</br>
-	
-
 		<hr>	<!-- line break -->
-		
-		<h3>What would you like to do?</a></h3>
+        </br>
 
-		<a href="/customersearchflights">Search Flights</a>
-		</br>
-
-		<a href="/customerpastflightsview">View My Past Flights</a>
-		</br>
-
-		<!-- <h3>Rate a Past Flight: <a href="/customerreview">Add Review</a></h3> -->
-		<a href="/customerreview">Add Review for a Past Flight</a>
-		
-		</br></br>
-		
-		<hr>	<!-- line break -->
-		</br>
-        <a href="/logout">Logout</a> <!-- Logout -- DO NOT TOUCH -->
-
+        <!-- <a href="/">Go back</a> -->
+        <a href="/customerhome">Back</a>
     </body>
 
 
