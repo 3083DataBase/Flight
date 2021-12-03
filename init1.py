@@ -90,10 +90,11 @@ def get_flight():
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
 
-	if(session['user'][2] != 1):
-		return redirect(url_for('login'))
+	#if(session['user'][2] != 1):
+	#	return redirect(url_for('staffLogin'))
 		
 	Airline = session['user'][1]
+	print(Airline)
 	cursor = conn.cursor()
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
 	
@@ -114,7 +115,7 @@ def staff():
 @app.route('/staffinput', methods=['GET', 'POST'])
 def staffinput():
 	FlightNumber = request.form["Flight Number"]
-	Date = request.form["Departing Date"]
+	DepartureDate = request.form["Departing Date"]
 	DepartureTime = request.form["Departing Time"]
 	ArrivalDate = request.form["Arrival Date"]
 	ArrivalTime = request.form["Arrival Time"]
@@ -226,8 +227,8 @@ def add_airport():
 @app.route('/staff_info', methods=['GET', 'POST'])
 def staff_info():
 
-	if(session['user'][2] != 1):
-		return redirect(url_for('login'))
+	#if(session['user'][2] != 1):
+	#	return redirect(url_for('staffLogin'))
 
 	print("In Staff Info")
 	print(session['user'])
@@ -392,7 +393,7 @@ def userLoginAuth():
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT * FROM customer WHERE CustomerEmail = %s AND password = %s'
+	query = 'SELECT CustomerEmail, CustomerName FROM customer WHERE CustomerEmail = %s AND password = %s'
 	cursor.execute(query, (username, password))
 	#stores the results in a variable
 	data = cursor.fetchone()
@@ -416,7 +417,8 @@ def userLoginAuth():
 
 		#creates a session for the the user
 		#session is a built in
-		session['username'] = username
+		session.pop('user')
+		session['user'] = [data[0]['CostomerEmail'], data[0]['CustomerName'], 0]
 		return redirect(url_for('customerhome'))
 	else:
 		#returns an error message to the html page
@@ -445,17 +447,19 @@ def staffLoginAuth():
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT * FROM airlinestaff WHERE StaffUsername = %s and password = %s'
+	query = 'SELECT StaffUsername, AirlineName FROM airlinestaff WHERE StaffUsername = %s and password = %s'
 	cursor.execute(query, (username, password))
 	#stores the results in a variable
-	data = cursor.fetchone()
+	data = cursor.fetchall()
+	print(data)
 	#use fetchall() if you are expecting more than 1 data row
 	cursor.close()
 	error = None
 	if(data):
 		#creates a session for the the user
 		#session is a built in
-		session['username'] = username
+		session['user'] = [data[0]['StaffUsername'], data[0]['AirlineName'], 1]
+		print(session['user'])
 		return redirect(url_for('staff'))
 	else:
 		#returns an error message to the html page
@@ -656,7 +660,7 @@ def customersearchflights():
 #NOT USED
 @app.route('/post', methods=['GET', 'POST'])
 def post():
-	username = session['username']
+	username = session['user']
 	cursor = conn.cursor();
 	blog = request.form['blog']
 	query = 'INSERT INTO blog (blog_post, username) VALUES(%s, %s)'
