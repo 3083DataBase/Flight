@@ -461,7 +461,7 @@ def customerhome():
 	return render_template('CustomerHome.html', flights=flight_data)
 
 ####################### CUSTOMERPASTFLIGHT
-@app.route('/customerpastflightsview')
+@app.route('/customerpastflightsview', methods=['GET', 'POST'])
 def customerpastflightsview():
 	#username = session['username']
 	cursor = conn.cursor();
@@ -486,7 +486,7 @@ def customerreview():
 	return render_template('CustomerReview.html')
 
 ####################### CUSTOMERREVIEW
-@app.route('/customersearchflights')
+@app.route('/customersearchflights', methods=['GET', 'POST'])
 def customersearchflights():
 	return render_template('CustomerSearchFlights.html')
 	
