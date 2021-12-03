@@ -249,17 +249,18 @@ def staff_info():
 	total_year = cursor.fetchall()
 	total_year= total_year[0]['SUM(SoldPrice)']
 
-	query = 'SELECT City FROM ticket NATURAL JOIN flight, airport WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 365 GROUP BY City ORDER BY COUNT(*) DESC LIMIT 1'
+	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 365 GROUP BY b.City ORDER BY COUNT(*) DESC'
 	cursor.execute(query, Airline)
 	popular_year = cursor.fetchall()
+	popular_year = popular_year[0]['City']
 
-	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 365 GROUP BY b.City ORDER BY COUNT(*) DESC LIMIT 1'
-	cursor.execute(query, Airline)
-	popular_year = cursor.fetchall()
-
-	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 30 GROUP BY b.City ORDER BY COUNT(*) DESC LIMIT 1'
+	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 90 GROUP BY b.City ORDER BY COUNT(*) DESC'
 	cursor.execute(query, Airline)
 	popular_month = cursor.fetchall()
+	if(popular_month != ()):
+		popular_month = popular_month[0]['City']
+	else:
+		popular_month = None
 	cursor.close()
 
 
