@@ -468,7 +468,7 @@ def customerpastflightsview():
 
 	# need to update to limit to purchased flights
 	# need to take from purchase table instead of flights table
-	query_past = 'SELECT * FROM flight WHERE DepartureDate < CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime < CURRENT_TIMESTAMP)'
+	query_past = 'SELECT * FROM flight WHERE DepartureDate < CURRENT_DATE or (DepartureDate = CURRENT_DATE and ArrivalTime < CURRENT_TIMESTAMP)'
 	cursor.execute(query_past) #Runs the query
 	past_flight_data = cursor.fetchall()
 
@@ -483,14 +483,35 @@ def customerpastflightsview():
 ####################### CUSTOMERREVIEW
 @app.route('/customerreview', methods=['GET', 'POST'])
 def customerreview():
+	# the update statsus
 	'''
-	cursor = conn.cursor();
-	blog = request.form['view']
-	query = 'INSERT INTO view (Rate, Comment) VALUES(%d, %s)'
-	cursor.execute(query, (blog))
+	FlightNumber = request.form["FlightNumber"]
+	Date = request.form["DepartureDate"]
+	Time = request.form["DepartureTime"]
+	Status = request.form["Status"]
+
+	cursor = conn.cursor()
+	query = 'UPDATE flight SET Status = %s WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
+	cursor.execute(query, (Status, FlightNumber, Date, Time))
 	conn.commit()
 	cursor.close()
+	return redirect(url_for('staff'))
 	'''
+
+	# attempt
+	CustomerEmail = request.form["CustomerEmail"]
+	FlightNumber = request.form["FlightNumber"]
+	DepartureDate = request.form["DepartureDate"]
+	DepartureTime = request.form["DepartureTime"]
+
+	cursor = conn.cursor();
+	rate = request.form['rating']
+	comment = request.form['comment']
+	query = 'UPDATE views SET Rate = %s, Comment = %s WHERE CustomerEmail = %s AND FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
+	cursor.execute(query, (rate, comment))
+	conn.commit()
+	cursor.close()
+	
 	return render_template('CustomerReview.html')
 
 ####################### CUSTOMERREVIEW
