@@ -70,6 +70,7 @@ def search_flights():
 def flight_status():
 	return render_template('flight_status.html',  name1=session['user'][1])
 
+#Gets the Flight from the data base
 @app.route('/get_flight', methods=['GET', 'POST'])
 def get_flight():
 	FlightNumber = request.form["FlightNumber"]
@@ -87,6 +88,10 @@ def get_flight():
 #Holds all the code for the staff to input into flights (Required for staff to be logged in)
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
+
+	if(session['user'][2] != 1):
+		return redirect(url_for('login'))
+		
 	Airline = session['user'][1]
 	cursor = conn.cursor()
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
@@ -219,6 +224,12 @@ def add_airport():
 #Staff_info gets the info that the staff should be able to see
 @app.route('/staff_info', methods=['GET', 'POST'])
 def staff_info():
+
+	if(session['user'][2] != 1):
+		return redirect(url_for('login'))
+
+	print("In Staff Info")
+	print(session['user'])
 	
 	Airline = session['user'][1]
 	cursor = conn.cursor()
@@ -360,7 +371,7 @@ def loginfork():
 #Define route for login
 @app.route('/login')
 def login():
-
+	session.pop('user')
 	session['user'] = ['test_username', "China Eastern", 1]       #FOR TESTING GOTTA DELETE
 
 	return render_template('login.html')
