@@ -87,7 +87,7 @@ def get_flight():
 #Holds all the code for the staff to input into flights (Required for staff to be logged in)
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
-	Airline = session['test'][1]
+	Airline = session['user'][1]
 	cursor = conn.cursor()
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
 	
@@ -102,7 +102,7 @@ def staff():
 	
 	cursor.close()
 
-	return render_template('staff.html', flights = airline_flights, Airports = airports, Airline = session['test'][1])
+	return render_template('staff.html', flights = airline_flights, Airports = airports, Airline = Airline)
 
 #Inserts the Flight into the data base
 @app.route('/staffinput', methods=['GET', 'POST'])
@@ -156,7 +156,7 @@ def update_status():
 #Shows all the planes the airline has and the confirmation button (Opens airplane.html)
 @app.route('/add_airplane_confirmation', methods=['GET', 'POST'])
 def add_airplane_confirmation():
-	Airline = session['test'][1]
+	Airline = session['user'][1]
 	AirplaneID = request.form["AirplaneID"]
 	NumSeats = request.form["NumSeats"]
 
@@ -178,7 +178,7 @@ def add_airplane_confirmation():
 #Adds the plane to the database (redirects to '/staff')
 @app.route('/add_airplane', methods=['PUT', 'POST'])
 def add_airplane():
-	Airline = session['test'][1]
+	Airline = session['user'][1]
 	AirplaneID = request.form["AirplaneID"]
 	NumSeats = request.form["NumSeats"]
 	
@@ -220,7 +220,7 @@ def add_airport():
 @app.route('/staff_info', methods=['GET', 'POST'])
 def staff_info():
 	
-	Airline = session['test'][1]
+	Airline = session['user'][1]
 	cursor = conn.cursor()
 
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
@@ -292,7 +292,7 @@ def reviews():
 def customer_flights():
 
 	Email = request.form["CustomerEmail"]
-	Airline = session['test'][1]
+	Airline = session['user'][1]
 
 	print(Airline)
 	print(Email)
@@ -309,7 +309,7 @@ def customer_flights():
 
 @app.route('/reports', methods=['GET', 'POST'])
 def reports():
-	Airline = session['test'][1]
+	Airline = session['user'][1]
 
 	cursor = conn.cursor()
 	year_query = 'SELECT COUNT(TicketID) FROM ticket WHERE AirlineName = %s AND YEAR(PurchaseDate) = (YEAR(CURRENT_DATE) - 1)'
@@ -328,7 +328,7 @@ def reports():
 
 @app.route('/reports_inrange', methods=['GET', 'POST'])
 def reports_inrange():
-	Airline = session['test'][1]
+	Airline = session['user'][1]
 	start = request.form["StartingDate"]
 	end = request.form["EndingDate"]
 
@@ -361,7 +361,7 @@ def loginfork():
 @app.route('/login')
 def login():
 
-	session['test'] = ['test_username', "China Eastern", 1]       #FOR TESTING GOTTA DELETE
+	session['user'] = ['test_username', "China Eastern", 1]       #FOR TESTING GOTTA DELETE
 
 	return render_template('login.html')
 
@@ -424,6 +424,8 @@ def registerAuth():
 		cursor.close()
 		return render_template('index.html')
 
+
+# NOT USED
 @app.route('/home')
 def home():
     
@@ -479,7 +481,7 @@ def customerpastflightsview():
 	return render_template('CustomerPastFlight.html', flights=past_flight_data)
 
 ####################### CUSTOMERREVIEW
-@app.route('/customerreview')
+@app.route('/customerreview', methods=['GET', 'POST'])
 def customerreview():
 	return render_template('CustomerReview.html')
 
@@ -489,7 +491,7 @@ def customersearchflights():
 	return render_template('CustomerSearchFlights.html')
 	
 
-		
+#NOT USED
 @app.route('/post', methods=['GET', 'POST'])
 def post():
 	username = session['username']
@@ -503,8 +505,9 @@ def post():
 
 @app.route('/logout')
 def logout():
-	session.pop('username')
-	return redirect('/')
+	session.pop('user')
+	session['user'] = [None, 'Guest', 0]
+	return redirect('/login')
 		
 app.secret_key = 'some key that you will never guess'
 #Run the app on localhost port 5000
