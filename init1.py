@@ -96,7 +96,7 @@ def staff():
 	Airline = session['user'][1]
 	print(Airline)
 	cursor = conn.cursor()
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE, DepartureDate) < 30'
 	
 	query_airport = 'SELECT * FROM airport'
 	#query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s'
@@ -110,6 +110,10 @@ def staff():
 	cursor.close()
 
 	return render_template('staff.html', flights = airline_flights, Airports = airports, Airline = Airline)
+
+@app.route('/add_flight', methods=['GET', 'POST'])
+def add_flight():
+	return render_template('staff_add_flight.html')
 
 #Inserts the Flight into the data base
 @app.route('/staffinput', methods=['GET', 'POST'])
@@ -125,13 +129,14 @@ def staffinput():
 	DepartingAirport = request.form["Departing Airport ID"]
 	ArrivingAirport = request.form["Arriving Airport ID"]
 
+	Airline = session['user'][1]
+
 	cursor = conn.cursor()
-	query = 'INSERT INTO flight VALUES (%s, %s, %s, "China Eastern", %s, %s, %s, %s, %s, %s, %s)'
-	cursor.execute(query, (FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, BasePrice, Status, AirplaneID, DepartingAirport, ArrivingAirport))
+	query = 'INSERT INTO flight VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+	cursor.execute(query, (FlightNumber, DepartureDate, DepartureTime, Airline, ArrivalDate, ArrivalTime, BasePrice, Status, AirplaneID, DepartingAirport, ArrivingAirport))
 	depart_data = cursor.fetchall()
 
-	for each in depart_data:   #prints out all the flights we have THIS IS A TEST
-			print(each)
+	conn.commit()
 	cursor.close()
 
 	return redirect(url_for('staff'))
@@ -417,7 +422,7 @@ def userLoginAuth():
 
 		#creates a session for the the user
 		#session is a built in
-		session.pop('user')
+		session.pop()
 		session['user'] = [data[0]['CostomerEmail'], data[0]['CustomerName'], 0]
 		return redirect(url_for('customerhome'))
 	else:
