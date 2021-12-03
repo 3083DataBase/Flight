@@ -637,7 +637,7 @@ def post():
 def logout():
 	session.pop('user')
 	session['user'] = [None, 'Guest', 0]
-	return redirect('/login')
+	return redirect('/loginfork')
 		
 app.secret_key = 'some key that you will never guess'
 #Run the app on localhost port 5000
