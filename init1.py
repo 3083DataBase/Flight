@@ -483,6 +483,14 @@ def customerpastflightsview():
 ####################### CUSTOMERREVIEW
 @app.route('/customerreview', methods=['GET', 'POST'])
 def customerreview():
+	'''
+	cursor = conn.cursor();
+	blog = request.form['view']
+	query = 'INSERT INTO view (Rate, Comment) VALUES(%d, %s)'
+	cursor.execute(query, (blog))
+	conn.commit()
+	cursor.close()
+	'''
 	return render_template('CustomerReview.html')
 
 ####################### CUSTOMERREVIEW
