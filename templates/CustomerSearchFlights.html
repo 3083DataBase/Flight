@@ -1,18 +1,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<h1>Search Flights</h1>
+		<h1>Customer Search Flights</h1>
 	</head>
 
 	<body>
-
-		<form action="/flight_status">
-			<input type="submit" value="Flight Status" />
-		</form>
-
-		<br>
-
-		<form action="/search_flights" method="POST">
+		<form action="/customersearchflights" method="POST">
 
 			<!--One-way check box-->
 			<input type="radio" id = "One-Way" name = "checkbox" onclick="check();" checked value="OneWay">
@@ -59,6 +52,7 @@
 			<th>Airline</th>
 			<th>Departing Airport</th>
 			<th>Arriving Airport</th>
+            <th>Select Flight</th>
 
 			{% for line in depart_flights %}
 				<tr>
@@ -70,11 +64,17 @@
 					<td>{{line['AirlineName']}}</td>
 					<td>{{line['AirportName']}}</td>
 					<td>{{line['a.AirportName']}}</td>
+
+                    <td>
+						<form action="/customerreview" method="POST">
+							<input type="checkbox" onclick="check();" Value = "Select Flight" Style="z-index :-1">
+						</form>
+					</td>
 				</tr>
 			{% endfor %}
 		</table>
 
-		<h1>Returning Flights</h1>
+		<h1>Returning/Arriving Flights</h1>
 
 		<table>
 			<th>Flight Number</th>
@@ -85,6 +85,7 @@
 			<th>Airline</th>
 			<th>Departing Airport</th>
 			<th>Arriving Airport</th>
+            <th>Select Flight</th>
 
 			{% for line in arrival_flights %}
 				<tr>
@@ -96,6 +97,12 @@
 					<td>{{line['AirlineName']}}</td>
 					<td>{{line['AirportName']}}</td>
 					<td>{{line['a.AirportName']}}</td>
+
+                    <td>
+						<form action="/customerreview" method="POST">
+							<input type="checkbox" onclick="check();" Value = "Select Flight" Style="z-index :-1">
+						</form>
+					</td>
 				</tr>
 			{% endfor %}
 		</table>
