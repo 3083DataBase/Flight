@@ -108,7 +108,7 @@ def staff():
 	
 	cursor.close()
 
-	return render_template('staff.html', flights = airline_flights, Airports = airports, Airline = Airline)
+	return render_template('staff.html', flights = airline_flights, Airline = Airline)
 
 @app.route('/add_flight', methods=['GET', 'POST'])
 def add_flight():
@@ -164,6 +164,11 @@ def update_status():
 	cursor.close()
 	return redirect(url_for('staff'))
 
+@app.route('/add_airplane_page', methods=['GET', 'POST'])
+def add_airplane_page():
+	return render_template('staff_add_airplane.html')
+
+
 #Shows all the planes the airline has and the confirmation button (Opens airplane.html)
 @app.route('/add_airplane_confirmation', methods=['GET', 'POST'])
 def add_airplane_confirmation():
@@ -184,21 +189,34 @@ def add_airplane_confirmation():
 		return render_template('airplane.html', airplanes = airplanes, Airline = Airline, AirplaneID = AirplaneID, NumSeats = NumSeats)
 	else:
 		cursor.close()
-		return redirect(url_for('staff'))
+		return redirect(url_for('add_airplane'))
 
 #Adds the plane to the database (redirects to '/staff')
-@app.route('/add_airplane', methods=['PUT', 'POST'])
+@app.route('/add_airplane', methods=['GET', 'POST'])
 def add_airplane():
 	Airline = session['user'][1]
 	AirplaneID = request.form["AirplaneID"]
 	NumSeats = request.form["NumSeats"]
 	
 	cursor = conn.cursor()
+
 	query = 'INSERT INTO airplane VALUES (%s, %s, %s)' 
 	cursor.execute(query, ( AirplaneID, Airline, NumSeats))
 	conn.commit()
+
 	cursor.close()
-	return redirect(url_for('staff'))
+	return redirect(url_for('add_airplane_page'))
+
+@app.route('/add_airport_page', methods=['GET', 'POST'])
+def add_airport_page():
+	cursor = conn.cursor()
+
+	query_airport = 'SELECT * FROM airport'
+	cursor.execute(query_airport)
+	airports = cursor.fetchall()
+	
+	cursor.close()
+	return render_template('staff_add_airport.html', Airports = airports)
 
 @app.route('/add_airport', methods=['PUT', 'POST'])
 def add_airport():
@@ -220,12 +238,12 @@ def add_airport():
 		cursor.execute(query, (AirportID, AirportName, City))
 		conn.commit()
 		cursor.close()
-		return redirect(url_for('staff'))
+		return redirect(url_for('add_airport_page'))
 	else:
 		cursor.close()
 		print("didnt work")
 		error = 'Invalid login or username'
-		return redirect(url_for('staff'))
+		return redirect(url_for('add_airport_page'))
 	
 #Staff_info gets the info that the staff should be able to see
 @app.route('/staff_info', methods=['GET', 'POST'])
