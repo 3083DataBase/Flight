@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<h1>{{Airline}}</h1>
+	</head>
+
+	<body>
+		<style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+
+		<table>
+			<th>Airport ID</th>
+			<th>Airport Name</th>
+			<th>City</th>
+	
+			{% for line in Airports %}
+				<tr>
+					<td>{{line['AirportID']}}</td>
+					<td>{{line['AirportName']}}</td>
+					<td>{{line['City']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	
+		<br><h1>Input Airport</h1><br>
+		<form action="/add_airport" method="POST">
+			<label for="AirportID">AirPort ID</label> </br>
+			<input type="text" name="AirportID" placeholder="Airport ID" required/> </br>
+			
+			<label for="AirportName">AirPort Name</label> </br>
+			<input type="text" name="AirportName" placeholder="Airport Name" required/> </br>
+	
+			<label for="City">City</label> </br>
+			<input type="City" name="City" placeholder="City" required/> </br>
+			
+			<input type="submit" Value = submit>
+	
+		</form><br>
+	</body>
+</html>

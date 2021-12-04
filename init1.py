@@ -66,7 +66,7 @@ def search_flights():
 	cursor.close()
 	return render_template('flights.html', depart_flights=depart_data, arrival_flights=arriving_data)
 
-#Searches for a flight to see the status
+#Redirects to flight_status.html (Goes from staff to flight_status)
 @app.route('/flight_status', methods=['GET', 'POST'])
 def flight_status():
 	return render_template('flight_status.html',  name1=session['user'][1])
@@ -90,16 +90,15 @@ def get_flight():
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
 
-	#you are not a staff
-	if(session['user'][2] != 1):
-		return redirect(url_for('stafflogin'))
+	#if(session['user'][2] != 1):
+	#	return redirect(url_for('staffLogin'))
 		
 	Airline = session['user'][1]
+	print(Airline)
 	cursor = conn.cursor()
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 30 AND DATEDIFF(DepartureDate, CURRENT_DATE) > 0'
 	
 	query_airport = 'SELECT * FROM airport'
-	#query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s'
 	cursor.execute(query, (Airline))
 	airline_flights = cursor.fetchall()
 
@@ -109,13 +108,17 @@ def staff():
 	
 	cursor.close()
 
-	return render_template('staff.html', flights = airline_flights, Airports = airports, Airline = Airline)
+	return render_template('staff.html', flights = airline_flights, Airline = Airline)
+
+@app.route('/add_flight', methods=['GET', 'POST'])
+def add_flight():
+	return render_template('staff_add_flight.html')
 
 #Inserts the Flight into the data base
 @app.route('/staffinput', methods=['GET', 'POST'])
 def staffinput():
 	FlightNumber = request.form["Flight Number"]
-	Date = request.form["Departing Date"]
+	DepartureDate = request.form["Departing Date"]
 	DepartureTime = request.form["Departing Time"]
 	ArrivalDate = request.form["Arrival Date"]
 	ArrivalTime = request.form["Arrival Time"]
@@ -125,13 +128,14 @@ def staffinput():
 	DepartingAirport = request.form["Departing Airport ID"]
 	ArrivingAirport = request.form["Arriving Airport ID"]
 
+	Airline = session['user'][1]
+
 	cursor = conn.cursor()
-	query = 'INSERT INTO flight VALUES (%s, %s, %s, "China Eastern", %s, %s, %s, %s, %s, %s, %s)'
-	cursor.execute(query, (FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, BasePrice, Status, AirplaneID, DepartingAirport, ArrivingAirport))
+	query = 'INSERT INTO flight VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+	cursor.execute(query, (FlightNumber, DepartureDate, DepartureTime, Airline, ArrivalDate, ArrivalTime, BasePrice, Status, AirplaneID, DepartingAirport, ArrivingAirport))
 	depart_data = cursor.fetchall()
 
-	for each in depart_data:   #prints out all the flights we have THIS IS A TEST
-			print(each)
+	conn.commit()
 	cursor.close()
 
 	return redirect(url_for('staff'))
@@ -160,6 +164,11 @@ def update_status():
 	cursor.close()
 	return redirect(url_for('staff'))
 
+@app.route('/add_airplane_page', methods=['GET', 'POST'])
+def add_airplane_page():
+	return render_template('staff_add_airplane.html')
+
+
 #Shows all the planes the airline has and the confirmation button (Opens airplane.html)
 @app.route('/add_airplane_confirmation', methods=['GET', 'POST'])
 def add_airplane_confirmation():
@@ -180,21 +189,34 @@ def add_airplane_confirmation():
 		return render_template('airplane.html', airplanes = airplanes, Airline = Airline, AirplaneID = AirplaneID, NumSeats = NumSeats)
 	else:
 		cursor.close()
-		return redirect(url_for('staff'))
+		return redirect(url_for('add_airplane'))
 
 #Adds the plane to the database (redirects to '/staff')
-@app.route('/add_airplane', methods=['PUT', 'POST'])
+@app.route('/add_airplane', methods=['GET', 'POST'])
 def add_airplane():
 	Airline = session['user'][1]
 	AirplaneID = request.form["AirplaneID"]
 	NumSeats = request.form["NumSeats"]
 	
 	cursor = conn.cursor()
+
 	query = 'INSERT INTO airplane VALUES (%s, %s, %s)' 
 	cursor.execute(query, ( AirplaneID, Airline, NumSeats))
 	conn.commit()
+
 	cursor.close()
-	return redirect(url_for('staff'))
+	return redirect(url_for('add_airplane_page'))
+
+@app.route('/add_airport_page', methods=['GET', 'POST'])
+def add_airport_page():
+	cursor = conn.cursor()
+
+	query_airport = 'SELECT * FROM airport'
+	cursor.execute(query_airport)
+	airports = cursor.fetchall()
+	
+	cursor.close()
+	return render_template('staff_add_airport.html', Airports = airports)
 
 @app.route('/add_airport', methods=['PUT', 'POST'])
 def add_airport():
@@ -216,19 +238,19 @@ def add_airport():
 		cursor.execute(query, (AirportID, AirportName, City))
 		conn.commit()
 		cursor.close()
-		return redirect(url_for('staff'))
+		return redirect(url_for('add_airport_page'))
 	else:
 		cursor.close()
 		print("didnt work")
 		error = 'Invalid login or username'
-		return redirect(url_for('staff'))
+		return redirect(url_for('add_airport_page'))
 	
 #Staff_info gets the info that the staff should be able to see
 @app.route('/staff_info', methods=['GET', 'POST'])
 def staff_info():
 
-	if(session['user'][2] != 1):
-		return redirect(url_for('login'))
+	#if(session['user'][2] != 1):
+	#	return redirect(url_for('staffLogin'))
 
 	print("In Staff Info")
 	print(session['user'])
@@ -393,7 +415,7 @@ def userLoginAuth():
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT * FROM customer WHERE CustomerEmail = %s AND password = %s'
+	query = 'SELECT CustomerEmail, CustomerName FROM customer WHERE CustomerEmail = %s AND password = %s'
 	cursor.execute(query, (username, password))
 	#stores the results in a variable
 	data = cursor.fetchone()
@@ -417,7 +439,8 @@ def userLoginAuth():
 
 		#creates a session for the the user
 		#session is a built in
-		session['username'] = username
+		session.pop()
+		session['user'] = [data[0]['CostomerEmail'], data[0]['CustomerName'], 0]
 		return redirect(url_for('customerhome'))
 	else:
 		#returns an error message to the html page
@@ -446,17 +469,19 @@ def staffLoginAuth():
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT * FROM airlinestaff WHERE StaffUsername = %s and password = %s'
+	query = 'SELECT StaffUsername, AirlineName FROM airlinestaff WHERE StaffUsername = %s and password = %s'
 	cursor.execute(query, (username, password))
 	#stores the results in a variable
-	data = cursor.fetchone()
+	data = cursor.fetchall()
+	print(data)
 	#use fetchall() if you are expecting more than 1 data row
 	cursor.close()
 	error = None
 	if(data):
 		#creates a session for the the user
 		#session is a built in
-		session['username'] = username
+		session['user'] = [data[0]['StaffUsername'], data[0]['AirlineName'], 1]
+		print(session['user'])
 		return redirect(url_for('staff'))
 	else:
 		#returns an error message to the html page
@@ -617,30 +642,20 @@ def customerpastflightsview():
 ####################### CUSTOMERREVIEW
 @app.route('/customerreview', methods=['GET', 'POST'])
 def customerreview():
-	# the update statsus
-	'''
-	FlightNumber = request.form["FlightNumber"]
-	Date = request.form["DepartureDate"]
-	Time = request.form["DepartureTime"]
-	Status = request.form["Status"]
-
-	cursor = conn.cursor()
-	query = 'UPDATE flight SET Status = %s WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
-	cursor.execute(query, (Status, FlightNumber, Date, Time))
-	conn.commit()
-	cursor.close()
-	return redirect(url_for('staff'))
-	'''
-
-	# attempt
-	CustomerEmail = request.form["CustomerEmail"]
-	FlightNumber = request.form["FlightNumber"]
-	DepartureDate = request.form["DepartureDate"]
-	DepartureTime = request.form["DepartureTime"]
+	#CustomerEmail = request.form["CustomerEmail"]
+	CustomerEmail = request.form.get("CustomerEmail")
+	#FlightNumber = request.form["FlightNumber"]
+	FlightNumber = request.form.get("FlightNumber")
+	#DepartureDate = request.form["DepartureDate"]
+	DepartureDate = request.form.get("DepartureDate")
+	#DepartureTime = request.form["DepartureTime"]
+	DepartureTime = request.form.get("DepartureTime")
 
 	cursor = conn.cursor();
-	rate = request.form['rating']
-	comment = request.form['comment']
+	#rate = request.form['rating']
+	rate = request.form.get('rating')
+	#comment = request.form['comment']
+	comment = request.form.get('comment')
 	query = 'UPDATE views SET Rate = %s, Comment = %s WHERE CustomerEmail = %s AND FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
 	cursor.execute(query, (rate, comment))
 	conn.commit()
@@ -651,13 +666,50 @@ def customerreview():
 ####################### CUSTOMERREVIEW
 @app.route('/customersearchflights', methods=['GET', 'POST'])
 def customersearchflights():
-	return render_template('CustomerSearchFlights.html')
+	#checkbox = request.form["checkbox"]
+	checkbox = request.form.get("checkbox")
+	#departing = request.form["Departing"]
+	departing = request.form.get("Departing")
+	#departing_date = request.form["Departure Date"]
+	departing_date = request.form.get("Departure Date")
+	#arriving = request.form["Arriving"]
+	arriving = request.form.get("Arriving")
+
+	arriving_date = None
+
+	arriving_data = ()
+
+	cursor = conn.cursor()
+	if(checkbox == "RoundTrip"):
+		arriving_date = request.form["Arriving Date"]
+		query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s'
+		query2 = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = d.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s'
+		cursor.execute(query, (departing, departing, arriving, arriving, departing_date)) #Runs the query
+		depart_data = cursor.fetchall() #Gets the data from ran SQL query
+		cursor.execute(query2, (arriving, arriving, departing, departing, arriving_date)) #Runs the query
+		arriving_data = cursor.fetchall()
+
+	else:    #Is the one way search
+		query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s'
+		cursor.execute(query, (departing, departing, arriving, arriving, departing_date)) #Runs the query
+		depart_data = cursor.fetchall() #Gets the data from ran SQL query
+		for each in depart_data:   #prints out all the flights we have THIS IS A TEST
+			print(each)
+
+	cursor.close()
+	return render_template('CustomerSearchFlights.html', depart_flights=depart_data, arrival_flights=arriving_data)
+
+
+
+
+
+
 	
 
 #NOT USED
 @app.route('/post', methods=['GET', 'POST'])
 def post():
-	username = session['username']
+	username = session['user']
 	cursor = conn.cursor();
 	blog = request.form['blog']
 	query = 'INSERT INTO blog (blog_post, username) VALUES(%s, %s)'
