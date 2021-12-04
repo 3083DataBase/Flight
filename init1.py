@@ -90,8 +90,9 @@ def get_flight():
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
 
+	#you are not a staff
 	if(session['user'][2] != 1):
-		return redirect(url_for('login'))
+		return redirect(url_for('stafflogin'))
 		
 	Airline = session['user'][1]
 	cursor = conn.cursor()
