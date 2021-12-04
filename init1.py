@@ -642,14 +642,20 @@ def customerpastflightsview():
 ####################### CUSTOMERREVIEW
 @app.route('/customerreview', methods=['GET', 'POST'])
 def customerreview():
-	CustomerEmail = request.form["CustomerEmail"]
-	FlightNumber = request.form["FlightNumber"]
-	DepartureDate = request.form["DepartureDate"]
-	DepartureTime = request.form["DepartureTime"]
+	#CustomerEmail = request.form["CustomerEmail"]
+	CustomerEmail = request.form.get("CustomerEmail")
+	#FlightNumber = request.form["FlightNumber"]
+	FlightNumber = request.form.get("FlightNumber")
+	#DepartureDate = request.form["DepartureDate"]
+	DepartureDate = request.form.get("DepartureDate")
+	#DepartureTime = request.form["DepartureTime"]
+	DepartureTime = request.form.get("DepartureTime")
 
 	cursor = conn.cursor();
-	rate = request.form['rating']
-	comment = request.form['comment']
+	#rate = request.form['rating']
+	rate = request.form.get('rating')
+	#comment = request.form['comment']
+	comment = request.form.get('comment')
 	query = 'UPDATE views SET Rate = %s, Comment = %s WHERE CustomerEmail = %s AND FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
 	cursor.execute(query, (rate, comment))
 	conn.commit()
