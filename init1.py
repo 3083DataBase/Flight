@@ -66,7 +66,7 @@ def search_flights():
 	cursor.close()
 	return render_template('flights.html', depart_flights=depart_data, arrival_flights=arriving_data)
 
-#Searches for a flight to see the status
+#Redirects to flight_status.html (Goes from staff to flight_status)
 @app.route('/flight_status', methods=['GET', 'POST'])
 def flight_status():
 	return render_template('flight_status.html',  name1=session['user'][1])
