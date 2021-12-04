@@ -1,10 +1,18 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <h1>Search Flights</h1>
-    </head>
+	<head>
+		<h1>Search Flights</h1>
+	</head>
 
-    <body>
-        <form action="/search_flights" method="POST">
+	<body>
+
+		<form action="/flight_status">
+			<input type="submit" value="Flight Status" />
+		</form>
+
+		<br>
+
+		<form action="/search_flights" method="POST">
 
 			<!--One-way check box-->
 			<input type="radio" id = "One-Way" name = "checkbox" onclick="check();" checked value="OneWay">
@@ -29,11 +37,10 @@
 			<!--The input area for Arriving Date-->
 			<label for="Arriving Date" id="Arr_date" Style="display:none">Arriving Date</label>
 			<input type="date" name="Arriving Date" id="Arr_date_input" placeholder="Arriving Date" Style="display:none" disabled /> </br>
-			<input type="submit" Value = "Search">
+			<input type="submit" Value = "submit">
 
 		</form>
 		<br>
-        <hr>	<!-- line break -->
 
 		<style type="text/css">
 			table, th, td{
@@ -124,16 +131,14 @@
 			}
 		</script>
 		
-
-		</br>
-		<hr>	<!-- line break -->
+        </br>
+        <hr>	<!-- line break -->
         </br>
 
-
-        <!-- <a href="/">Go back</a> -->
-        <a href="/customerhome">Back</a>
-
-    </body>
+		{% if not message %}
+			<a href="/customerhome">Back</a>
+		{% endif %}
 
 
+	</body>
 </html>
