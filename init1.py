@@ -165,7 +165,12 @@ def update_status():
 
 @app.route('/add_airplane_page', methods=['GET', 'POST'])
 def add_airplane_page():
-	return render_template('staff_add_airplane.html')
+	Airline = session['user'][1]
+	cursor = conn.cursor()
+	query = 'SELECT AirplaneID, NumSeats FROM airplane WHERE AirlineName = %s'
+	cursor.execute(query, Airline)
+	airplanes = cursor.fetchall()
+	return render_template('staff_add_airplane.html', airplanes = airplanes)
 
 
 #Shows all the planes the airline has and the confirmation button (Opens airplane.html)
@@ -225,8 +230,8 @@ def add_airport():
 	
 	print(AirportID)
 	cursor = conn.cursor()
-	query_check = 'SELECT AirportID FROM airport WHERE AirportID = %s'
-	cursor.execute(query_check, AirportID)
+	query_check = 'SELECT AirportID FROM airport WHERE AirportID = %s or AirportName = %s'
+	cursor.execute(query_check, (AirportID, AirportName))
 	check = cursor.fetchall()
 
 	print(check)
@@ -237,6 +242,7 @@ def add_airport():
 		cursor.execute(query, (AirportID, AirportName, City))
 		conn.commit()
 		cursor.close()
+		print("It work")
 		return redirect(url_for('add_airport_page'))
 	else:
 		cursor.close()

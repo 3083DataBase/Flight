@@ -6,6 +6,24 @@
 
 	<body>
 
+		<style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+
+		<table>
+			<th>Airplane ID</th>
+			<th>Number of Seats</th>
+	
+			{% for line in airplanes %}
+				<tr>
+					<td>{{line['AirplaneID']}}</td>
+					<td>{{line['NumSeats']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+
 		<br><h1>Input airplane</h1><br>
 		<form action="/add_airplane_confirmation" method="POST">
 			<input type="hidden" name="Airline" Value = "{{Airline}}" required Style="display:none">
