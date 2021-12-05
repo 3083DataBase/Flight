@@ -116,20 +116,72 @@ def add_flight():
 #Inserts the Flight into the data base
 @app.route('/staffinput', methods=['GET', 'POST'])
 def staffinput():
+
+	error = None
+
 	FlightNumber = request.form["Flight Number"]
+	Airline = session['user'][1]
+	AirplaneID = request.form["Airplane ID"]
+	DepartingAirport = request.form["Departing Airport ID"]
+	ArrivingAirport = request.form["Arriving Airport ID"]
+
+	cursor = conn.cursor()
+	query = 'SELECT FlightNumber FROM flight WHERE FlightNumber = %s AND AirlineName = %s'
+	cursor.execute(query, (FlightNumber, Airline))
+	flights = cursor.fetchall()
+	print(flights)
+
+	query = 'SELECT AirplaneID FROM airplane WHERE AirplaneID = %s AND AirlineName = %s'
+	cursor.execute(query, (AirplaneID, Airline))
+	airplane = cursor.fetchall()
+	print(airplane)
+
+	query = 'SELECT AirportID FROM airport WHERE AirportID = %s'
+	cursor.execute(query, DepartingAirport)
+	dep_airport = cursor.fetchall()
+	print(dep_airport)
+
+	query = 'SELECT AirportID FROM airport WHERE AirportID = %s'
+	cursor.execute(query, ArrivingAirport)
+	ari_airport = cursor.fetchall()
+	print(ari_airport)
+
+	#print("Flight Number input: " + flights)
+	#print("Airplane ID input: " + airplane)
+
+	if flights != ():
+		cursor.close()
+		error = "Flight Number already exists"
+		return render_template('staff_add_flight.html', error = error)
+	
+	if airplane == ():
+		cursor.close()
+		error = "Airplane does not exist"
+		return render_template('staff_add_flight.html', error = error)
+
+	if dep_airport == ():
+		cursor.close()
+		error = "Departing Airport does not exist"
+		return render_template('staff_add_flight.html', error = error)
+
+	if ari_airport == ():
+		cursor.close()
+		error = "Arriving Airport does not exist"
+		return render_template('staff_add_flight.html', error = error)
+
+	if DepartingAirport == ArrivingAirport:
+		cursor.close()
+		error = "Departing and Arriving airports cant be the same"
+		return render_template('staff_add_flight.html', error = error)
+
 	DepartureDate = request.form["Departing Date"]
 	DepartureTime = request.form["Departing Time"]
 	ArrivalDate = request.form["Arrival Date"]
 	ArrivalTime = request.form["Arrival Time"]
 	BasePrice = request.form["Base Price"]
 	Status = request.form["Status"]
-	AirplaneID = request.form["Airplane ID"]
-	DepartingAirport = request.form["Departing Airport ID"]
-	ArrivingAirport = request.form["Arriving Airport ID"]
 
-	Airline = session['user'][1]
 
-	cursor = conn.cursor()
 	query = 'INSERT INTO flight VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 	cursor.execute(query, (FlightNumber, DepartureDate, DepartureTime, Airline, ArrivalDate, ArrivalTime, BasePrice, Status, AirplaneID, DepartingAirport, ArrivingAirport))
 	depart_data = cursor.fetchall()
@@ -137,7 +189,7 @@ def staffinput():
 	conn.commit()
 	cursor.close()
 
-	return redirect(url_for('staff'))
+	return redirect(url_for('add_flight'))
 
 #Transfers the data to status_update.html (opens status_update.html)
 @app.route('/staff_update_status', methods=['GET', 'POST'])
