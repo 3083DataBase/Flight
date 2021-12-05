@@ -193,7 +193,7 @@ def add_airplane_confirmation():
 		return render_template('airplane.html', airplanes = airplanes, Airline = Airline, AirplaneID = AirplaneID, NumSeats = NumSeats)
 	else:
 		cursor.close()
-		return redirect(url_for('add_airplane'))
+		return redirect(url_for('add_airplane_page'))
 
 #Adds the plane to the database (redirects to '/staff')
 @app.route('/add_airplane', methods=['GET', 'POST'])
