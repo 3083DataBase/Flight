@@ -4,20 +4,20 @@
 </head>
 
 <body>
-    User Registration
+    <h4>User Registration </h4>
     <form action="/userRegisterAuth" method="POST">
-        <input type="email" name="email" placeholder="Email" required/> </br>
-        <input type="password" name="password" placeholder="password" required/></br>
-        <input type="text" name="fullname" placeholder="Full Name" required/> </br>
-        <input type="text" name="BuildingNo" placeholder="Building Number" required/> </br>
-        <input type="text" name="street" placeholder="Street" required/> </br>
-        <input type="text" name="city" placeholder="City" required/> </br>
-        <input type="text" name="state" placeholder="State" required/> </br>
-        <input type="text" name="phoneNo" placeholder="Phone Number" required/> </br>
-        <input type="text" name="passportNo" placeholder="Passport Number" required/> </br>
-        <input type="text" name="passportExp" placeholder="Passport Expiration" required/> </br>
-        <input type="text" name="passportCntry" placeholder="Passport Country" required/> </br>
-        <input type="text" name="dob" placeholder="Date Of Birth" required/> </br>
+        Email: <input type="email" name="email" placeholder="example@ex.com" required/> </br>
+        Password: <input type="password" name="password" placeholder="password" required/></br>
+        Full Name: <input type="text" name="fullname" placeholder="John Doe" required/> </br>
+        Building No.: <input type="text" name="BuildingNo" placeholder="6" required/> </br>
+        Street: <input type="text" name="street" placeholder="Metrotech" required/> </br>
+        City: <input type="text" name="city" placeholder="NYC" required/> </br>
+        State: <input type="text" name="state" placeholder="NY" required/> </br>
+        Phone Number: <input type="tel" name="phoneNo" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required/> </br>
+        Passport Number: <input type="text" name="passportNo" placeholder="123456" required/> </br>
+        Passport Expiration: <input type="date" name="passportExp" placeholder="2022-05-22" required/> </br>
+        Passport Country: <input type="text" name="passportCntry" placeholder="USA" required/> </br>
+        Date of Birth: <input type="date" name="dob" placeholder="2021-05-22" required/> </br>
 
         <input type="submit" value=Register /> {% if error %}
         <p class="error"><strong>Error:</strong> {{error}}</p>
