@@ -6,7 +6,7 @@ INSERT INTO Customer VALUES('my1590@nyu.edu', 'passw0rd', 'Michelle Yang', '80',
 
 INSERT INTO airplane VALUES('001', 'Korean Air', '1069'), ('002', 'American Airlines', '2000'), ('003', 'United Airlines', '2122'), ('001', 'China Eastern', '4206');
 
-INSERT INTO airlinestaff VALUES('MisterBrightside', 'pw12345*', 'Brightside', 'Jones', '1982-08-10', 'China Eastern'), ('SoulRider', 'LaCroix33', 'Soul', 'Smith', '1995-07-04', 'China Eastern'), ('YugiMuto', 'endGamers!', 'Yugi', 'Muto', '1980-05-04', 'China Eastern');
+INSERT INTO airlinestaff VALUES('MisterBrightside', 'md5(pw12345*)', 'Brightside', 'Jones', '1982-08-10', 'China Eastern'), ('SoulRider', 'md5(LaCroix33)', 'Soul', 'Smith', '1995-07-04', 'China Eastern'), ('YugiMuto', 'md5(endGamers!)', 'Yugi', 'Muto', '1980-05-04', 'China Eastern');
 
 INSERT INTO phonenumber VALUES('MisterBrightside', '2123336565'), ('SoulRider', '6465559949'), ('YugiMuto', '3326668899');
 
