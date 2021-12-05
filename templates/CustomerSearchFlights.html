@@ -52,6 +52,7 @@
 			<th>Airline</th>
 			<th>Departing Airport</th>
 			<th>Arriving Airport</th>
+            <th>Ticket Price</th>
             <th>Purchase Flight</th>
 
 			{% for line in depart_flights %}
@@ -64,6 +65,7 @@
 					<td>{{line['AirlineName']}}</td>
 					<td>{{line['AirportName']}}</td>
 					<td>{{line['a.AirportName']}}</td>
+                    <td>{{line['SoldPrice']}}</td>
 
                     <td>
 						<form action="/customerpurchase" method="POST">
