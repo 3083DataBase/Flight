@@ -147,9 +147,6 @@ def staffinput():
 	ari_airport = cursor.fetchall()
 	print(ari_airport)
 
-	#print("Flight Number input: " + flights)
-	#print("Airplane ID input: " + airplane)
-
 	# Checks if the Flight Number Exists already
 	if flights != ():
 		cursor.close()
