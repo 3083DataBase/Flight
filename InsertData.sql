@@ -10,7 +10,7 @@ INSERT INTO airlinestaff VALUES('MisterBrightside', md5('pw12345*'), 'Brightside
 
 INSERT INTO phonenumber VALUES('MisterBrightside', '2123336565'), ('SoulRider', '6465559949'), ('YugiMuto', '3326668899');
 
-INSERT INTO flight VALUES ('00684', '2021-11-11', '10:23:00', 'China Eastern', '2021-11-12', '1:30:00', '800.00', 'on-time', '1', '1','2'), ('09231', '2021-11-24', '09:10:00', 'China Eastern', '2021-11-25', '12:10:00', '300.00', 'delayed', '2','2','1'), ('00732', '2021-11-25', '02:48:00', 'China Eastern', '2021-11-26', '14:30:00', '1200.00', 'on-time', '3','1','2');
+INSERT INTO flight VALUES ('00684', '2021-11-11', '10:23:00', 'China Eastern', '2021-11-12', '1:30:00', '800.00', 'on-time', '1', '1','2'), ('09231', '2021-11-24', '09:10:00', 'American Airlines', '2021-11-25', '12:10:00', '300.00', 'delayed', '2','2','1'), ('00732', '2021-11-25', '02:48:00', 'United Airlines', '2021-11-26', '14:30:00', '1200.00', 'on-time', '3','1','2');
 
 INSERT INTO ticket VALUES ('42012', '00684', 'China Eastern', 'my1590@nyu.edu', '800.00', '2021-09-01', '01:12:23'), ('22121', '09231', 'China Eastern', 'kp2327@nyu.edu', '300.00', '2021-10-20', '05:10:30'), ('55437', '00732', 'China Eastern', 'kei231@nyu.edu', '1200.00', '2021-01-24', '06:46:12');
 
