@@ -597,7 +597,7 @@ def home():
 
 
 
-####################### CUSTOMERHOME
+####################### CustomerHome
 @app.route('/customerhome')
 def customerhome():
 	#username = session['username']
@@ -616,7 +616,7 @@ def customerhome():
 
 	return render_template('CustomerHome.html', flights=flight_data)
 
-####################### CUSTOMERPASTFLIGHT
+####################### CustomerPastFlightsView
 @app.route('/customerpastflightsview', methods=['GET', 'POST'])
 def customerpastflightsview():
 	#username = session['username']
@@ -636,7 +636,7 @@ def customerpastflightsview():
 
 	return render_template('CustomerPastFlight.html', flights=past_flight_data)
 
-####################### CUSTOMERREVIEW
+####################### CustomerReview
 @app.route('/customerreview', methods=['GET', 'POST'])
 def customerreview():
 	#CustomerEmail = request.form["CustomerEmail"]
@@ -660,7 +660,7 @@ def customerreview():
 	
 	return render_template('CustomerReview.html')
 
-####################### CUSTOMERREVIEW
+####################### CustomerSearchFlights
 @app.route('/customersearchflights', methods=['GET', 'POST'])
 def customersearchflights():
 	#checkbox = request.form["checkbox"]
@@ -697,7 +697,16 @@ def customersearchflights():
 	return render_template('CustomerSearchFlights.html', depart_flights=depart_data, arrival_flights=arriving_data)
 
 
+####################### CustomerPurchase
+@app.route('/customerpurchase', methods=['GET', 'POST'])
+def customerpurchase():
+	return render_template('CustomerPurchase.html')
 
+
+####################### CustomerPurchaseResult
+@app.route('/customerpurchaseresult', methods=['GET', 'POST'])
+def customerpurchaseresult():
+	return render_template('CustomerPurchaseResult.html')
 
 
 
