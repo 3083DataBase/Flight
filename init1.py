@@ -304,7 +304,20 @@ def add_airport():
 		print("didnt work")
 		error = 'Invalid login or username'
 		return redirect(url_for('add_airport_page'))
+
+# Loads staff_review_page.html from staff.html
+@app.route('/view_review', methods=['GET', 'POST'])
+def view_review():
+	Airline = session['user'][1]
+	cursor = conn.cursor()
+
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND ArrivalDate < CURRENT_DATE ORDER BY ArrivalDate'
 	
+	cursor.execute(query, (Airline))
+	airline_flights = cursor.fetchall()
+	cursor.close()
+	return render_template('staff_review_page.html', flights = airline_flights)
+
 #Staff_info gets the info that the staff should be able to see
 @app.route('/staff_info', methods=['GET', 'POST'])
 def staff_info():
