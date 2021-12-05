@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<h1>{{Airline}}</h1>
+	</head>
+
+	<body>
+
+		<style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+
+		<p>Most Frequent Flyer: {{flyer}}</p>
+
+		<h3>Customers</h3>
+		<table>
+			<th>Customer</th>
+			<th>See Flights</th>
+
+			{% for line in customers %}
+				<tr>
+					<td>{{line['CustomerName']}}</td>
+					<td>
+						<form action="/customer_flights" method="POST">
+							<input type="hidden" name="CustomerEmail" Value = "{{line['CustomerEmail']}}" required Style="display:none">
+							<input type="submit" Value = View Style="z-index :-1">
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+
+		<!--Back button to Staff-->
+		<form action="/staff">
+			<input type="submit" value="Go Back"/>
+		</form>
+	</body>
+</html>

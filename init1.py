@@ -318,7 +318,7 @@ def view_review():
 	cursor.close()
 	return render_template('staff_review_page.html', flights = airline_flights)
 
-#Staff_info gets the info that the staff should be able to see
+#Staff_info gets the info that the staff should be able to see (NOT GONNA BE USED)
 @app.route('/staff_info', methods=['GET', 'POST'])
 def staff_info():
 
@@ -331,21 +331,21 @@ def staff_info():
 	Airline = session['user'][1]
 	cursor = conn.cursor()
 
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
+	#query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
 	
-	cursor.execute(query, (Airline))
-	airline_flights = cursor.fetchall()
+	#cursor.execute(query, (Airline))
+	#airline_flights = cursor.fetchall()
 
-	frequent_flyer_query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket WHERE DATEDIFF(CURRENT_DATE,PurchaseDate) < 365 AND AirlineName = %s ORDER BY SoldPrice DESC'
+	#frequent_flyer_query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket WHERE DATEDIFF(CURRENT_DATE,PurchaseDate) < 365 AND AirlineName = %s ORDER BY SoldPrice DESC'
 	
-	cursor.execute(frequent_flyer_query, (Airline))
-	frequent_flyer = cursor.fetchall()
-	frequent_flyer = frequent_flyer[0]['CustomerName']
+	#cursor.execute(frequent_flyer_query, (Airline))
+	#frequent_flyer = cursor.fetchall()
+	#frequent_flyer = frequent_flyer[0]['CustomerName']
 
-	customer_query = 'SELECT CustomerName, CustomerEmail FROM customer NATURAL JOIN ticket WHERE AirlineName = %s'
+	#customer_query = 'SELECT CustomerName, CustomerEmail FROM customer NATURAL JOIN ticket WHERE AirlineName = %s'
 	
-	cursor.execute(customer_query, (Airline))
-	customers = cursor.fetchall()
+	#cursor.execute(customer_query, (Airline))
+	#customers = cursor.fetchall()
 
 	query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 30'
 	cursor.execute(query, Airline)
@@ -395,6 +395,26 @@ def reviews():
 	cursor.close()
 
 	return render_template('staff_view_review.html', comments = comments, Avg = avg)
+
+@app.route('/customer_view', methods=['GET', 'POST'])
+def customer_view():
+
+	Airline = session['user'][1]
+	cursor = conn.cursor()
+
+	frequent_flyer_query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket WHERE DATEDIFF(CURRENT_DATE,PurchaseDate) < 365 AND AirlineName = %s ORDER BY SoldPrice DESC'
+	
+	cursor.execute(frequent_flyer_query, (Airline))
+	frequent_flyer = cursor.fetchall()
+	frequent_flyer = frequent_flyer[0]['CustomerName']
+
+	customer_query = 'SELECT CustomerName, CustomerEmail FROM customer NATURAL JOIN ticket WHERE AirlineName = %s'
+	
+	cursor.execute(customer_query, (Airline))
+	customers = cursor.fetchall()
+
+	cursor.close()
+	return render_template('staff_frequent_flyer.html', flyer = frequent_flyer, customers = customers)
 
 @app.route('/customer_flights', methods=['GET', 'POST'])
 def customer_flights():
