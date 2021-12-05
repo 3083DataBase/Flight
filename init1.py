@@ -429,8 +429,14 @@ def userLoginAuth():
 
 		#creates a session for the the user
 		#session is a built in
-		session.pop()
-		session['user'] = [data[0]['CostomerEmail'], data[0]['CustomerName'], 0]
+		print("DATA: ", data)
+		print("ERROR: ", [data['CustomerEmail'], data['CustomerName']])
+		print("PRE: ", session)
+		session.pop('user')
+		print("POP: ", session)
+
+		session['user'] = [data['CustomerEmail'], data['CustomerName'], 1]
+		print("POST: ", session)
 		return redirect(url_for('customerhome'))
 	else:
 		#returns an error message to the html page
@@ -463,15 +469,17 @@ def staffLoginAuth():
 	cursor.execute(query, (username, password))
 	#stores the results in a variable
 	data = cursor.fetchall()
-	print(data)
+	# print(data)
 	#use fetchall() if you are expecting more than 1 data row
 	cursor.close()
 	error = None
 	if(data):
 		#creates a session for the the user
 		#session is a built in
+		print(session)
+		session.pop('user')
 		session['user'] = [data[0]['StaffUsername'], data[0]['AirlineName'], 1]
-		print(session['user'])
+		print(session)
 		return redirect(url_for('staff'))
 	else:
 		#returns an error message to the html page
