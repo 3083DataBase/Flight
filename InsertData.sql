@@ -1,10 +1,10 @@
 INSERT INTO airline VALUES('China Eastern'), ('Korean Air'), ('American Airlines'), ('United Airlines');
 
-INSERT INTO airport VALUES('001', 'JFK', 'NYC'), ('002', 'PVG', 'Shanghai');
+INSERT INTO airport VALUES('1', 'JFK', 'NYC'), ('2', 'PVG', 'Shanghai');
 
 INSERT INTO Customer VALUES('my1590@nyu.edu', 'passw0rd', 'Michelle Yang', '80', 'Lafayette St', 'New York City', 'NY', '8888888888', '5550000303', '2023-09-30', 'United States of America', '2000-09-26'), ('kp2327@nyu.edu', 'kattrippassword', 'Kathy Pan', '370', 'Jay St', 'Brooklyn', 'NY', '7185558888', '7561643301', '2027-12-25', 'United States of America', '2000-08-25'), ('kei231@nyu.edu', 'passw0rd1234', 'Kevin Iza', '5', 'MetroTech', 'New York City', 'NY', '8811882288', '5398248312', '2024-09-30', 'United States of America', '2000-09-30');
 
-INSERT INTO airplane VALUES('001', 'Korean Air', '1069'), ('002', 'American Airlines', '2000'), ('003', 'United Airlines', '2122'), ('001', 'China Eastern', '4206');
+INSERT INTO airplane VALUES('1', 'Korean Air', '1069'), ('2', 'American Airlines', '2000'), ('3', 'United Airlines', '2122'), ('1', 'China Eastern', '4206');
 
 INSERT INTO airlinestaff VALUES('MisterBrightside', md5('pw12345*'), 'Brightside', 'Jones', '1982-08-10', 'China Eastern'), ('SoulRider',  md5('LaCroix33'), 'Soul', 'Smith', '1995-07-04', 'China Eastern'), ('YugiMuto',  md5('endGamers!'), 'Yugi', 'Muto', '1980-05-04', 'China Eastern');
 
