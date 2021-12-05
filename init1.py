@@ -1,7 +1,6 @@
 #Import Flask Library
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
-import hashlib
 
 #Initialize the app from Flask
 app = Flask(__name__)
@@ -409,38 +408,35 @@ def userLogin():
 @app.route('/userLoginAuth', methods=['GET', 'POST'])
 def userLoginAuth():
 	#grabs information from the forms
-	username = request.form['username']
+	email = request.form['username']
 	password = request.form['password']
 
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT CustomerEmail, CustomerName FROM customer WHERE CustomerEmail = %s AND password = %s'
-	cursor.execute(query, (username, password))
+	query = 'SELECT CustomerEmail, CustomerName FROM customer WHERE CustomerEmail = %s AND password = md5(%s)'
+	cursor.execute(query, (email, password))
+
+
 	#stores the results in a variable
 	data = cursor.fetchone()
 	#use fetchall() if you are expecting more than 1 data row
+
 	cursor.close()
 	error = None
 	if(data):
 		#double check for password error
 
-		# TODO
-		# cursor = conn.cursor()
-		# query = 'SELECT password FROM customer WHERE CustomerEmail = %s'
-		# cursor.execute(query, (username))
-		# pw = cursor.fetchone()
-		# print("printint", pw["password"])
-		# if pw["password"].hexdigest() != password:
-		# 	cursor.close()
-		# 	error = 'Invalid password'
-		# 	return render_template('userlogin.html', error = error)
-
-
 		#creates a session for the the user
 		#session is a built in
-		session.pop()
-		session['user'] = [data[0]['CostomerEmail'], data[0]['CustomerName'], 0]
+		print("DATA: ", data)
+		print("ERROR: ", [data['CustomerEmail'], data['CustomerName']])
+		print("PRE: ", session)
+		session.pop('user')
+		print("POP: ", session)
+
+		session['user'] = [data['CustomerEmail'], data['CustomerName'], 1]
+		print("POST: ", session)
 		return redirect(url_for('customerhome'))
 	else:
 		#returns an error message to the html page
@@ -469,19 +465,21 @@ def staffLoginAuth():
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT StaffUsername, AirlineName FROM airlinestaff WHERE StaffUsername = %s and password = %s'
+	query = 'SELECT StaffUsername, AirlineName FROM airlinestaff WHERE StaffUsername = %s and password = md5(%s)'
 	cursor.execute(query, (username, password))
 	#stores the results in a variable
 	data = cursor.fetchall()
-	print(data)
+	# print(data)
 	#use fetchall() if you are expecting more than 1 data row
 	cursor.close()
 	error = None
 	if(data):
 		#creates a session for the the user
 		#session is a built in
+		print(session)
+		session.pop('user')
 		session['user'] = [data[0]['StaffUsername'], data[0]['AirlineName'], 1]
-		print(session['user'])
+		print(session)
 		return redirect(url_for('staff'))
 	else:
 		#returns an error message to the html page
@@ -536,10 +534,9 @@ def userRegisterAuth():
 		error = "This user already exists"
 		return render_template('userRegister.html', error = error)
 	else:
-		ins = 'INSERT INTO customer VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+		ins = 'INSERT INTO customer VALUES(%s, md5(%s), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+		# cursor.execute(ins, (email, password, customername, BuildingNo, street, city, state, phoneNo, passportNo, passportExp, passportCntry, dob))
 		cursor.execute(ins, (email, password, customername, BuildingNo, street, city, state, phoneNo, passportNo, passportExp, passportCntry, dob))
-		# TODO
-		# cursor.execute(ins, (email, hashlib.md5(password.encode('utf8')), customername, BuildingNo, street, city, state, phoneNo, passportNo, passportExp, passportCntry, dob))
 		conn.commit()
 		cursor.close()
 		return render_template('userLogin.html')
@@ -574,7 +571,7 @@ def staffRegisterAuth():
 		error = "This user already exists"
 		return render_template('staffRegister.html', error = error)
 	else:
-		ins = 'INSERT INTO airlinestaff VALUES(%s, %s, %s, %s, %s, %s)'
+		ins = 'INSERT INTO airlinestaff VALUES(%s, md5(%s), %s, %s, %s, %s)'
 		cursor.execute(ins, (staffUsername, password, firstname, lastName, dob, airlineName))
 		conn.commit()
 		cursor.close()
