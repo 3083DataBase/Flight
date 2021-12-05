@@ -20,3 +20,6 @@ INSERT INTO purchase VALUES ('42012', 'my1590@nyu.edu', 'debit', '5534 2232 1211
 
 
 INSERT INTO flight VALUES ('99000', '2021-12-11', '10:23:00', 'Korean Air', '2021-12-12', '1:30:00', '803.00', 'on-time', '1', '1', '2'), ('99001', '2021-12-24', '09:10:00', 'Korean Air', '2021-12-25', '12:10:00', '303.00', 'delayed', '1', '1', '2'), ('99002', '2021-12-25', '02:48:00', 'American Airlines', '2021-12-26', '14:30:00', '1203.00', 'on-time', '2', '2', '1');
+
+#uncheck 'Enable foreign key checks'
+INSERT INTO ticket VALUES ('10001', '99000', 'Korean Air', NULL, '700.00', NULL, NULL), ('10002', '99001', 'China Eastern', NULL, '620.00', NULL, NULL), ('10003', '99002', 'American Airlines', NULL, '940.00', NULL, NULL);
