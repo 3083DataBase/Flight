@@ -782,6 +782,11 @@ def customerpurchase():
 def customerpurchaseresult():
 	return render_template('CustomerPurchaseResult.html')
 
+####################### CustomerTrackSpending
+@app.route('/customertrackspending', methods=['GET', 'POST'])
+def customertrackspending():
+	return render_template('CustomerTrackSpending.html')
+
 
 
 	
