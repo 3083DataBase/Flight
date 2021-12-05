@@ -4,14 +4,14 @@
 </head>
 
 <body>
-    Staff Registration
+    <h4>Staff Registration</h4>
     <form action="/staffRegisterAuth" method="POST">
-        <input type="text" name="staffUsername" placeholder="Username" required/> </br>
-        <input type="password" name="password" placeholder="password" required/></br>
-        <input type="text" name="firstName" placeholder="First Name" required/> </br>
-        <input type="text" name="lastName" placeholder="Last Name" required/> </br>
-        <input type="text" name="dob" placeholder="Date of Birth (YYYY-MM-DD)" required/> </br>
-        <input type="text" name="airlineName" placeholder="Airline Name" required/> </br>
+        Username: <input type="text" name="staffUsername" placeholder="RabidRats2" required/> </br>
+        Password: <input type="password" name="password" placeholder="password" required/></br>
+        First Name: <input type="text" name="firstName" placeholder="John" required/> </br>
+        Last Name: <input type="text" name="lastName" placeholder="Doe" required/> </br>
+        Date of Birth: <input type="date" name="dob" placeholder="2021-20-22" required/> </br>
+        Airline Name: <input type="text" name="airlineName" placeholder="China Eastern" required/> </br>
 
         <input type="submit" value=Register /> {% if error %}
         <p class="error"><strong>Error:</strong> {{error}}</p>
