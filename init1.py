@@ -109,6 +109,7 @@ def staff():
 
 	return render_template('staff.html', flights = airline_flights, Airline = Airline)
 
+# Loads staff_add_flight.html from staff.html
 @app.route('/add_flight', methods=['GET', 'POST'])
 def add_flight():
 	return render_template('staff_add_flight.html')
@@ -149,26 +150,31 @@ def staffinput():
 	#print("Flight Number input: " + flights)
 	#print("Airplane ID input: " + airplane)
 
+	# Checks if the Flight Number Exists already
 	if flights != ():
 		cursor.close()
 		error = "Flight Number already exists"
 		return render_template('staff_add_flight.html', error = error)
 	
+	# Checks if the Airplane ID exists
 	if airplane == ():
 		cursor.close()
 		error = "Airplane does not exist"
 		return render_template('staff_add_flight.html', error = error)
 
+	# Checks if the departing Airport Exists
 	if dep_airport == ():
 		cursor.close()
 		error = "Departing Airport does not exist"
 		return render_template('staff_add_flight.html', error = error)
 
+	# Checks if the Arriving Airport Exists
 	if ari_airport == ():
 		cursor.close()
 		error = "Arriving Airport does not exist"
 		return render_template('staff_add_flight.html', error = error)
 
+	# Checks if the departing and arriving airports the same
 	if DepartingAirport == ArrivingAirport:
 		cursor.close()
 		error = "Departing and Arriving airports cant be the same"
