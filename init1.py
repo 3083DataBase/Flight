@@ -148,12 +148,12 @@ def staff_view_customer():
 	Airline = session['user'][1]
 
 	cursor = conn.cursor()
-	query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket,flight WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s AND Airline = %s'
-	cursor.execute(query, (FlightNumber, Date, Time, Airline))
+	query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket WHERE FlightNumber = %s AND AirlineName = %s'
+	cursor.execute(query, (FlightNumber, Airline))
 	customers = cursor.fetchall()
 	cursor.close()
 
-	return render_template('status_update.html', customers = customers)
+	return render_template('staff_view_customers.html', customers = customers)
 
 # Loads staff_add_flight.html from staff.html
 @app.route('/add_flight', methods=['GET', 'POST'])
