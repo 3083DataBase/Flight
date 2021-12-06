@@ -12,7 +12,38 @@
 			}
 		</style>
 
-		
+		<form action="/search_flights" method="POST">
+
+			<!--Date search check box-->
+			<input type="radio" id = "DateSearch" name = "checkbox" onclick="check()" value="DateSearch">
+			<label for="DateSearch">Date Search</label>
+
+			<!--City/Airport check box-->
+			<input type="radio" id = "DestinationSearch" name = "checkbox" onclick="check()" value="DestinationSearch">
+			<label for="DestinationSearch">Destination Search</label> 
+
+
+			<!--The input area for Departing airports/city-->
+			<label for="Departing" Style="display:none" id="dep_text">Departing</label>
+			<input type="text" name="Departing" placeholder="City or Airport Name" required Style="display:none" disabled id="dep_dest"/>
+
+			<!--The input area for Arriving airports/city-->
+			<label for="Arriving" Style="display:none" id="ari_text">Arriving</label> 
+			<input type="text" name="Arriving" placeholder="City or Airport Name" required Style="display:none" disabled id="ari_dest"/> 
+
+
+			<!--The input area for Starting Date-->
+			<label for="Inital Date" id="start_text" Style="display:none">Inital Date</label>
+			<input type="date" name="Inital Date" placeholder="Initial Date"required id="start_date" Style="display:none"/>
+
+			<!--The input area for Arriving Date-->
+			<label for="Ending Date" id="end_text" Style="display:none">Ending Date</label>
+			<input type="date" name="Ending Date" placeholder="Ending Date" id="end_date" Style="display:none"/> 
+			
+			<br>
+			<input type="submit" Value = "submit" id="submit" disabled>
+
+		</form>
 
 		<table>
 			<th>Flight Number</th>
@@ -46,6 +77,62 @@
 				</tr>
 			{% endfor %}
 		</table>
+
+		<script>
+			function check(){	
+				var checkBox = document.getElementById("DateSearch");
+				var starttext = document.getElementById("start_text");
+				var startdate = document.getElementById("start_date");
+				var endtext = document.getElementById("end_text");
+				var enddate = document.getElementById("end_date");
+
+				var deptext = document.getElementById("dep_text");
+				var dep = document.getElementById("dep_dest");
+				var aritext = document.getElementById("ari_text");
+				var ari = document.getElementById("ari_dest");
+
+				var submit = document.getElementById("submit");
+				if (checkBox.checked == true){
+					starttext.style.display = "block";
+					startdate.style.display = "block";
+					startdate.disabled = false;
+
+					endtext.style.display = "block";
+					enddate.style.display = "block";
+					enddate.disabled = false;
+
+					deptext.style.display = "none";
+					dep.style.display = "none";
+					dep.disabled = true;
+
+					aritext.style.display = "none";
+					ari.style.display = "none";
+					ari.disabled = true;
+
+					submit.disabled = false;
+				} else {
+					starttext.style.display = "none";
+					startdate.style.display = "none";
+					startdate.disabled = true;
+
+					endtext.style.display = "none";
+					enddate.style.display = "none";
+					enddate.disabled = true;
+
+					deptext.style.display = "block";
+					dep.style.display = "block";
+					dep.disabled = false;
+
+					aritext.style.display = "block";
+					ari.style.display = "block";
+					ari.disabled = false;
+
+					submit.disabled = false;
+				}
+				return document.getElementsByID("Round Trip").checked;
+			}
+
+		</script>
 
 		<!--Back button to Staff-->
 		<form action="/staff">
