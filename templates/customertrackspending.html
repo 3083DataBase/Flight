@@ -1,0 +1,54 @@
+<head>
+    <!-- <h1>Welcome {{username}}</h1> -->
+    <h1>Track Spending</h1>
+</head>
+
+<body>
+    Total Amount of Money Spent in Past Year: {{total_spent }}
+
+    <br>
+    <br>
+    <table>
+        <th>Month</th>
+        <th>Money Spent</th>
+
+        {% for line in six_months %}
+        <tr>
+            <td>{{line['MONTH(PurchaseDate)']}}</td>
+            <td>{{line['SUM(SoldPrice)']}}</td>
+        </tr>
+
+
+        {% endfor %}
+    </table>
+    <br/>
+    <br/> Choose Date Range
+    <br/>
+
+
+    <form action="/customer_tracking_range" method="POST">
+        <label for="Start Date">Start Date</label> </br>
+        <input type="date" name="startDate" placeholder="Start Date" required/> </br>
+        <label for="End Date">End Date</label> </br>
+        <input type="date" name="endDate" placeholder="End Date" required/> </br>
+        <input type="submit" value="enter" />
+        <br>
+    </form>
+    <br> Money spent in this time frame: {{specify}}
+
+    <br> {% if error %}
+    <p class="error"><strong>Error:</strong> {{error}}</p>
+    {% endif %}
+
+
+    <br> {% if not message %}
+    <a href="/customerhome">Back</a> {% endif %}
+</body>
+
+<style type="text/css">
+    table,
+    th,
+    td {
+        border: 1px solid black;
+    }
+</style>
