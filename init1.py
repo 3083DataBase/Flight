@@ -88,11 +88,12 @@ def get_flight():
 #Holds all the code for the staff to input into flights (Required for staff to be logged in)
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
-
 	###Security Check
 	if(session['user'][2] != 1):
 		return redirect(url_for('staffLogin'))
-	return render_template('staff.html')
+
+	Airline = session['user'][1]
+	return render_template('staff.html', Airline = Airline)
 
 @app.route('/view_flights', methods=['GET', 'POST'])
 def view_flights():
@@ -110,7 +111,7 @@ def view_flights():
 	airline_flights = cursor.fetchall()
 	
 	cursor.close()
-	return render_template('staff_view_flights.html', flights = airline_flights)
+	return render_template('staff_view_flights.html', flights = airline_flights, Airline = Airline)
 
 @app.route('/staff_search_flights', methods=['GET', 'POST'])
 def staff_search_flights():
@@ -136,7 +137,7 @@ def staff_search_flights():
 		date = cursor.fetchall() #Gets the data from ran SQL query
 		print(date)
 		cursor.close()
-		return render_template('staff_view_flights.html', flights=date)
+		return render_template('staff_view_flights.html', flights=date, Airline = Airline)
 	else:    #Is the one way search
 		depart = request.form["Departing"] 
 		arrival = request.form["Arriving"]
@@ -148,7 +149,7 @@ def staff_search_flights():
 		cursor.execute(query, (depart, depart, arrival, arrival, Airline)) #Runs the query
 		dest = cursor.fetchall() #Gets the data from ran SQL query
 		cursor.close()
-		return render_template('staff_view_flights.html', flights=dest)
+		return render_template('staff_view_flights.html', flights=dest, Airline = Airline)
 
 @app.route('/staff_view_customer', methods=['GET', 'POST'])
 def staff_view_customer():
@@ -169,7 +170,7 @@ def staff_view_customer():
 	customers = cursor.fetchall()
 	cursor.close()
 
-	return render_template('staff_view_customers.html', customers = customers)
+	return render_template('staff_view_customers.html', customers = customers, Airline = Airline)
 
 # Loads staff_add_flight.html from staff.html
 @app.route('/add_flight', methods=['GET', 'POST'])
@@ -178,7 +179,9 @@ def add_flight():
 	if(session['user'][2] != 1):
 		return redirect(url_for('staffLogin'))
 
-	return render_template('staff_add_flight.html')
+	Airline = session['user'][1]
+
+	return render_template('staff_add_flight.html',Airline = Airline)
 
 #Inserts the Flight into the data base
 @app.route('/staffinput', methods=['GET', 'POST'])
@@ -199,17 +202,17 @@ def staffinput():
 	query = 'SELECT FlightNumber FROM flight WHERE FlightNumber = %s AND AirlineName = %s'
 	cursor.execute(query, (FlightNumber, Airline))
 	flights = cursor.fetchall()
-	print(flights)
+	#print(flights)
 
 	query = 'SELECT AirplaneID FROM airplane WHERE AirplaneID = %s AND AirlineName = %s'
 	cursor.execute(query, (AirplaneID, Airline))
 	airplane = cursor.fetchall()
-	print(airplane)
+	#print(airplane)
 
 	query = 'SELECT AirportID FROM airport WHERE AirportID = %s'
 	cursor.execute(query, DepartingAirport)
 	dep_airport = cursor.fetchall()
-	print(dep_airport)
+	#print(dep_airport)
 
 	query = 'SELECT AirportID FROM airport WHERE AirportID = %s'
 	cursor.execute(query, ArrivingAirport)
@@ -220,31 +223,31 @@ def staffinput():
 	if flights != ():
 		cursor.close()
 		error = "Flight Number already exists"
-		return render_template('staff_add_flight.html', error = error)
+		return render_template('staff_add_flight.html', error = error, Airline = Airline)
 	
 	# Checks if the Airplane ID exists
 	if airplane == ():
 		cursor.close()
 		error = "Airplane does not exist"
-		return render_template('staff_add_flight.html', error = error)
+		return render_template('staff_add_flight.html', error = error, Airline = Airline)
 
 	# Checks if the departing Airport Exists
 	if dep_airport == ():
 		cursor.close()
 		error = "Departing Airport does not exist"
-		return render_template('staff_add_flight.html', error = error)
+		return render_template('staff_add_flight.html', error = error, Airline = Airline)
 
 	# Checks if the Arriving Airport Exists
 	if ari_airport == ():
 		cursor.close()
 		error = "Arriving Airport does not exist"
-		return render_template('staff_add_flight.html', error = error)
+		return render_template('staff_add_flight.html', error = error, Airline = Airline)
 
 	# Checks if the departing and arriving airports the same
 	if DepartingAirport == ArrivingAirport:
 		cursor.close()
 		error = "Departing and Arriving airports cant be the same"
-		return render_template('staff_add_flight.html', error = error)
+		return render_template('staff_add_flight.html', error = error, Airline = Airline)
 
 	DepartureDate = request.form["Departing Date"]
 	DepartureTime = request.form["Departing Time"]
@@ -275,7 +278,9 @@ def staff_update_status():
 	Date = request.form["DepartureDate"]
 	Time = request.form["DepartureTime"]
 
-	return render_template('status_update.html', FNumber = FlightNumber, date = Date, time = Time)
+	Airline = session['user'][1]
+
+	return render_template('status_update.html', FNumber = FlightNumber, date = Date, time = Time, Airline = Airline)
 
 #Updates the Status of the plane (redirects to '/staff')
 @app.route('/update_status', methods=['PUT', 'POST'])
@@ -295,7 +300,7 @@ def update_status():
 	cursor.execute(query, (Status, FlightNumber, Date, Time))
 	conn.commit()
 	cursor.close()
-	return redirect(url_for('staff'))
+	return redirect(url_for('view_flights'))
 
 @app.route('/add_airplane_page', methods=['GET', 'POST'])
 def add_airplane_page():
@@ -309,7 +314,7 @@ def add_airplane_page():
 	query = 'SELECT AirplaneID, NumSeats FROM airplane WHERE AirlineName = %s'
 	cursor.execute(query, Airline)
 	airplanes = cursor.fetchall()
-	return render_template('staff_add_airplane.html', airplanes = airplanes)
+	return render_template('staff_add_airplane.html', airplanes = airplanes, Airline = Airline)
 
 
 #Shows all the planes the airline has and the confirmation button (Opens airplane.html)
@@ -368,14 +373,15 @@ def add_airport_page():
 	if(session['user'][2] != 1):
 		return redirect(url_for('staffLogin'))
 
+	Airline = session['user'][1]
+
 	cursor = conn.cursor()
 
 	query_airport = 'SELECT * FROM airport'
 	cursor.execute(query_airport)
 	airports = cursor.fetchall()
-	
 	cursor.close()
-	return render_template('staff_add_airport.html', Airports = airports)
+	return render_template('staff_add_airport.html', Airports = airports, Airline = Airline)
 
 # Checks and inserts airports that meet criteria
 @app.route('/add_airport', methods=['PUT', 'POST'])
@@ -395,19 +401,14 @@ def add_airport():
 	cursor.execute(query_check, (AirportID, AirportName))
 	check = cursor.fetchall()
 
-	print(check)
-
 	if(check == ()):
-		print()
 		query = 'INSERT INTO airport VALUES (%s, %s, %s)'
 		cursor.execute(query, (AirportID, AirportName, City))
 		conn.commit()
 		cursor.close()
-		print("It work")
 		return redirect(url_for('add_airport_page'))
 	else:
 		cursor.close()
-		print("didnt work")
 		error = 'Invalid login or username'
 		return redirect(url_for('add_airport_page'))
 
@@ -427,7 +428,7 @@ def view_review():
 	cursor.execute(query, (Airline))
 	airline_flights = cursor.fetchall()
 	cursor.close()
-	return render_template('staff_review_page.html', flights = airline_flights)
+	return render_template('staff_review_page.html', flights = airline_flights, Airline = Airline)
 
 #Staff_info gets the info that the staff should be able to see (NOT GONNA BE USED)
 #@app.route('/staff_info', methods=['GET', 'POST'])
@@ -497,6 +498,8 @@ def reviews():
 	Date = request.form["DepartureDate"]
 	Time = request.form["DepartureTime"]
 
+	Airline = session['user'][1]
+
 	cursor = conn.cursor()
 	query = 'SELECT Comment FROM views WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
 	cursor.execute(query, (FlightNumber, Date, Time))
@@ -510,7 +513,7 @@ def reviews():
 
 	cursor.close()
 
-	return render_template('staff_view_review.html', comments = comments, Avg = avg)
+	return render_template('staff_view_review.html', comments = comments, Avg = avg, Airline = Airline )
 
 # Find the most frequent flyer and lists all customers from the airline
 @app.route('/customer_view', methods=['GET', 'POST'])
@@ -535,7 +538,7 @@ def customer_view():
 	customers = cursor.fetchall()
 
 	cursor.close()
-	return render_template('staff_frequent_flyer.html', flyer = frequent_flyer, customers = customers)
+	return render_template('staff_frequent_flyer.html', flyer = frequent_flyer, customers = customers, Airline = Airline)
 
 # Gets the customers flights in that airline
 @app.route('/customer_flights', methods=['GET', 'POST'])
@@ -559,7 +562,7 @@ def customer_flights():
 
 	print(customer_flights)
 
-	return render_template('staff_customer_view.html', flights = customer_flights)
+	return render_template('staff_customer_view.html', flights = customer_flights, Airline = Airline)
 
 # Finds the amount of tickets sold last month and last year
 @app.route('/reports', methods=['GET', 'POST'])
@@ -584,7 +587,7 @@ def reports():
 	month_tickets = month_tickets[0]['COUNT(TicketID)']
 
 	cursor.close()
-	return render_template('reports.html', year = year_tickets, month = month_tickets)
+	return render_template('reports.html', year = year_tickets, month = month_tickets, Airline = Airline)
 
 #finds the amount of tickets sold in the range dipicted
 @app.route('/reports_inrange', methods=['GET', 'POST'])
@@ -616,7 +619,7 @@ def reports_inrange():
 	tickets = cursor.fetchall()
 	tickets = tickets[0]['COUNT(TicketID)']
 
-	return render_template('reports.html',year = year_tickets, month = month_tickets, tickets = tickets)
+	return render_template('reports.html',year = year_tickets, month = month_tickets, tickets = tickets, Airline = Airline)
 
 # Finds the revenue made in the last 30 days and last year
 @app.route('/revenue', methods=['GET', 'POST'])
@@ -640,7 +643,7 @@ def revenue():
 	total_year= total_year[0]['SUM(SoldPrice)']
 	cursor.close()
 
-	return render_template('staff_revenue.html', Year = total_year, Month = total_month)
+	return render_template('staff_revenue.html', Year = total_year, Month = total_month, Airline = Airline)
 
 # Finds the most popular desination in the last 3 months and year
 @app.route('/destination', methods=['GET', 'POST'])
@@ -667,7 +670,7 @@ def destination():
 		popular_month = None
 	cursor.close()
 
-	return render_template('staff_destinations.html', pop_year = popular_year, pop_month = popular_month)
+	return render_template('staff_destinations.html', pop_year = popular_year, pop_month = popular_month, Airline = Airline)
 
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
