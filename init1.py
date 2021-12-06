@@ -266,6 +266,7 @@ def add_airplane():
 	cursor.close()
 	return redirect(url_for('add_airplane_page'))
 
+# Finds all the Airports
 @app.route('/add_airport_page', methods=['GET', 'POST'])
 def add_airport_page():
 	cursor = conn.cursor()
@@ -277,6 +278,7 @@ def add_airport_page():
 	cursor.close()
 	return render_template('staff_add_airport.html', Airports = airports)
 
+# Checks and inserts airports that meet criteria
 @app.route('/add_airport', methods=['PUT', 'POST'])
 def add_airport():
 	AirportID = request.form["AirportID"]
@@ -319,17 +321,17 @@ def view_review():
 	return render_template('staff_review_page.html', flights = airline_flights)
 
 #Staff_info gets the info that the staff should be able to see (NOT GONNA BE USED)
-@app.route('/staff_info', methods=['GET', 'POST'])
-def staff_info():
+#@app.route('/staff_info', methods=['GET', 'POST'])
+#def staff_info():
 
 	#if(session['user'][2] != 1):
 	#	return redirect(url_for('staffLogin'))
 
-	print("In Staff Info")
-	print(session['user'])
+	#print("In Staff Info")
+	#print(session['user'])
 	
-	Airline = session['user'][1]
-	cursor = conn.cursor()
+	#Airline = session['user'][1]
+	#cursor = conn.cursor()
 
 	#query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
 	
@@ -357,23 +359,24 @@ def staff_info():
 	#total_year = cursor.fetchall()
 	#total_year= total_year[0]['SUM(SoldPrice)']
 
-	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 365 GROUP BY b.City ORDER BY COUNT(*) DESC'
-	cursor.execute(query, Airline)
-	popular_year = cursor.fetchall()
-	popular_year = popular_year[0]['City']
+	#query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 365 GROUP BY b.City ORDER BY COUNT(*) DESC'
+	#cursor.execute(query, Airline)
+	#popular_year = cursor.fetchall()
+	#popular_year = popular_year[0]['City']
 
-	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 90 GROUP BY b.City ORDER BY COUNT(*) DESC'
-	cursor.execute(query, Airline)
-	popular_month = cursor.fetchall()
-	if(popular_month != ()):
-		popular_month = popular_month[0]['City']
-	else:
-		popular_month = None
-	cursor.close()
+	#query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 90 GROUP BY b.City ORDER BY COUNT(*) DESC'
+	#cursor.execute(query, Airline)
+	#popular_month = cursor.fetchall()
+	#if(popular_month != ()):
+	#	popular_month = popular_month[0]['City']
+	#else:
+	#	popular_month = None
+	#cursor.close()
 
 
-	return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, customers = customers, Airline = Airline, Year = total_year, Month = total_month, pop_year = popular_year, pop_month = popular_month)
+	#return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, customers = customers, Airline = Airline, Year = total_year, Month = total_month, pop_year = popular_year, pop_month = popular_month)
 	
+# Gets all the reviews for a flight and shows it
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
 
@@ -396,6 +399,7 @@ def reviews():
 
 	return render_template('staff_view_review.html', comments = comments, Avg = avg)
 
+# Find the most frequent flyer and lists all customers from the airline
 @app.route('/customer_view', methods=['GET', 'POST'])
 def customer_view():
 
@@ -416,6 +420,7 @@ def customer_view():
 	cursor.close()
 	return render_template('staff_frequent_flyer.html', flyer = frequent_flyer, customers = customers)
 
+# Gets the customers flights in that airline
 @app.route('/customer_flights', methods=['GET', 'POST'])
 def customer_flights():
 
@@ -435,6 +440,7 @@ def customer_flights():
 
 	return render_template('staff_customer_view.html', flights = customer_flights)
 
+# Finds the amount of tickets sold last month and last year
 @app.route('/reports', methods=['GET', 'POST'])
 def reports():
 	Airline = session['user'][1]
@@ -454,6 +460,7 @@ def reports():
 	cursor.close()
 	return render_template('reports.html', year = year_tickets, month = month_tickets)
 
+#finds the amount of tickets sold in the range dipicted
 @app.route('/reports_inrange', methods=['GET', 'POST'])
 def reports_inrange():
 	Airline = session['user'][1]
@@ -480,6 +487,7 @@ def reports_inrange():
 
 	return render_template('reports.html',year = year_tickets, month = month_tickets, tickets = tickets)
 
+# Finds the revenue made in the last 30 days and last year
 @app.route('/revenue', methods=['GET', 'POST'])
 def revenue():
 	Airline = session['user'][1]
@@ -498,7 +506,7 @@ def revenue():
 
 	return render_template('staff_revenue.html', Year = total_year, Month = total_month)
 
-
+# Finds the most popular desination in the last 3 months and year
 @app.route('/destination', methods=['GET', 'POST'])
 def destination():
 	Airline = session['user'][1]
