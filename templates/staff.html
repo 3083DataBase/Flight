@@ -13,6 +13,13 @@
 
 		<br>
 
+		<!--View Flights button-->
+		<form action="/add_flight">
+			<input type="submit" value="View Flights"/>
+		</form>
+
+		<br>
+
 		<!--Add Flight button-->
 		<form action="/add_flight">
 			<input type="submit" value="Add Flight"/>
@@ -59,37 +66,5 @@
 			}
 		</style>
 
-		<table>
-			<th>Flight Number</th>
-			<th>Departure Date</th>
-			<th>Departure Time</th>
-			<th>Arrival Date</th>
-			<th>Arrival Time</th>
-			<th>Departing Airport</th>
-			<th>Arriving Airport</th>
-			<th>Status</th>
-			<th>Update Flight Status</th>
-
-			{% for line in flights %}
-				<tr>
-					<td>{{line['FlightNumber']}}</td>
-					<td>{{line['DepartureDate']}}</td>
-					<td>{{line['DepartureTime']}}</td>
-					<td>{{line['ArrivalDate']}}</td>
-					<td>{{line['ArrivalTime']}}</td>
-					<td>{{line['AirportName']}}</td>
-					<td>{{line['a.AirportName']}}</td>
-					<td>{{line['status']}}</td>
-					<td>
-						<form action="/staff_update_status" method="POST">
-							<input type="hidden" name="FlightNumber" Value = "{{line['FlightNumber']}}" required Style="display:none">
-							<input type="hidden" name="DepartureDate" Value = "{{line['DepartureDate']}}" required Style="display:none">
-							<input type="hidden" name="DepartureTime" Value = "{{line['DepartureTime']}}" required Style="display:none">
-							<input type="submit" Value = update Style="z-index :-1">
-						</form>
-					</td>
-				</tr>
-			{% endfor %}
-		</table>
 	</body>
 </html>
