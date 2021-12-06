@@ -28,12 +28,30 @@
 			<input type="submit" value="Add Airport"/>
 		</form>
 
-		<!--Goes to staff info  MIGHT GET RID OF-->
-		<form action="/staff_info">
-			<input type="submit" value="Information"/>
+		<!--Flight reviews button-->
+		<form action="/view_review">
+			<input type="submit" value="Flight Reviews"/>
 		</form>
 
-		<br>
+		<!--View Customers and the most freuqent flyer button-->
+		<form action="/customer_view">
+			<input type="submit" value="Customer flights"/>
+		</form>
+
+		<!--View Reports button-->
+		<form action="/reports">
+			<input type="submit" value="View Reports"/>
+		</form>
+
+		<!--View Revenue button-->
+		<form action="/revenue">
+			<input type="submit" value="View Revenue"/>
+		</form>
+
+		<!--View Revenue button-->
+		<form action="/destination">
+			<input type="submit" value="Popular Destinations"/>
+		</form>
 
 		<style type="text/css">
 			table, th, td{
@@ -50,6 +68,7 @@
 			<th>Departing Airport</th>
 			<th>Arriving Airport</th>
 			<th>Status</th>
+			<th>Update Flight Status</th>
 
 			{% for line in flights %}
 				<tr>

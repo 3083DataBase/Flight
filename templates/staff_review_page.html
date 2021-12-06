@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<h1>{{Airline}}</h1>
+	</head>
+
+	<body>
+		<style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+
+	<h2>Flight Ratings</h2>
+	<table>
+		<th>Flight Number</th>
+		<th>Departure Date</th>
+		<th>Departure Time</th>
+		<th>Arrival Date</th>
+		<th>Arrival Time</th>
+		<th>Departing Airport</th>
+		<th>Arriving Airport</th>
+		<th>Status</th>
+		<th>Check Rating and Comments</th>
+
+		{% for line in flights %}
+			<tr>
+				<td>{{line['FlightNumber']}}</td>
+				<td>{{line['DepartureDate']}}</td>
+				<td>{{line['DepartureTime']}}</td>
+				<td>{{line['ArrivalDate']}}</td>
+				<td>{{line['ArrivalTime']}}</td>
+				<td>{{line['AirportName']}}</td>
+				<td>{{line['a.AirportName']}}</td>
+				<td>{{line['status']}}</td>
+				<td>
+					<form action="/reviews" method="POST">
+						<input type="hidden" name="FlightNumber" Value = "{{line['FlightNumber']}}" required Style="display:none">
+						<input type="hidden" name="DepartureDate" Value = "{{line['DepartureDate']}}" required Style="display:none">
+						<input type="hidden" name="DepartureTime" Value = "{{line['DepartureTime']}}" required Style="display:none">
+						<input type="submit" Value = Select Style="z-index :-1">
+					</form>
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+
+	<!--Back button to Staff-->
+	<form action="/staff">
+		<input type="submit" value="Go Back"/>
+	</form>
+	
+	</body>
+</html>

@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <h1>Confirm Purchase Flights</h1>
+    </head>
+
+    <body>
+        <!-- Search -->
+        <!-- User's flights -->
+        <h3>Selected Flight</h3>
+        <!-- Insert table here -->
+
+        <style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+  
+		<table>
+            <th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Arrival Date</th>
+			<th>Arrival Time</th>
+			<th>Airline</th>
+			<th>Departing Airport</th>
+			<th>Arriving Airport</th>
+
+			{% for line in flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['ArrivalDate']}}</td>
+					<td>{{line['ArrivalTime']}}</td>
+					<td>{{line['AirlineName']}}</td>
+					<td>{{line['AirportName']}}</td>
+					<td>{{line['a.AirportName']}}</td>
+				</tr>
+
+				
+			{% endfor %}
+		</table>
+		</br><br></br>
+        
+		<form action="/customerpurchase" method="POST">
+            <input type="submit" Value = "Purchase" Style="z-index :-1">
+        </form>
+		
+		</br></br>
+		
+		<hr>	<!-- line break -->
+		</br>
+        <a href="/customersearchflights">Back</a> <!-- Logout -- DO NOT TOUCH -->
+
+        <a href="/customerpurchaseresult">Test Purchase Result</a> <!-- Logout -- DO NOT TOUCH -->
+
+    </body>
+
+
+</html>

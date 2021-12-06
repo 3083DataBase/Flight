@@ -6,6 +6,10 @@
 
 	<body>
 
+		{% if message %}
+				<p class="message"> {{error}}</p>
+		{% endif %}
+
 		<!--Addes a new flight to the system-->
 		<br><h1>Adding new flight</h1><br>
 
@@ -36,23 +40,35 @@
 			<input type="number" name="Base Price" placeholder="Base Price" required/> </br>
 
 			<!--The input area for Status-->
-			<label for="status">Status</label> </br>
-			<input type="text" name="Status" placeholder="Status" required/> </br>
+			<label for="Status">Status</label> </br>
+			<select name="Status" id="Status" required>
+				<option value="On-time" name='Status'>On-Time</option>
+				<option value="Delayed" name='Status'>Delayed</option>
+			</select><br>
 
 			<!--The input area for Status-->
 			<label for="Airplane ID">Airplane ID</label> </br>
-			<input type="text" name="Airplane ID" placeholder="Airplane ID" required/> </br>
+			<input type="number" name="Airplane ID" placeholder="Airplane ID" required/> </br>
 			
 			<!--The input area for Departing airports/city-->
 			<label for="Departing Airport ID">Departing Airport ID</label> </br>
-			<input type="text" name="Departing Airport ID" placeholder="Departing Airport ID" required/> </br>
+			<input type="number" name="Departing Airport ID" placeholder="Departing Airport ID" required/> </br>
 
 			<!--The input area for Arriving airports/city-->
 			<label for="Arriving Airport ID">Arriving Airport ID</label> </br>
-			<input type="text" name="Arriving Airport ID" placeholder="Arriving Airport ID" required/> </br>
+			<input type="number" name="Arriving Airport ID" placeholder="Arriving Airport ID" required/> </br>
 
 			<input type="submit" Value = submit>
 
+			{% if error %}
+				<p class="error"><strong>Error:</strong> {{error}}</p>
+			{% endif %}
+
+		</form>
+
+		<!--Back button to Staff-->
+		<form action="/staff">
+			<input type="submit" value="Go Back"/>
 		</form>
 	</body>
 </html>
