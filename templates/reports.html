@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 <html>
-	<head>
-	</head>
 
-	<body>
+<head>
+</head>
 
-		<form action="/reports_inrange" method="POST">
-			<!--The input area for starting Date-->
-			<label for="StartingDate">Starting Date</label> </br>
-			<input type="date" name="StartingDate" placeholder="StartingDate"required/> </br>
+<body>
 
-			<!--The input area for ending Date-->
-			<label for="EndingDate">Ending Date</label></br>
-			<input type="date" name="EndingDate" placeholder="EndingDate"> </br>
+    <form action="/reports_inrange" method="POST">
+        <!--The input area for starting Date-->
+        <label for="StartingDate">Starting Date</label> </br>
+        <input type="date" name="StartingDate" placeholder="StartingDate" required/> </br>
 
-			<input type="submit" Value = submit>
+        <!--The input area for ending Date-->
+        <label for="EndingDate">Ending Date</label></br>
+        <input type="date" name="EndingDate" placeholder="EndingDate"> </br>
 
-		</form>
+        <input type="submit" Value=s ubmit>
 
-		<p id="search">Tickets sold within dates: {{tickets}}</p>
+    </form>
 
-		<br>
-		
-		<p>
-			Tickets sold last year: {{year}} <br>
-			Tickets sold last month: {{month}}
-		</p>
+    <p id="search">Tickets sold within dates: {{tickets}}</p>
+
+    <br>
+
+    <p>
+        Tickets sold last year: {{year}} <br> Tickets sold last month: {{month}}
+    </p>
 
 
-		<!--Back button to Staff-->
-		<form action="/staff">
-			<input type="submit" value="Go Back"/>
-		</form>
+    <!--Back button to Staff-->
+    <form action="/staff">
+        <input type="submit" value="Go Back" />
+    </form>
 
-	</body>
+</body>
+
 </html>
