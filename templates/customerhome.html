@@ -1,73 +1,64 @@
 <html>
 
-<head>
-    <!-- <h1>Welcome {{username}}</h1> -->
-    <h1>Welcome NamePlaceholder</h1>
-</head>
+    <head>
+        <!-- <h1>Welcome {{username}}</h1> -->
+        <h1>Welcome NamePlaceholder</h1>
+    </head>
 
-<body>
-    <!-- Search -->
-    <!-- User's flights -->
-    <h3>View My Flights</h3>
-    <!-- Insert table here -->
+    <body>
+        <!-- Search -->
+        <!-- User's flights -->
+        <h3>View My Flights</h3>
+        <!-- Insert table here -->
 
-    <style type="text/css">
-        table,
-        th,
-        td {
-            border: 1px solid black;
-        }
-    </style>
+        <style type="text/css">
+			table, th, td{
+				border: 1px solid black;
+			}
+		</style>
+  
+		<table>
+			<th>Flight Number</th>
+			<th>Departure Date</th>
+			<th>Departure Time</th>
+			<th>Airline</th>
+			<th>Status</th>
 
-    <table>
-        <th>Flight Number</th>
-        <th>Departure Date</th>
-        <th>Departure Time</th>
-        <th>Airline</th>
-        <th>Status</th>
+			{% for line in flights %}
+				<tr>
+					<td>{{line['FlightNumber']}}</td>
+					<td>{{line['DepartureDate']}}</td>
+					<td>{{line['DepartureTime']}}</td>
+					<td>{{line['AirlineName']}}</td>
+					<td>{{line['Status']}}</td>
+				</tr>
 
-        {% for line in flights %}
-        <tr>
-            <td>{{line['FlightNumber']}}</td>
-            <td>{{line['DepartureDate']}}</td>
-            <td>{{line['DepartureTime']}}</td>
-            <td>{{line['AirlineName']}}</td>
-            <td>{{line['Status']}}</td>
-        </tr>
+				
+			{% endfor %}
+		</table>
+		</br>
+	
 
+		<hr>	<!-- line break -->
+		
+		<h3>What would you like to do?</a></h3>
 
-        {% endfor %}
-    </table>
-    </br>
+		<a href="/customersearchflights">Search Flights</a>
+		</br>
 
+		<a href="/customerpastflightsview">View My Past Flights</a>
+		</br>
 
-    <hr>
-    <!-- line break -->
+		<a href="/customerreview">Add Review for a Past Flight</a>
+		</br>
+		
+		</br></br>
+		
+		<hr>	<!-- line break -->
+		</br>
+        <a href="/logout">Logout</a> <!-- Logout -- DO NOT TOUCH -->
 
-    <h3>What would you like to do?</a>
-    </h3>
-
-    <a href="/customersearchflights">Search Flights</a>
-    </br>
-
-    <a href="/customerpastflightsview">View My Past Flights</a>
-    </br>
-
-    <a href="/customerreview">Add Review for a Past Flight</a>
-    </br>
-
-    <a href="/customertrackspending">Track My Spending</a>
-
-    </br>
-    </br>
-
-    <hr>
-    <!-- line break -->
-    </br>
-    <a href="/logout">Logout</a>
-    <!-- Logout -- DO NOT TOUCH -->
-
-</body>
+    </body>
 
 
 </html>
