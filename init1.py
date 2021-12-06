@@ -842,9 +842,9 @@ def customerpurchase():
 def customerpurchaseresult():
 	return render_template('CustomerPurchaseResult.html')
 
-####################### CustomerTrackSpending
-@app.route('/customertrackspending', methods=['GET', 'POST'])
-def customertrackspending():
+####################### CustomerTrackSpendingV2
+@app.route('/customertrackspendingv2', methods=['GET', 'POST'])
+def customertrackspendingV2():
 	#username = session['username']
 	cursor = conn.cursor()
 	#queryCustYearSpent = 'SELECT SUM(SoldPrice) AS Spent FROM `ticket` WHERE CustomerEmail = %s AND PurchaseDate >= CURRENT_DATE - INTERVAL 1 YEAR'
@@ -858,7 +858,7 @@ def customertrackspending():
 
 
 	cursor.close()
-	return render_template('CustomerTrackSpending.html', spentYear = spentYear)
+	return render_template('CustomerTrackSpendingV2.html', spentYear = spentYear)
 
 
 
