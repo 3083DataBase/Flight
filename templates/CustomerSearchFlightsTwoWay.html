@@ -8,21 +8,22 @@
 <body>
     <form action="/customersearchflightstwoway" method="POST">
         <!--The input area for Departing airports/city-->
-        <label for="Departing">Departing</label> </br>
+        <label for="Departing"><b>Departing</b></label> </br>
         <input type="text" name="Departing" placeholder="City or Airport Name" required/> </br></br>
 
         <!--The input area for Arriving airports/city-->
-        <label for="Arriving">Arriving</label> </br>
+        <label for="Arriving"><b>Arriving</b></label> </br>
         <input type="text" name="Arriving" placeholder="City or Airport Name" required/> </br></br>
 
         <!--The input area for Departing Date-->
-        <label for="Departing Date">Departing Date</label> </br>
-        <input type="date" name="Departure Date" placeholder="Departure Date" required/> </br></br>
+        <label for="Departing Date"><b>Departing Date</b></label> </br>
+        <input type="date" name="Departure Date" placeholder="Departure Date" required/> </br>
 
         <!--The input area for Arriving Date-->
-        <label for="Arriving Date">Arriving Date</label></br>
+        <label for="Arriving Date" id="Arr_date"><b>Arriving Date</b></label>
         <input type="date" name="Arriving Date" placeholder="Arriving Date" required/> </br></br>
         
+        <!--Search Button-->
         <input type="submit" Value="submit">
 
     </form>
