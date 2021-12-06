@@ -1,63 +1,74 @@
 <html>
-    <head>
-        <!-- <h1>Welcome {{username}}</h1> -->
-        <h1>Welcome NamePlaceholder</h1>
-    </head>
 
-    <body>
-        <!-- Search -->
-        <!-- User's flights -->
-        <h3>View My Flights</h3>
-        <!-- Insert table here -->
+<head>
+    <!-- <h1>Welcome {{username}}</h1> -->
+    <h1>Welcome Name Placeholder</h1>
+</head>
 
-        <style type="text/css">
-			table, th, td{
-				border: 1px solid black;
-			}
-		</style>
-  
-		<table>
-			<th>Flight Number</th>
-			<th>Departure Date</th>
-			<th>Departure Time</th>
-			<th>Airline</th>
-			<th>Status</th>
+<body>
+    <!-- Search -->
+    <!-- User's flights -->
+    <h3>View My Flights</h3>
+    <!-- Insert table here -->
 
-			{% for line in flights %}
-				<tr>
-					<td>{{line['FlightNumber']}}</td>
-					<td>{{line['DepartureDate']}}</td>
-					<td>{{line['DepartureTime']}}</td>
-					<td>{{line['AirlineName']}}</td>
-					<td>{{line['Status']}}</td>
-				</tr>
+    <style type="text/css">
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
 
-				
-			{% endfor %}
-		</table>
-		</br>
-	
+    <table>
+        <th>Flight Number</th>
+        <th>Departure Date</th>
+        <th>Departure Time</th>
+        <th>Airline</th>
+        <th>Status</th>
 
-		<hr>	<!-- line break -->
-		
-		<h3>What would you like to do?</a></h3>
+        {% for line in flights %}
+        <tr>
+            <td>{{line['FlightNumber']}}</td>
+            <td>{{line['DepartureDate']}}</td>
+            <td>{{line['DepartureTime']}}</td>
+            <td>{{line['AirlineName']}}</td>
+            <td>{{line['Status']}}</td>
+        </tr>
 
-		<a href="/customersearchflights">Search Flights</a>
-		</br>
 
-		<a href="/customerpastflightsview">View My Past Flights</a>
-		</br>
+        {% endfor %}
+    </table>
+    </br>
 
-		<!-- <h3>Rate a Past Flight: <a href="/customerreview">Add Review</a></h3> -->
-		<a href="/customerreview">Add Review for a Past Flight</a>
-		
-		</br></br>
-		
-		<hr>	<!-- line break -->
-		</br>
-        <a href="/logout">Logout</a> <!-- Logout -- DO NOT TOUCH -->
 
-    </body>
+    <hr>
+    <!-- line break -->
+
+    <h3>What would you like to do?</a>
+    </h3>
+
+    <a href="/customersearchflights">Search Flights</a>
+    </br>
+
+    <a href="/customerpastflightsview">View My Past Flights</a>
+    </br>
+
+    <!-- <h3>Rate a Past Flight: <a href="/customerreview">Add Review</a></h3> -->
+    <a href="/customerreview">Add Review for a Past Flight</a>
+    </br>
+
+    <a href="/customertrackspending">Check Past Purchases</a>
+
+    </br>
+    </br>
+
+    <hr>
+    <!-- line break -->
+    </br>
+    <a href="/logout">Logout</a>
+    <!-- Logout -- DO NOT TOUCH -->
+
+</body>
 
 
 </html>
