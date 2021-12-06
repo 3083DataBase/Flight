@@ -88,13 +88,20 @@ def get_flight():
 #Holds all the code for the staff to input into flights (Required for staff to be logged in)
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
 	return render_template('staff.html')
 
 @app.route('/view_flights', methods=['GET', 'POST'])
 def view_flights():
-	Airline = session['user'][1]
-	#print(Airline)
 
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
+	Airline = session['user'][1]
 	cursor = conn.cursor()
 
 	#finds the flights in 30 days
@@ -107,6 +114,11 @@ def view_flights():
 
 @app.route('/staff_search_flights', methods=['GET', 'POST'])
 def staff_search_flights():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	Airline = session['user'][1]
 	checkbox = request.form["checkbox"]
 
@@ -141,6 +153,10 @@ def staff_search_flights():
 @app.route('/staff_view_customer', methods=['GET', 'POST'])
 def staff_view_customer():
 
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	FlightNumber = request.form["FlightNumber"]
 	Date = request.form["DepartureDate"]
 	Time = request.form["DepartureTime"]
@@ -158,11 +174,18 @@ def staff_view_customer():
 # Loads staff_add_flight.html from staff.html
 @app.route('/add_flight', methods=['GET', 'POST'])
 def add_flight():
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	return render_template('staff_add_flight.html')
 
 #Inserts the Flight into the data base
 @app.route('/staffinput', methods=['GET', 'POST'])
 def staffinput():
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
 
 	error = None
 
@@ -243,6 +266,11 @@ def staffinput():
 #Transfers the data to status_update.html (opens status_update.html)
 @app.route('/staff_update_status', methods=['GET', 'POST'])
 def staff_update_status():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	FlightNumber = request.form["FlightNumber"]
 	Date = request.form["DepartureDate"]
 	Time = request.form["DepartureTime"]
@@ -252,6 +280,11 @@ def staff_update_status():
 #Updates the Status of the plane (redirects to '/staff')
 @app.route('/update_status', methods=['PUT', 'POST'])
 def update_status():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	FlightNumber = request.form["FlightNumber"]
 	Date = request.form["DepartureDate"]
 	Time = request.form["DepartureTime"]
@@ -266,6 +299,11 @@ def update_status():
 
 @app.route('/add_airplane_page', methods=['GET', 'POST'])
 def add_airplane_page():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	Airline = session['user'][1]
 	cursor = conn.cursor()
 	query = 'SELECT AirplaneID, NumSeats FROM airplane WHERE AirlineName = %s'
@@ -277,6 +315,11 @@ def add_airplane_page():
 #Shows all the planes the airline has and the confirmation button (Opens airplane.html)
 @app.route('/add_airplane_confirmation', methods=['GET', 'POST'])
 def add_airplane_confirmation():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	Airline = session['user'][1]
 	AirplaneID = request.form["AirplaneID"]
 	NumSeats = request.form["NumSeats"]
@@ -299,6 +342,11 @@ def add_airplane_confirmation():
 #Adds the plane to the database (redirects to '/staff')
 @app.route('/add_airplane', methods=['GET', 'POST'])
 def add_airplane():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	Airline = session['user'][1]
 	AirplaneID = request.form["AirplaneID"]
 	NumSeats = request.form["NumSeats"]
@@ -315,6 +363,11 @@ def add_airplane():
 # Finds all the Airports
 @app.route('/add_airport_page', methods=['GET', 'POST'])
 def add_airport_page():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	cursor = conn.cursor()
 
 	query_airport = 'SELECT * FROM airport'
@@ -327,6 +380,11 @@ def add_airport_page():
 # Checks and inserts airports that meet criteria
 @app.route('/add_airport', methods=['PUT', 'POST'])
 def add_airport():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	AirportID = request.form["AirportID"]
 	AirportName	= request.form["AirportName"]
 	City = request.form["City"]
@@ -356,6 +414,11 @@ def add_airport():
 # Loads staff_review_page.html from staff.html
 @app.route('/view_review', methods=['GET', 'POST'])
 def view_review():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	Airline = session['user'][1]
 	cursor = conn.cursor()
 
@@ -426,6 +489,10 @@ def view_review():
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
 
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	FlightNumber = request.form["FlightNumber"]
 	Date = request.form["DepartureDate"]
 	Time = request.form["DepartureTime"]
@@ -449,6 +516,10 @@ def reviews():
 @app.route('/customer_view', methods=['GET', 'POST'])
 def customer_view():
 
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	Airline = session['user'][1]
 	cursor = conn.cursor()
 
@@ -470,6 +541,10 @@ def customer_view():
 @app.route('/customer_flights', methods=['GET', 'POST'])
 def customer_flights():
 
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	Email = request.form["CustomerEmail"]
 	Airline = session['user'][1]
 
@@ -489,6 +564,11 @@ def customer_flights():
 # Finds the amount of tickets sold last month and last year
 @app.route('/reports', methods=['GET', 'POST'])
 def reports():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	Airline = session['user'][1]
 
 	cursor = conn.cursor()
@@ -509,6 +589,11 @@ def reports():
 #finds the amount of tickets sold in the range dipicted
 @app.route('/reports_inrange', methods=['GET', 'POST'])
 def reports_inrange():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	Airline = session['user'][1]
 	start = request.form["StartingDate"]
 	end = request.form["EndingDate"]
@@ -536,6 +621,11 @@ def reports_inrange():
 # Finds the revenue made in the last 30 days and last year
 @app.route('/revenue', methods=['GET', 'POST'])
 def revenue():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+
 	Airline = session['user'][1]
 	cursor = conn.cursor()
 
@@ -555,6 +645,11 @@ def revenue():
 # Finds the most popular desination in the last 3 months and year
 @app.route('/destination', methods=['GET', 'POST'])
 def destination():
+
+	###Security Check
+	if(session['user'][2] != 1):
+		return redirect(url_for('staffLogin'))
+		
 	Airline = session['user'][1]
 	cursor = conn.cursor()
 
