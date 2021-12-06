@@ -16,46 +16,18 @@
         </br></br>
 
         <!-- Comment Box -->
-
         <label for="Comment">Comment:</label>
         </br>
         <textarea id="comment" name="comment" rows="10" cols="50"></textarea>
-
 
 
         </br></br>
         <form action="/customerreview" method="POST">
             <input type="submit" value="Submit Review">
         </form>
-        </br>
-            
-        <hr>	<!-- line break -->
-        <h3>Review previous ratings</h3>
-        <style type="text/css">
-            table, th, td{
-                border: 1px solid black;
-            }
-        </style>
-        
-        <table>
-            <th>FlightNumber</th>
-            <th>DepartureDate</th>
-            <th>DepartureTime</th>
-            <th>Rate</th>
-            <th>Comment</th>
-        
-        {% for line in posts %}
-            <tr>
-                <td>{{line['FlightNumber']}}</td>
-                <td>{{line['DepartureDate']}}</td>
-                <td>{{line['DepartureTime']}}</td>
-                <td>{{line['Rate']}}</td>
-                <td>{{line['Comment']}}</td>
-            </tr>
-        {% endfor %}
-        </table>
-
         </br></br>
+
+
         <hr>	<!-- line break -->
         </br>
         <a href="/customerhome">Back</a>
