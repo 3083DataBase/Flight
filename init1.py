@@ -833,9 +833,6 @@ def customersearchflights():
 ####################### CustomerSearchFlights -- One Way
 @app.route('/customersearchflightsoneway', methods=['GET', 'POST'])
 def customersearchflightsoneway():
-	#checkbox = request.form["checkbox"]
-	#checkbox = request.form.get("checkbox")
-
 	#departing = request.form["Departing"]
 	departing = request.form.get("Departing")
 	#departing_date = request.form["Departure Date"]
@@ -861,6 +858,31 @@ def customersearchflightsoneway():
 ####################### CustomerSearchFlights -- Two Way
 @app.route('/customersearchflightstwoway', methods=['GET', 'POST'])
 def customersearchflightstwoway():
+	#departing = request.form["Departing"]
+	departing = request.form.get("Departing")
+	#departing_date = request.form["Departure Date"]
+	departing_date = request.form.get("Departure Date")
+	#arriving = request.form["Arriving"]
+	arriving = request.form.get("Arriving")
+	arriving_date = request.form.get("Arriving Date")
+
+	cursor = conn.cursor()
+
+
+	# two way search
+	queryDepart = 'SELECT f.FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, plane.AirlineName, d.AirportName, a.AirportName, NumSeats, SoldPrice FROM `flight` AS f, `airplane` AS plane, `ticket`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND f.`AirplaneID` = plane.`AirplaneID` AND f.`AirlineName` = plane.`AirlineName`AND f.`FlightNumber` = `ticket`.`FlightNumber` AND f.`AirlineName` = `ticket`.`AirlineName`AND plane.`AirlineName` =`ticket`.`AirlineName` AND NumSeats > 0 AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s;'
+	#queryReturn = 'SELECT f.FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, plane.AirlineName, d.AirportName, a.AirportName, NumSeats, SoldPrice FROM `flight` AS f, `airplane` AS plane, `ticket`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND f.`AirplaneID` = plane.`AirplaneID` AND f.`AirlineName` = plane.`AirlineName`AND f.`FlightNumber` = `ticket`.`FlightNumber` AND f.`AirlineName` = `ticket`.`AirlineName`AND plane.`AirlineName` =`ticket`.`AirlineName` AND NumSeats > 0 AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s;'
+	cursor.execute(queryDepart, (departing, departing, arriving, arriving, departing_date))
+	depart_data = cursor.fetchall()
+
+	queryArrive = 'SELECT f.FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, plane.AirlineName, d.AirportName, a.AirportName, NumSeats, SoldPrice FROM `flight` AS f, `airplane` AS plane, `ticket`, `airport` AS d, `airport` AS a WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = d.AirportID AND f.`AirplaneID` = plane.`AirplaneID` AND f.`AirlineName` = plane.`AirlineName`AND f.`FlightNumber` = `ticket`.`FlightNumber` AND f.`AirlineName` = `ticket`.`AirlineName`AND plane.`AirlineName` =`ticket`.`AirlineName` AND NumSeats > 0 AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s;'
+	cursor.execute(queryArrive, (departing, departing, arriving, arriving, departing_date))
+	arrive_data = cursor.fetchall()
+
+	for each in arrive_data:
+		print(each)
+
+	cursor.close()
 	return render_template('CustomerSearchFlightsTwoWay.html')
 
 

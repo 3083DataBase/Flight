@@ -17,10 +17,10 @@
 
         <!--The input area for Departing Date-->
         <label for="Departing Date"><b>Departing Date</b></label> </br>
-        <input type="date" name="Departure Date" placeholder="Departure Date" required/> </br>
+        <input type="date" name="Departure Date" placeholder="Departure Date" required/> </br></br>
 
-        <!--The input area for Arriving Date-->
-        <label for="Arriving Date" id="Arr_date"><b>Arriving Date</b></label>
+        <!--The input area for Arriving Date / Returning-->
+        <label for="Arriving Date" id="Arr_date"><b>Arriving Date</b></label></br>
         <input type="date" name="Arriving Date" placeholder="Arriving Date" required/> </br></br>
         
         <!--Search Button-->
@@ -72,6 +72,9 @@
         {% endfor %}
     </table>
 
+
+
+
     <h1>Returning/Arriving Flights</h1>
 
     <table>
@@ -83,7 +86,8 @@
         <th>Airline</th>
         <th>Departing Airport</th>
         <th>Arriving Airport</th>
-        <th>Select Flight</th>
+        <th>Ticket Price</th>
+        <th>Purchase Flight</th>
 
         {% for line in arrival_flights %}
         <tr>
@@ -95,6 +99,7 @@
             <td>{{line['AirlineName']}}</td>
             <td>{{line['AirportName']}}</td>
             <td>{{line['a.AirportName']}}</td>
+            <td>{{line['SoldPrice']}}</td>
 
             <td>
                 <form action="/customerpurchase" method="POST">
