@@ -788,7 +788,7 @@ def customerreview():
 	#comment = request.form['comment']
 	comment = request.form.get('comment')
 	query = 'UPDATE views SET Rate = %s, Comment = %s WHERE CustomerEmail = %s AND FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
-	cursor.execute(query, (rate, comment))
+	cursor.execute(query, (rate, comment, CustomerEmail, FlightNumber, DepartureDate, DepartureTime))
 	conn.commit()
 	cursor.close()
 	
