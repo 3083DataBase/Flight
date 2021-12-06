@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <h1>Search One-Way Flights</h1>
+</head>
+
+<body>
+    <form action="/customersearchflightsoneway" method="POST">
+        <!--The input area for Departing airports/city-->
+        <label for="Departing"><b>Departing</b></label> </br>
+        <input type="text" name="Departing" placeholder="City or Airport Name" required/> </br></br>
+
+        <!--The input area for Arriving airports/city-->
+        <label for="Arriving"><b>Arriving</b></label> </br>
+        <input type="text" name="Arriving" placeholder="City or Airport Name" required/> </br></br>
+
+        <!--The input area for Departing Date-->
+        <label for="Departing Date"><b>Departing Date</b></label> </br>
+        <input type="date" name="Departure Date" placeholder="Departure Date" required/> </br></br>
+        
+        <!--Search Button-->
+        <input type="submit" Value="submit">
+
+    </form>
+
+    <p style="color:red;">* Table will be empty until search values are entered<br>
+    ** Table will be empty if no flights match search values
+    </p>
+    <br>
+
+    <style type="text/css">
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+
+    <h1>Departure Flights</h1>
+
+    <table>
+        <th>Flight Number</th>
+        <th>Departure Date</th>
+        <th>Departure Time</th>
+        <th>Arrival Date</th>
+        <th>Arrival Time</th>
+        <th>Airline</th>
+        <th>Departing Airport</th>
+        <th>Arriving Airport</th>
+        <th>Ticket Price</th>
+        <th>Purchase Flight</th>
+
+        {% for line in depart_flights %}
+        <tr>
+            <td>{{line['FlightNumber']}}</td>
+            <td>{{line['DepartureDate']}}</td>
+            <td>{{line['DepartureTime']}}</td>
+            <td>{{line['ArrivalDate']}}</td>
+            <td>{{line['ArrivalTime']}}</td>
+            <td>{{line['AirlineName']}}</td>
+            <td>{{line['AirportName']}}</td>
+            <td>{{line['a.AirportName']}}</td>
+            <td>{{line['SoldPrice']}}</td>
+
+            <td>
+                <form action="/customerpurchase" method="POST">
+                    <input type="submit" Value="Purchase" Style="z-index :-1">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    </br>
+    <hr>
+    <!-- line break -->
+    </br>
+
+    {% if not message %}
+    <a href="/customerhome">Back</a> {% endif %}
+
+
+</body>
+
+</html>

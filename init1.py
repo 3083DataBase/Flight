@@ -846,6 +846,40 @@ def customersearchflights():
 	return render_template('CustomerSearchFlights.html', depart_flights=depart_data, arrival_flights=arriving_data)
 
 
+####################### CustomerSearchFlights -- One Way
+@app.route('/customersearchflightsoneway', methods=['GET', 'POST'])
+def customersearchflightsoneway():
+	#checkbox = request.form["checkbox"]
+	#checkbox = request.form.get("checkbox")
+
+	#departing = request.form["Departing"]
+	departing = request.form.get("Departing")
+	#departing_date = request.form["Departure Date"]
+	departing_date = request.form.get("Departure Date")
+	#arriving = request.form["Arriving"]
+	arriving = request.form.get("Arriving")
+
+	cursor = conn.cursor()
+
+
+	# one way search
+	#queryOneWay = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, SoldPrice FROM (`flight` NATURAL JOIN `airplane`), `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s AND NumSeats > 0'
+	queryOneWay = 'SELECT f.FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, plane.AirlineName, d.AirportName, a.AirportName, NumSeats, SoldPrice FROM `flight` AS f, `airplane` AS plane, `ticket`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND f.`AirplaneID` = plane.`AirplaneID` AND f.`AirlineName` = plane.`AirlineName`AND f.`FlightNumber` = `ticket`.`FlightNumber` AND f.`AirlineName` = `ticket`.`AirlineName`AND plane.`AirlineName` =`ticket`.`AirlineName` AND NumSeats > 0 AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s;'
+	cursor.execute(queryOneWay, (departing, departing, arriving, arriving, departing_date))
+	depart_data = cursor.fetchall()
+	for each in depart_data:
+		print(each)
+
+	cursor.close()
+	return render_template('CustomerSearchFlightsOneWay.html', depart_flights=depart_data)
+
+
+####################### CustomerSearchFlights -- Two Way
+@app.route('/customersearchflightstwoway', methods=['GET', 'POST'])
+def customersearchflightstwoway():
+	return render_template('CustomerSearchFlightsTwoWay.html')
+
+
 ####################### CustomerPurchase
 @app.route('/customerpurchase', methods=['GET', 'POST'])
 def customerpurchase():
