@@ -115,6 +115,35 @@ def view_flights():
 	cursor.close()
 	return render_template('staff_view_flights.html', flights = airline_flights, Airline = Airline, city = city, airport = airport)
 
+@app.route('/staff_search_flights', methods=['GET', 'POST'])
+def staff_search_flights():
+	Airline = session['user'][1]
+	checkbox = request.form["checkbox"]
+
+	print(checkbox)
+	cursor = conn.cursor()
+	if(checkbox == "DateSearch"):
+		start = request.form["Inital Date"] 
+		end = request.form["Ending Date"]
+
+		query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND DepartureDate > %s and DepartureDate < %s AND AirlineName = %s'
+		cursor.execute(query, (start, end, Airline)) #Runs the query
+		date = cursor.fetchall() #Gets the data from ran SQL query
+		date = cursor.fetchall()
+		cursor.close()
+		return render_template('staff_view_flights.html', flights=date)
+	else:    #Is the one way search
+		depart = request.form["Departing"] 
+		arrival = request.form["Arriving"]
+
+		if depart == arrival:
+			return redirect(url_for('view_flights'))
+
+		query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND DepartAirportID = %s AND ArrivalAirportID = %s AND AirlineName = %s'
+		cursor.execute(query, (depart, arrival, Airline)) #Runs the query
+		dest = cursor.fetchall() #Gets the data from ran SQL query
+		cursor.close()
+		return render_template('staff_view_flights.html', flights=dest)
 
 # Loads staff_add_flight.html from staff.html
 @app.route('/add_flight', methods=['GET', 'POST'])
