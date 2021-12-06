@@ -1,13 +1,38 @@
 <html>
     <head>
-        <h1>Confirm Purchase Flights</h1>
+        <h1>Purchase Flight</h1>
     </head>
 
     <body>
         <!-- Search -->
+        <form action="/customerpurchase" method="POST">    
+            <!--CustomerEmail input-->
+            <label for="CustomerEmail"><b>Email</b></label> </br>
+            <input type="text" name="CustomerEmail" placeholder="CustomerEmail" required/> </br></br>
+
+            <!--Card Type input-->
+            <label for="CardType"><b>Card Type (credit/debit)</b></label> </br>
+            <input type="text" name="CardType" placeholder="Card Type" required/> </br></br>
+
+            <!--The input area for Departing Date-->
+            <label for="CardNumber"><b>Card Number</b></label> </br>
+            <input type="text" name="CardNumber" placeholder="CardNumber" required/> </br></br>
+
+            <!--The input area for Departing Date-->
+            <label for="NameOfCard"><b>Name Of Card (Visa, Mastercard, etc.)</b></label> </br>
+            <input type="text" name="NameOfCard" placeholder="NameOfCard" required/> </br></br>
+
+            <!--The input area for Departing Date-->
+            <label for="ExpirationDate"><b>Card Expiration Date</b></label> </br>
+            <input type="date" name="ExpirationDate" placeholder="ExpirationDate" required/> </br></br>
+            
+    
+        </form>
+
+
+
         <!-- User's flights -->
         <h3>Selected Flight</h3>
-        <!-- Insert table here -->
 
         <style type="text/css">
 			table, th, td{
