@@ -347,15 +347,15 @@ def staff_info():
 	#cursor.execute(customer_query, (Airline))
 	#customers = cursor.fetchall()
 
-	query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 30'
-	cursor.execute(query, Airline)
-	total_month = cursor.fetchall()
-	total_month = total_month[0]['SUM(SoldPrice)']
+	#query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 30'
+	#cursor.execute(query, Airline)
+	#total_month = cursor.fetchall()
+	#total_month = total_month[0]['SUM(SoldPrice)']
 
-	query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 365'
-	cursor.execute(query, Airline)
-	total_year = cursor.fetchall()
-	total_year= total_year[0]['SUM(SoldPrice)']
+	#query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 365'
+	#cursor.execute(query, Airline)
+	#total_year = cursor.fetchall()
+	#total_year= total_year[0]['SUM(SoldPrice)']
 
 	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 365 GROUP BY b.City ORDER BY COUNT(*) DESC'
 	cursor.execute(query, Airline)
@@ -479,6 +479,46 @@ def reports_inrange():
 	tickets = tickets[0]['COUNT(TicketID)']
 
 	return render_template('reports.html',year = year_tickets, month = month_tickets, tickets = tickets)
+
+@app.route('/revenue', methods=['GET', 'POST'])
+def revenue():
+	Airline = session['user'][1]
+	cursor = conn.cursor()
+
+	query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 30'
+	cursor.execute(query, Airline)
+	total_month = cursor.fetchall()
+	total_month = total_month[0]['SUM(SoldPrice)']
+
+	query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 365'
+	cursor.execute(query, Airline)
+	total_year = cursor.fetchall()
+	total_year= total_year[0]['SUM(SoldPrice)']
+	cursor.close()
+
+	return render_template('staff_revenue.html', Year = total_year, Month = total_month)
+
+
+@app.route('/destination', methods=['GET', 'POST'])
+def destination():
+	Airline = session['user'][1]
+	cursor = conn.cursor()
+
+	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 365 GROUP BY b.City ORDER BY COUNT(*) DESC'
+	cursor.execute(query, Airline)
+	popular_year = cursor.fetchall()
+	popular_year = popular_year[0]['City']
+
+	query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 90 GROUP BY b.City ORDER BY COUNT(*) DESC'
+	cursor.execute(query, Airline)
+	popular_month = cursor.fetchall()
+	if(popular_month != ()):
+		popular_month = popular_month[0]['City']
+	else:
+		popular_month = None
+	cursor.close()
+
+	return render_template('staff_destinations.html', pop_year = popular_year, pop_month = popular_month)
 
 #Define route for loginfork // this is where we pick is a user or staff log in
 @app.route('/loginfork')
