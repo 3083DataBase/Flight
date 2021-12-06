@@ -25,13 +25,17 @@
     <br/> Choose Date Range
     <br/>
 
-    <label for="Start Date">Start Date</label> </br>
-    <input type="date" name="startDate" placeholder="Start Date" required/> </br>
-    <label for="End Date">End Date</label> </br>
-    <input type="date" name="endDate" placeholder="End Date" required/> </br>
-    <input type="submit" value="enter" />
+
+    <form action="/customer_tracking_range" method="POST">
+        <label for="Start Date">Start Date</label> </br>
+        <input type="date" name="startDate" placeholder="Start Date" required/> </br>
+        <label for="End Date">End Date</label> </br>
+        <input type="date" name="endDate" placeholder="End Date" required/> </br>
+        <input type="submit" value="enter" />
+        <br>
+    </form>
     <br> Money spent in this time frame: {{specify}}
-    <br>
+
     <br> {% if error %}
     <p class="error"><strong>Error:</strong> {{error}}</p>
     {% endif %}

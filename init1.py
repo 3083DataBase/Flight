@@ -870,23 +870,50 @@ def customertrackspending():
 	money_spent = cursor.fetchall()
 	s_date = request.form.get("startDate") 
 	e_date = request.form.get("endDate")
-	print(s_date, e_date)
 	
-	query3 = 'SELECT SUM(SoldPrice) FROM ticket NATURAL JOIN customer WHERE CustomerEmail = %s AND %s < PurchaseDate < %s';
+	conn.commit()
+	cursor.close()
+
+	return render_template('customertrackspending.html', total_spent = total_spent, six_months = money_spent)
+
+
+@app.route('/customer_tracking_range', methods=['GET', 'POST'])
+def customer_tracking_range():
+	user = session['user'][0]
+	s_date = request.form.get("startDate") 
+	e_date = request.form.get("endDate")
+
+	cursor = conn.cursor()
+
+	# print(user)
+	query = 'SELECT SUM(SoldPrice) FROM ticket NATURAL JOIN customer WHERE CustomerEmail = %s AND YEAR(PurchaseDate) = YEAR(now());'
+	cursor.execute(query, user)
+	total_spent = cursor.fetchall()
+	# print("HERE: ", total_spent[0])
+	# print(total_spent[0]['SUM(SoldPrice)'])
+	if total_spent[0]['SUM(SoldPrice)'] == None:
+		total_spent = 0
+	else:
+		total_spent = total_spent[0]['SUM(SoldPrice)']
+
+	query2 = 'SELECT MONTH(PurchaseDate), SUM(SoldPrice) FROM ticket NATURAL JOIN customer WHERE PurchaseDate > DATE_SUB(now(), INTERVAL 6 MONTH) AND CustomerEmail = %s GROUP BY MONTH(PurchaseDate)'
+	cursor.execute(query2, user)
+	money_spent = cursor.fetchall()
+	s_date = request.form.get("startDate") 
+	e_date = request.form.get("endDate")
+	
+	query3 = 'SELECT SUM(SoldPrice) FROM ticket NATURAL JOIN customer WHERE CustomerEmail = %s AND PurchaseDate >= %s AND PurchaseDate <= %s';
 	cursor.execute(query3, (user, s_date, e_date))
 	specific_spent = cursor.fetchall()
 	if specific_spent[0]['SUM(SoldPrice)'] == None:
 		specific_spent = 0
 	else:
 		specific_spent = specific_spent[0]['SUM(SoldPrice)']
-	print(specific_spent)
 	conn.commit()
 	cursor.close()
 
 	return render_template('customertrackspending.html', total_spent = total_spent, six_months = money_spent, specify = specific_spent)
 
-	cursor.close()
-	return render_template('CustomerTrackSpendingV2.html', spentYear = spentYear)
 
 
 
