@@ -940,9 +940,16 @@ def customersearchflightstwoway():
 ####################### CustomerPurchase
 @app.route('/customerpurchase', methods=['GET', 'POST'])
 def customerpurchase():
+	CustomerEmail = request.form.get("CustomerEmail")
 	FlightNumber = request.form.get("FlightNumber")
+	TicketID = request.form.get("TicketID")
 
-	
+	# update ticket to have customerEmail
+	# take ticketID from ticket and insert into purchase
+	# insert basic data into views
+
+
+
 	return render_template('CustomerPurchase.html')
 
 
