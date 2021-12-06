@@ -88,26 +88,23 @@ def get_flight():
 #Holds all the code for the staff to input into flights (Required for staff to be logged in)
 @app.route('/staff', methods=['GET', 'POST'])
 def staff():
+	return render_template('staff.html')
 
-	#if(session['user'][2] != 1):
-	#	return redirect(url_for('staffLogin'))
-		
+@app.route('/view_flights', methods=['GET', 'POST'])
+def view_flights():
+	
 	Airline = session['user'][1]
 	print(Airline)
 	cursor = conn.cursor()
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 30 AND DATEDIFF(DepartureDate, CURRENT_DATE) > 0'
-	
-	query_airport = 'SELECT * FROM airport'
-	cursor.execute(query, (Airline))
-	airline_flights = cursor.fetchall()
 
 	cursor.execute(query_airport)
 
 	airports = cursor.fetchall()
 	
 	cursor.close()
+	return render_template('staff_view_flights.html', flights = airline_flights, Airline = Airline)
 
-	return render_template('staff.html', flights = airline_flights, Airline = Airline)
 
 # Loads staff_add_flight.html from staff.html
 @app.route('/add_flight', methods=['GET', 'POST'])
