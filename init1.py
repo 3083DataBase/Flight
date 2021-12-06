@@ -92,18 +92,28 @@ def staff():
 
 @app.route('/view_flights', methods=['GET', 'POST'])
 def view_flights():
-	
 	Airline = session['user'][1]
-	print(Airline)
+	#print(Airline)
+
 	cursor = conn.cursor()
+
+	#finds the flights in 30 days
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 30 AND DATEDIFF(DepartureDate, CURRENT_DATE) > 0'
+	cursor.execute(query, Airline)
+	airline_flights = cursor.fetchall()
 
-	cursor.execute(query_airport)
+	#finds the depart cities
+	query = 'SELECT DISTINCT City FROM `airport`'
+	cursor.execute(query)
+	city = cursor.fetchall()
 
-	airports = cursor.fetchall()
+	#finds the depart airport
+	query = 'SELECT AirportName FROM `airport`'
+	cursor.execute(query)
+	airport = cursor.fetchall()
 	
 	cursor.close()
-	return render_template('staff_view_flights.html', flights = airline_flights, Airline = Airline)
+	return render_template('staff_view_flights.html', flights = airline_flights, Airline = Airline, city = city, airport = airport)
 
 
 # Loads staff_add_flight.html from staff.html
@@ -568,9 +578,14 @@ def userLoginAuth():
 
 		#creates a session for the the user
 		#session is a built in
+		print("DATA: ", data)
+		print("ERROR: ", [data['CustomerEmail'], data['CustomerName']])
+		print("PRE: ", session)
 		session.pop('user')
+		print("POP: ", session)
 
 		session['user'] = [data['CustomerEmail'], data['CustomerName'], 1]
+		print("POST: ", session)
 		return redirect(url_for('customerhome'))
 	else:
 		#returns an error message to the html page
@@ -669,6 +684,7 @@ def userRegisterAuth():
 		return render_template('userRegister.html', error = error)
 	else:
 		ins = 'INSERT INTO customer VALUES(%s, md5(%s), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+		# cursor.execute(ins, (email, password, customername, BuildingNo, street, city, state, phoneNo, passportNo, passportExp, passportCntry, dob))
 		cursor.execute(ins, (email, password, customername, BuildingNo, street, city, state, phoneNo, passportNo, passportExp, passportCntry, dob))
 		conn.commit()
 		cursor.close()
@@ -898,78 +914,20 @@ def customerpurchaseresult():
 	return render_template('CustomerPurchaseResult.html')
 
 
+
 	
 
-####################
-@app.route('/customertrackspending', methods=['GET', 'POST'])
-def customertrackspending():
+#NOT USED
+@app.route('/post', methods=['GET', 'POST'])
+def post():
+	username = session['user']
 	cursor = conn.cursor();
-	user = session['user'][0]
-	# print(user)
-	query = 'SELECT SUM(SoldPrice) FROM ticket NATURAL JOIN customer WHERE CustomerEmail = %s AND YEAR(PurchaseDate) = YEAR(now());'
-	cursor.execute(query, user)
-	total_spent = cursor.fetchall()
-	# print("HERE: ", total_spent[0])
-	# print(total_spent[0]['SUM(SoldPrice)'])
-	if total_spent[0]['SUM(SoldPrice)'] == None:
-		total_spent = 0
-	else:
-		total_spent = total_spent[0]['SUM(SoldPrice)']
-
-	query2 = 'SELECT MONTH(PurchaseDate), SUM(SoldPrice) FROM ticket NATURAL JOIN customer WHERE PurchaseDate > DATE_SUB(now(), INTERVAL 6 MONTH) AND CustomerEmail = %s GROUP BY MONTH(PurchaseDate)'
-	cursor.execute(query2, user)
-	money_spent = cursor.fetchall()
-	s_date = request.form.get("startDate") 
-	e_date = request.form.get("endDate")
-	
+	blog = request.form['blog']
+	query = 'INSERT INTO blog (blog_post, username) VALUES(%s, %s)'
+	cursor.execute(query, (blog, username))
 	conn.commit()
 	cursor.close()
-
-	return render_template('customertrackspending.html', total_spent = total_spent, six_months = money_spent)
-
-
-
-@app.route('/customer_tracking_range', methods=['GET', 'POST'])
-def customer_tracking_range():
-	user = session['user'][0]
-	s_date = request.form.get("startDate") 
-	e_date = request.form.get("endDate")
-
-	cursor = conn.cursor()
-
-	# print(user)
-	query = 'SELECT SUM(SoldPrice) FROM ticket NATURAL JOIN customer WHERE CustomerEmail = %s AND YEAR(PurchaseDate) = YEAR(now());'
-	cursor.execute(query, user)
-	total_spent = cursor.fetchall()
-	# print("HERE: ", total_spent[0])
-	# print(total_spent[0]['SUM(SoldPrice)'])
-	if total_spent[0]['SUM(SoldPrice)'] == None:
-		total_spent = 0
-	else:
-		total_spent = total_spent[0]['SUM(SoldPrice)']
-
-	query2 = 'SELECT MONTH(PurchaseDate), SUM(SoldPrice) FROM ticket NATURAL JOIN customer WHERE PurchaseDate > DATE_SUB(now(), INTERVAL 6 MONTH) AND CustomerEmail = %s GROUP BY MONTH(PurchaseDate)'
-	cursor.execute(query2, user)
-	money_spent = cursor.fetchall()
-	s_date = request.form.get("startDate") 
-	e_date = request.form.get("endDate")
-	
-	query3 = 'SELECT SUM(SoldPrice) FROM ticket NATURAL JOIN customer WHERE CustomerEmail = %s AND PurchaseDate >= %s AND PurchaseDate <= %s';
-	cursor.execute(query3, (user, s_date, e_date))
-	specific_spent = cursor.fetchall()
-	if specific_spent[0]['SUM(SoldPrice)'] == None:
-		specific_spent = 0
-	else:
-		specific_spent = specific_spent[0]['SUM(SoldPrice)']
-	conn.commit()
-	cursor.close()
-
-	return render_template('customertrackspending.html', total_spent = total_spent, six_months = money_spent, specify = specific_spent)
-
-
-
-
-	
+	return redirect(url_for('home'))
 
 @app.route('/logout')
 def logout():
