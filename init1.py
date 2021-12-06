@@ -98,22 +98,12 @@ def view_flights():
 	cursor = conn.cursor()
 
 	#finds the flights in 30 days
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 30 AND DATEDIFF(DepartureDate, CURRENT_DATE) > 0'
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 30 AND DATEDIFF(DepartureDate, CURRENT_DATE) > 0 ORDER BY DepartureDate, DepartureTime'
 	cursor.execute(query, Airline)
 	airline_flights = cursor.fetchall()
-
-	#finds the depart cities
-	query = 'SELECT DISTINCT City FROM `airport`'
-	cursor.execute(query)
-	city = cursor.fetchall()
-
-	#finds the depart airport
-	query = 'SELECT AirportName FROM `airport`'
-	cursor.execute(query)
-	airport = cursor.fetchall()
 	
 	cursor.close()
-	return render_template('staff_view_flights.html', flights = airline_flights, Airline = Airline, city = city, airport = airport)
+	return render_template('staff_view_flights.html', flights = airline_flights)
 
 @app.route('/staff_search_flights', methods=['GET', 'POST'])
 def staff_search_flights():
@@ -126,10 +116,13 @@ def staff_search_flights():
 		start = request.form["Inital Date"] 
 		end = request.form["Ending Date"]
 
-		query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND DepartureDate > %s and DepartureDate < %s AND AirlineName = %s'
+		print(start)
+		print(end)
+
+		query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND DepartureDate > %s and DepartureDate < %s AND AirlineName = %s ORDER BY DepartureDate, DepartureTime'
 		cursor.execute(query, (start, end, Airline)) #Runs the query
 		date = cursor.fetchall() #Gets the data from ran SQL query
-		date = cursor.fetchall()
+		print(date)
 		cursor.close()
 		return render_template('staff_view_flights.html', flights=date)
 	else:    #Is the one way search
@@ -139,11 +132,28 @@ def staff_search_flights():
 		if depart == arrival:
 			return redirect(url_for('view_flights'))
 
-		query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND DepartAirportID = %s AND ArrivalAirportID = %s AND AirlineName = %s'
-		cursor.execute(query, (depart, arrival, Airline)) #Runs the query
+		query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName , status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND AirlineName = %s ORDER BY DepartureDate, DepartureTime'
+		cursor.execute(query, (depart, depart, arrival, arrival, Airline)) #Runs the query
 		dest = cursor.fetchall() #Gets the data from ran SQL query
 		cursor.close()
 		return render_template('staff_view_flights.html', flights=dest)
+
+@app.route('/staff_view_customer', methods=['GET', 'POST'])
+def staff_view_customer():
+
+	FlightNumber = request.form["FlightNumber"]
+	Date = request.form["DepartureDate"]
+	Time = request.form["DepartureTime"]
+
+	Airline = session['user'][1]
+
+	cursor = conn.cursor()
+	query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket,flight WHERE FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s AND Airline = %s'
+	cursor.execute(query, (FlightNumber, Date, Time, Airline))
+	customers = cursor.fetchall()
+	cursor.close()
+
+	return render_template('status_update.html', customers = customers)
 
 # Loads staff_add_flight.html from staff.html
 @app.route('/add_flight', methods=['GET', 'POST'])

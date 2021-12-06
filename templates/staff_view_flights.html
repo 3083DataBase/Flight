@@ -55,6 +55,7 @@
 			<th>Arriving Airport</th>
 			<th>Status</th>
 			<th>Update Flight Status</th>
+			<th>View All Customers</th>
 
 			{% for line in flights %}
 				<tr>
@@ -72,6 +73,14 @@
 							<input type="hidden" name="DepartureDate" Value = "{{line['DepartureDate']}}" required Style="display:none">
 							<input type="hidden" name="DepartureTime" Value = "{{line['DepartureTime']}}" required Style="display:none">
 							<input type="submit" Value = update Style="z-index :-1">
+						</form>
+					</td>
+					<td>
+						<form action="/staff_update_status" method="POST">
+							<input type="hidden" name="FlightNumber" Value = "{{line['FlightNumber']}}" required Style="display:none">
+							<input type="hidden" name="DepartureDate" Value = "{{line['DepartureDate']}}" required Style="display:none">
+							<input type="hidden" name="DepartureTime" Value = "{{line['DepartureTime']}}" required Style="display:none">
+							<input type="submit" Value = Customers Style="z-index :-1">
 						</form>
 					</td>
 				</tr>
