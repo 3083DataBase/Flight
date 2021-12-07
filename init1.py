@@ -1055,7 +1055,10 @@ def customersearchflightstwoway():
 @app.route('/customerpurchase', methods=['GET', 'POST'])
 def customerpurchase():
 	CustomerEmail = request.form.get("CustomerEmail")
-	FlightNumber = request.form.get("FlightNumber")
+	CardType = request.form.get("CardType")
+	CardNumber = request.form.get("CardNumber")
+	NameOfCard = request.form.get("NameOfCard")
+	ExpirationDate = request.form.get("ExpirationDate")
 	TicketID = request.form.get("TicketID")
 
 	cursor = conn.cursor()
@@ -1107,8 +1110,8 @@ def customerpurchase():
 	
 	# inserting new ticket -- SAMPLE COMMENTED OUT
 	#queryInsertPurchase = 'INSERT INTO purchase VALUES ('42012', 'my1590@nyu.edu', 'debit', '5534 2232 1211 2322', 'Visa', '2025-07-01')'
-	#queryInsertPurchase = 'INSERT INTO purchase VALUES (newTicketID, CustomerEmail, 'debit', '5534 2232 1211 2322', 'Visa', '2025-07-01')'
-
+	queryInsertPurchase = 'INSERT INTO purchase VALUES (newTicketID, CustomerEmail, CardType, CardNumber, NameOfCard, ExpirationDate)'
+	cursor.execute(queryInsertPurchase)
         
 
 	cursor.close()
