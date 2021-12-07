@@ -1072,17 +1072,44 @@ def customersearchflightstwoway():
 	cursor.close()
 	return render_template('CustomerSearchFlightsTwoWay.html')
 
+@app.route('/customerinputcard', methods=['GET', 'POST'])
+def customerinputcard():
+	FlightNumber = request.form.get("FlightNumber")
+	Airline = request.form.get("AirlineName")
+	Price = request.form.get("SoldPrice")
+
+	return render_template('CustomerPaymentInput.html', FlightNumber = FlightNumber, Ariline = Airline, Price = Price)
+
 
 ####################### CustomerPurchase
 @app.route('/customerpurchase', methods=['GET', 'POST'])
 def customerpurchase():
-	CustomerEmail = request.form.get("CustomerEmail")
+	CustomerEmail = session['user'][0]
 	CardType = request.form.get("CardType")
 	CardNumber = request.form.get("CardNumber")
 	NameOfCard = request.form.get("NameOfCard")
 	ExpirationDate = request.form.get("ExpirationDate")
+	FlightNumber = request.form.get("FlightNumber")
+	Airline = request.form.get("AirlineName")
+	Price = request.form.get("SoldPrice")
+
+	print(CustomerEmail)
+	print(CardType)
+	print(CardNumber)
+	print(NameOfCard)
+	print(ExpirationDate)
+	print(FlightNumber)
+	print(Airline)
+	print(Price)
 
 	cursor = conn.cursor()
+
+	query = 'SELECT CURRENT_DATE as date WHERE CURRENT_DATE < %s'
+	cursor.execute(query, ExpirationDate)
+	check = cursor.fetchall()
+
+	if(check == ()):
+		return redirect(url_for('customerinputcard'))
 
 	# update ticket to have customerEmail
 	# take ticketID from ticket and insert into purchase
@@ -1098,7 +1125,7 @@ def customerpurchase():
     	insertQuery = INSERT INTO.........
 	'''
 	
-	randomNum = random.randrange(1, 100000000) # max num is 99999999
+	#randomNum = random.randrange(1, 100000000) # max num is 99999999
 	
 	#allTickets = 'SELECT * FROM `ticket`'
 	queryAllTicketID = 'SELECT TicketID FROM `ticket` ORDER BY TicketID ASC;'
@@ -1127,8 +1154,11 @@ def customerpurchase():
 		counter += 1
 	
 	lastTicketID = allTicketID_data[counter - 1]['TicketID'] #gets the ticketID of the last ticket
-	newTicketID = lastTicketID + 1
+	newTicketID = int(lastTicketID) + 1
 	
+	queryInsertPurchase = 'INSERT INTO purchase VALUES (%s, %s, %s, %s, %s, CURRENT_DATE, CURRENT_TIME)'
+	cursor.execute(queryInsertPurchase, (newTicketID, FlightNumber, AirlineName, CustomerEmail, SoldPrice))
+
 	# inserting Purchase
 	queryInsertPurchase = 'INSERT INTO purchase VALUES (%s, %s, %s, %s, %s, %s)'
 	cursor.execute(queryInsertPurchase, (newTicketID, CustomerEmail, CardType, CardNumber, NameOfCard, ExpirationDate))
@@ -1141,7 +1171,10 @@ def customerpurchase():
 	queryCurrTime = 'SELECT CURRENT_TIME();'
 	cursor.execute(queryCurrTime)
 	currTime_data = cursor.fetchall()
+		
 
+	queryInsertPurchase = 'INSERT INTO purchase VALUES (%s, %s, %s, %s, %s, CURRENT_DATE, CURRENT_TIME)'
+	cursor.execute(queryInsertPurchase, (newTicketID, FlightNumber, AirlineName, CustomerEmail, SoldPrice))
 
 	# inserting Views
         
@@ -1237,7 +1270,7 @@ def post():
 @app.route('/logout')
 def logout():
 	session.pop('user')
-	session['user'] = [None, 'Guest', 0]
+	session['user'] = [None, 'Guest', -1]
 	return redirect('/loginfork')
 		
 app.secret_key = 'some key that you will never guess'

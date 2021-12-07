@@ -64,7 +64,10 @@
             <td>{{line['SoldPrice']}}</td>
 
             <td>
-                <form action="/customerpurchase" method="POST">
+                <form action="/customerinputcard" method="POST">
+                    <input type="hidden" name="FlightNumber" Value = "{{line['FlightNumber']}}" Style="display:none" required/>
+                    <input type="hidden" name="AirlineName" Value = "{{line['AirlineName']}}"  Style="display:none" required/>
+                    <input type="hidden" name="SoldPrice" Value = "{{line['SoldPrice']}}" Style="display:none" required/>
                     <input type="submit" Value="Purchase" Style="z-index :-1">
                 </form>
             </td>
