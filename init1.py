@@ -19,7 +19,7 @@ conn = pymysql.connect(host='localhost',
 #Define a route to hello function
 @app.route('/', methods=['GET', 'POST'])
 def hello():
-	session['user'] = [None, 'Guest', 0]    #Creates a session, will hold [staffusername / customer email, name of the customer or just Guest if not logged in / airline, 0 for customers, 1 for flight staff]
+	session['user'] = [None, 'Guest', -1]    #Creates a session, will hold [staffusername / customer email, name of the customer or just Guest if not logged in / airline, 0 for customers, 1 for flight staff]
 	#cursor = conn.cursor();
 
 	#after this Kevin needs to change for search
