@@ -1059,7 +1059,6 @@ def customerpurchase():
 	CardNumber = request.form.get("CardNumber")
 	NameOfCard = request.form.get("NameOfCard")
 	ExpirationDate = request.form.get("ExpirationDate")
-	TicketID = request.form.get("TicketID")
 
 	cursor = conn.cursor()
 
@@ -1108,10 +1107,21 @@ def customerpurchase():
 	lastTicketID = allTicketID_data[counter - 1]['TicketID'] #gets the ticketID of the last ticket
 	newTicketID = lastTicketID + 1
 	
-	# inserting new ticket -- SAMPLE COMMENTED OUT
-	#queryInsertPurchase = 'INSERT INTO purchase VALUES ('42012', 'my1590@nyu.edu', 'debit', '5534 2232 1211 2322', 'Visa', '2025-07-01')'
-	queryInsertPurchase = 'INSERT INTO purchase VALUES (newTicketID, CustomerEmail, CardType, CardNumber, NameOfCard, ExpirationDate)'
-	cursor.execute(queryInsertPurchase)
+	# inserting Purchase
+	queryInsertPurchase = 'INSERT INTO purchase VALUES (%s, %s, %s, %s, %s, %s)'
+	cursor.execute(queryInsertPurchase, (newTicketID, CustomerEmail, CardType, CardNumber, NameOfCard, ExpirationDate))
+
+	# inserting Ticket
+	queryCurrDate = 'SELECT CURRENT_DATE();'
+	cursor.execute(queryCurrDate)
+	currDate_data = cursor.fetchall()
+
+	queryCurrTime = 'SELECT CURRENT_TIME();'
+	cursor.execute(queryCurrTime)
+	currTime_data = cursor.fetchall()
+
+
+	# inserting Views
         
 
 	cursor.close()
