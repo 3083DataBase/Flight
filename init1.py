@@ -1,6 +1,7 @@
 #Import Flask Library
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
+import random
 
 #Initialize the app from Flask
 app = Flask(__name__)
@@ -1060,6 +1061,15 @@ def customerpurchase():
 	# update ticket to have customerEmail
 	# take ticketID from ticket and insert into purchase
 	# insert basic data into views
+	'''randnum = 
+	existTickets = query.getall
+	for i in existTickets
+	if randnum == i.ticketID
+    	randnum = randPythonFunc
+    else
+    	insertQuery = INSERT INTO.........'''
+        
+        
 
 
 
