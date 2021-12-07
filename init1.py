@@ -584,11 +584,22 @@ def reports():
 	cursor.execute(month_query, Airline)
 	month_tickets = cursor.fetchall()
 
+	query = 'SELECT MONTH(PurchaseDate) Month, COUNT(TicketID) count FROM `ticket` WHERE YEAR(PurchaseDate) = YEAR(CURRENT_DATE) - 1 GROUP BY MONTH(PurchaseDate) AND AirlineName = %s'
+	cursor.execute(query, Airline)
+	chart = cursor.fetchall()
+
+	blank_chart = []
+	for i in range(1,13):
+		blank_chart.append({'Month': i, 'count': 0})
+
+	for month in chart:
+		blank_chart[month['Month'] - 1]['count'] = month['count']
+
 	year_tickets = year_tickets[0]['COUNT(TicketID)']
 	month_tickets = month_tickets[0]['COUNT(TicketID)']
 
 	cursor.close()
-	return render_template('reports.html', year = year_tickets, month = month_tickets, Airline = Airline)
+	return render_template('reports.html', year = year_tickets, month = month_tickets, Airline = Airline, table = blank_chart)
 
 #finds the amount of tickets sold in the range dipicted
 @app.route('/reports_inrange', methods=['GET', 'POST'])
@@ -620,7 +631,18 @@ def reports_inrange():
 	tickets = cursor.fetchall()
 	tickets = tickets[0]['COUNT(TicketID)']
 
-	return render_template('reports.html',year = year_tickets, month = month_tickets, tickets = tickets, Airline = Airline)
+	query = 'SELECT MONTH(PurchaseDate) Month, COUNT(TicketID) count FROM `ticket` WHERE YEAR(PurchaseDate) = YEAR(CURRENT_DATE) - 1 GROUP BY MONTH(PurchaseDate) AND AirlineName = %s'
+	cursor.execute(query, Airline)
+	chart = cursor.fetchall()
+
+	blank_chart = []
+	for i in range(1,13):
+		blank_chart.append({'Month': i, 'count': 0})
+
+	for month in chart:
+		blank_chart[month['Month'] - 1]['count'] = month['count']
+
+	return render_template('reports.html',year = year_tickets, month = month_tickets, tickets = tickets, Airline = Airline, table = blank_chart)
 
 # Finds the revenue made in the last 30 days and last year
 @app.route('/revenue', methods=['GET', 'POST'])

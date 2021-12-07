@@ -15,7 +15,7 @@
         <label for="EndingDate">Ending Date</label></br>
         <input type="date" name="EndingDate" placeholder="EndingDate"> </br>
 
-        <input type="submit" Value=s ubmit>
+        <input type="submit" Value= submit>
 
     </form>
 
@@ -27,6 +27,26 @@
         Tickets sold last year: {{year}} <br> Tickets sold last month: {{month}}
     </p>
 
+
+    <style type="text/css">
+        table, th, td{
+            border: 1px solid black;
+        }
+    </style>
+
+    <h1>Tickets Sold by Month Last Year</h1>
+
+		<table>
+			<th>Month</th>
+			<th>Tickets Sold</th>
+
+			{% for line in table %}
+				<tr>
+					<td>{{line['Month']}}</td>
+					<td>{{line['count']}}</td>
+				</tr>
+			{% endfor %}
+		</table>
 
     <!--Back button to Staff-->
     <form action="/staff">
