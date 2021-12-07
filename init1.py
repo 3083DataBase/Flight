@@ -1058,20 +1058,60 @@ def customerpurchase():
 	FlightNumber = request.form.get("FlightNumber")
 	TicketID = request.form.get("TicketID")
 
+	cursor = conn.cursor()
+
 	# update ticket to have customerEmail
 	# take ticketID from ticket and insert into purchase
 	# insert basic data into views
-	'''randnum = 
+	'''
+	SQL to get all tickets from 'tickets'
+	randnum = pythonRandNumGenerator
 	existTickets = query.getall
 	for i in existTickets
 	if randnum == i.ticketID
     	randnum = randPythonFunc
     else
-    	insertQuery = INSERT INTO.........'''
-        
+    	insertQuery = INSERT INTO.........
+	'''
+	
+	randomNum = random.randrange(1, 100000000) # max num is 99999999
+	
+	#allTickets = 'SELECT * FROM `ticket`'
+	queryAllTicketID = 'SELECT TicketID FROM `ticket` ORDER BY TicketID ASC;'
+	cursor.execute(queryAllTicketID)
+	allTicketID_data = cursor.fetchall()
+
+	'''
+	isSame = False
+
+	# change to While loop?
+	# logic wrong
+	for id in allTicketID_data:
+
+		if(randomNum == id[0]): # id[0] is the TicketID
+			isSame = True
+		
+		# if randomNum already exists as ticketNum, 
+		if(isSame == True):
+			randomNum = random.randrange(1, 100000000)
+	'''
+	
+
+	# if we abandon the randomNum idea and have the tickets be assigned in consecutive nums
+	counter = 0
+	for id in allTicketID_data:
+		counter += 1
+	
+	lastTicketID = allTicketID_data[counter - 1]['TicketID'] #gets the ticketID of the last ticket
+	newTicketID = lastTicketID + 1
+	
+	# inserting new ticket -- SAMPLE COMMENTED OUT
+	#queryInsertPurchase = 'INSERT INTO purchase VALUES ('42012', 'my1590@nyu.edu', 'debit', '5534 2232 1211 2322', 'Visa', '2025-07-01')'
+	#queryInsertPurchase = 'INSERT INTO purchase VALUES (newTicketID, CustomerEmail, 'debit', '5534 2232 1211 2322', 'Visa', '2025-07-01')'
+
         
 
-
+	cursor.close()
 
 	return render_template('CustomerPurchase.html')
 
