@@ -1078,7 +1078,11 @@ def customerinputcard():
 	Airline = request.form.get("AirlineName")
 	Price = request.form.get("SoldPrice")
 
-	return render_template('CustomerPaymentInput.html', FlightNumber = FlightNumber, Ariline = Airline, Price = Price)
+	print(FlightNumber)
+	print(Airline)
+	print(Price)
+
+	return render_template('CustomerPaymentInput.html', FlightNumber = FlightNumber, Airline = Airline, Price = Price)
 
 
 ####################### CustomerPurchase
@@ -1156,25 +1160,28 @@ def customerpurchase():
 	lastTicketID = allTicketID_data[counter - 1]['TicketID'] #gets the ticketID of the last ticket
 	newTicketID = int(lastTicketID) + 1
 	
-	queryInsertPurchase = 'INSERT INTO purchase VALUES (%s, %s, %s, %s, %s, CURRENT_DATE, CURRENT_TIME)'
-	cursor.execute(queryInsertPurchase, (newTicketID, FlightNumber, AirlineName, CustomerEmail, SoldPrice))
+	#print("Insert into")
+	#queryInsertPurchase = 'INSERT INTO purchase VALUES (%s, %s, %s, %s, %s, CURRENT_DATE, CURRENT_TIME)'
+	#cursor.execute(queryInsertPurchase, (newTicketID, FlightNumber, Airline, CustomerEmail, Price))
+
+	queryInsertPurchase = 'INSERT INTO ticket VALUES (%s, %s, %s, %s, %s, CURRENT_DATE, CURRENT_TIME)'
+	cursor.execute(queryInsertPurchase, (newTicketID, FlightNumber, Airline, CustomerEmail, Price))
 
 	# inserting Purchase
 	queryInsertPurchase = 'INSERT INTO purchase VALUES (%s, %s, %s, %s, %s, %s)'
 	cursor.execute(queryInsertPurchase, (newTicketID, CustomerEmail, CardType, CardNumber, NameOfCard, ExpirationDate))
 
+	print("test 1")
+
 	# inserting Ticket
-	queryCurrDate = 'SELECT CURRENT_DATE();'
-	cursor.execute(queryCurrDate)
-	currDate_data = cursor.fetchall()
+	#queryCurrDate = 'SELECT CURRENT_DATE();'
+	#cursor.execute(queryCurrDate)
+	#currDate_data = cursor.fetchall()
 
-	queryCurrTime = 'SELECT CURRENT_TIME();'
-	cursor.execute(queryCurrTime)
-	currTime_data = cursor.fetchall()
+	#queryCurrTime = 'SELECT CURRENT_TIME();'
+	#cursor.execute(queryCurrTime)
+	#currTime_data = cursor.fetchall()
 		
-
-	queryInsertPurchase = 'INSERT INTO purchase VALUES (%s, %s, %s, %s, %s, CURRENT_DATE, CURRENT_TIME)'
-	cursor.execute(queryInsertPurchase, (newTicketID, FlightNumber, AirlineName, CustomerEmail, SoldPrice))
 
 	# inserting Views
         
