@@ -949,19 +949,34 @@ def customerpastflightsview():
 @app.route('/customerreview', methods=['GET', 'POST'])
 def customerreview():
 	#CustomerEmail = request.form["CustomerEmail"]
-	CustomerEmail = request.form.get("CustomerEmail")
+	CustomerEmail = session['user'][0]
 	#FlightNumber = request.form["FlightNumber"]
-	FlightNumber = request.form.get("FlightNumber")
+	FlightNumber = request.form["FlightNumber"]
 	#DepartureDate = request.form["DepartureDate"]
-	DepartureDate = request.form.get("DepartureDate")
+	DepartureDate = request.form["DepartureDate"]
 	#DepartureTime = request.form["DepartureTime"]
-	DepartureTime = request.form.get("DepartureTime")
+	DepartureTime = request.form["DepartureTime"]
+	rate = request.form.get('rating')
+	comment = request.form.get('comment')
+
+	print(CustomerEmail)
+	print(FlightNumber)
+	print(DepartureDate)
+	print(DepartureTime)
+
+
+	if(rate == None and comment == None):
+		print("in none")
+		return render_template('CustomerReview.html', FlightNumber = FlightNumber, DepartureDate = DepartureDate, DepartureTime = DepartureTime)
 
 	cursor = conn.cursor();
 	#rate = request.form['rating']
 	rate = request.form.get('rating')
+
+	print(rate)
 	#comment = request.form['comment']
 	comment = request.form.get('comment')
+	print(comment)
 	query = 'UPDATE views SET Rate = %s, Comment = %s WHERE CustomerEmail = %s AND FlightNumber = %s AND DepartureDate = %s AND DepartureTime = %s'
 	cursor.execute(query, (rate, comment, CustomerEmail, FlightNumber, DepartureDate, DepartureTime))
 	conn.commit()

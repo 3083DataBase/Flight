@@ -31,6 +31,9 @@
 
 					<td>
 						<form action="/customerreview" method="POST">
+							<input type="hidden" Name="FlightNumber" Value = "{{line['FlightNumber']}}" >
+							<input type="hidden" Name="DepartureDate" Value = "{{line['DepartureDate']}}" >
+							<input type="hidden" Name="DepartureTime" Value = "{{line['DepartureTime']}}" >
 							<input type="submit" Value = "Review Flight" Style="z-index :-1">
 						</form>
 					</td>
