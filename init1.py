@@ -1022,7 +1022,7 @@ def customersearchflightsoneway():
 	cursor = conn.cursor()
 
 	#Checks if it should be 
-	query = 'SELECT FlightNumber, d.AirportName, a.AirportName, NumSeats FROM `flight` AS f, `airplane` AS air , `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND f.AirplaneID = air.AirplaneID AND f.AirlineName = air.AirlineName AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE'
+	query = 'SELECT FlightNumber, d.AirportName, a.AirportName, NumSeats, BasePrice FROM `flight` AS f, `airplane` AS air , `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND f.AirplaneID = air.AirplaneID AND f.AirlineName = air.AirlineName AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE'
 	cursor.execute(query, (departing, departing, arriving, arriving))
 	check = cursor.fetchall()
 
@@ -1035,7 +1035,7 @@ def customersearchflightsoneway():
 		#seats.append(data['COUNT(TicketID'])
 		print(each)
 
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE ORDER BY DepartureDate ASC, DepartureTime ASC'
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, BasePrice FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE ORDER BY DepartureDate ASC, DepartureTime ASC'
 	cursor.execute(query, (departing, departing, arriving, arriving))
 	check = cursor.fetchall()
 	#query = 'SELECT flight.FlightNumber, COUNT(TicketID) FROM flight, airport AS d, airport AS a, ticket WHERE ticket.FlightNumber = flight.FlightNumber AND DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE'
@@ -1100,6 +1100,27 @@ def customersearchflightstwoway():
 
 	cursor.close()
 	return render_template('CustomerSearchFlightsTwoWay.html')
+
+@app.route('/ticketprice', methods=['GET', 'POST'])
+def ticketprice():
+	FlightNumber = request.form.get("FlightNumber")
+	Airline = request.form.get("AirlineName")
+	BasePrice = request.form.get("BasePrice")
+
+	print(BasePrice)
+	
+	cursor = conn.cursor()
+
+	query = 'SELECT COUNT(TicketID) as tickets FROM ticket WHERE FlightNumber = %s AND AirlineName = %s'
+	cursor.execute(query, (FlightNumber, Airline))
+	seats = cursor.fetchall()
+
+	print(seats)
+
+	
+
+	return render_template('TicketPrice.html')
+
 
 @app.route('/customerinputcard', methods=['GET', 'POST'])
 def customerinputcard():

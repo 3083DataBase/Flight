@@ -48,7 +48,6 @@
         <th>Airline</th>
         <th>Departing Airport</th>
         <th>Arriving Airport</th>
-        <th>Ticket Price</th>
         <th>Purchase Flight</th>
 
         {% for line in depart_flights %}
@@ -61,13 +60,12 @@
             <td>{{line['AirlineName']}}</td>
             <td>{{line['AirportName']}}</td>
             <td>{{line['a.AirportName']}}</td>
-            <td>{{line['SoldPrice']}}</td>
 
             <td>
-                <form action="/customerinputcard" method="POST">
+                <form action="/ticketprice" method="POST">
                     <input type="hidden" name="FlightNumber" Value = "{{line['FlightNumber']}}" Style="display:none" required/>
                     <input type="hidden" name="AirlineName" Value = "{{line['AirlineName']}}"  Style="display:none" required/>
-                    <input type="hidden" name="SoldPrice" Value = "{{line['SoldPrice']}}" Style="display:none" required/>
+                    <input type="hidden" name="BasePrice" Value = "{{line['BasePrice']}}"  Style="display:none" required/>
                     <input type="submit" Value="Purchase" Style="z-index :-1">
                 </form>
             </td>
