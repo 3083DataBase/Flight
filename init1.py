@@ -1167,15 +1167,6 @@ def customerpurchase():
 	Airline = request.form["Airline"]
 	Price = request.form["Price"]
 
-	print(CustomerEmail)
-	print(CardType)
-	print(CardNumber)
-	print(NameOfCard)
-	print(ExpirationDate)
-	print(FlightNumber)
-	print(Airline)
-	print(Price)
-
 	cursor = conn.cursor()
 
 	query = 'SELECT CURRENT_DATE as date WHERE CURRENT_DATE < %s;'
@@ -1254,18 +1245,22 @@ def customerpurchase():
 
 	# inserting Views, set up for Review -- NEED TO TEST
 	# finding departure date and time
-	#queryDepartureDate = 'SELECT DepartureDate FROM `flight` WHERE FlightNumber = FlightNumber;'
-	#cursor.execute(queryDepartureDate)
-	#departing_date = cursor.fetchall()
+	queryDepartureDate = 'SELECT DepartureDate FROM `flight` WHERE FlightNumber = %s AND AirlineName = %s;'
+	cursor.execute(queryDepartureDate, (FlightNumber, Airline))
+	departing_date = cursor.fetchall()
+	departing_date = departing_date[0]['DepartureDate']
 	
-	#queryDepartureTime = 'SELECT DepartureTime FROM `flight` WHERE FlightNumber = FlightNumber;'
-	#cursor.execute(queryDepartureTime)
-	#departing_time = cursor.fetchall()
+	queryDepartureTime = 'SELECT DepartureTime FROM `flight` WHERE FlightNumber = %s And AirlineName = %s;'
+	cursor.execute(queryDepartureTime,(FlightNumber, Airline))
+	departing_time = cursor.fetchall()
+	departing_time = departing_time[0]['DepartureTime']
 
-	'''
+	print(departing_time)
+	print(departing_date)
+
 	queryInsertViews = 'INSERT INTO views VALUES (%s, %s, %s, %s, NULL, NULL)'
-	cursor.execute(queryInsertViews, (newTicketID, CustomerEmail, FlightNumber, departing_date, departing_time))
-	'''
+	cursor.execute(queryInsertViews, (CustomerEmail, FlightNumber, departing_date, departing_time))
+
 	conn.commit()
 	cursor.close()
 
