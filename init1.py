@@ -1009,11 +1009,8 @@ def customersearchflights():
 ####################### CustomerSearchFlights -- One Way
 @app.route('/customersearchflightsoneway', methods=['GET', 'POST'])
 def customersearchflightsoneway():
-	#departing = request.form["Departing"]
 	departing = request.form.get("Departing")
-	#departing_date = request.form["Departure Date"]
 	departing_date = request.form.get("Departure Date")
-	#arriving = request.form["Arriving"]
 	arriving = request.form.get("Arriving")
 
 	if(departing == None and departing_date == None and arriving == None):
@@ -1103,34 +1100,40 @@ def customersearchflightstwoway():
 
 @app.route('/ticketprice', methods=['GET', 'POST'])
 def ticketprice():
-	FlightNumber = request.form.get("FlightNumber")
-	Airline = request.form.get("AirlineName")
-	BasePrice = request.form.get("BasePrice")
-
-	print(BasePrice)
+	print("in Ticketprice")
+	FlightNumber = request.form["FlightNumber"]
+	Airline = request.form["AirlineName"]
+	BasePrice = request.form["BasePrice"]
 	
 	cursor = conn.cursor()
 
 	query = 'SELECT COUNT(TicketID) as tickets FROM ticket WHERE FlightNumber = %s AND AirlineName = %s'
 	cursor.execute(query, (FlightNumber, Airline))
 	seats = cursor.fetchall()
+	seats_taken = seats[0]['tickets']
 
-	print(seats)
+	print(seats_taken)
 
-	
+	query = 'SELECT NumSeats FROM flight NATURAL JOIN airplane WHERE FlightNumber = %s AND AirlineName = %s'
+	cursor.execute(query, (FlightNumber, Airline))
+	seats = cursor.fetchall()
+	seats = seats[0]['NumSeats']
 
-	return render_template('TicketPrice.html')
+	print("Total seats: " + str(seats))
+	print(seats * .75)
+
+	if seats_taken > int(seats * .75):
+		BasePrice = float(BasePrice) * 1.25
+
+	return render_template('TicketPrice.html', FlightNumber = FlightNumber, Airline = Airline, Price = BasePrice)
 
 
 @app.route('/customerinputcard', methods=['GET', 'POST'])
 def customerinputcard():
-	FlightNumber = request.form.get("FlightNumber")
-	Airline = request.form.get("AirlineName")
-	Price = request.form.get("SoldPrice")
-
-	print(FlightNumber)
-	print(Airline)
-	print(Price)
+	print("in customerinputcard")
+	FlightNumber = request.form["FlightNumber"]
+	Airline = request.form["Airline"]
+	Price = request.form["Price"]
 
 	return render_template('CustomerPaymentInput.html', FlightNumber = FlightNumber, Airline = Airline, Price = Price)
 
@@ -1139,13 +1142,13 @@ def customerinputcard():
 @app.route('/customerpurchase', methods=['GET', 'POST'])
 def customerpurchase():
 	CustomerEmail = session['user'][0]
-	CardType = request.form.get("CardType")
-	CardNumber = request.form.get("CardNumber")
-	NameOfCard = request.form.get("NameOfCard")
-	ExpirationDate = request.form.get("ExpirationDate")
-	FlightNumber = request.form.get("FlightNumber")
-	Airline = request.form.get("AirlineName")
-	Price = request.form.get("SoldPrice")
+	CardType = request.form["CardType"]
+	CardNumber = request.form["CardNumber"]
+	NameOfCard = request.form["NameOfCard"]
+	ExpirationDate = request.form["ExpirationDate"]
+	FlightNumber = request.form["FlightNumber"]
+	Airline = request.form["Airline"]
+	Price = request.form["Price"]
 
 	print(CustomerEmail)
 	print(CardType)
@@ -1251,7 +1254,7 @@ def customerpurchase():
 
 	cursor.close()
 
-	return render_template('CustomerPurchase.html')
+	return redirect(url_for('customersearchflightsoneway'))
 
 
 ####################### CustomerPurchaseResult
