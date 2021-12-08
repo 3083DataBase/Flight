@@ -909,7 +909,7 @@ def home():
 ####################### CustomerHome
 @app.route('/customerhome')
 def customerhome():
-	#username = session['username']
+	username = session['user'][1]
 	cursor = conn.cursor();
 
 	# need to update to limit to purchased flights
@@ -923,7 +923,7 @@ def customerhome():
 
 	cursor.close()
 
-	return render_template('CustomerHome.html', flights=flight_data)
+	return render_template('CustomerHome.html', flights=flight_data, username = username)
 
 ####################### CustomerPastFlightsView
 @app.route('/customerpastflightsview', methods=['GET', 'POST'])
@@ -1016,20 +1016,49 @@ def customersearchflightsoneway():
 	#arriving = request.form["Arriving"]
 	arriving = request.form.get("Arriving")
 
+	if(departing == None and departing_date == None and arriving == None):
+		return render_template('CustomerSearchFlightsOneWay.html')
+
 	cursor = conn.cursor()
 
+	#Checks if it should be 
+	query = 'SELECT FlightNumber, d.AirportName, a.AirportName, NumSeats FROM `flight` AS f, `airplane` AS air , `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND f.AirplaneID = air.AirplaneID AND f.AirlineName = air.AirlineName AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE'
+	cursor.execute(query, (departing, departing, arriving, arriving))
+	check = cursor.fetchall()
+
+	seats = []
+
+	for each in check:
+		#query = 'SELECT COUNT(TicketID) FROM ticket WHERE FlightNumber = %s'
+		#cursor.execute(query, each['FlightNumber'])
+		#data = cursor.fetchall()
+		#seats.append(data['COUNT(TicketID'])
+		print(each)
+
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE ORDER BY DepartureDate ASC, DepartureTime ASC'
+	cursor.execute(query, (departing, departing, arriving, arriving))
+	check = cursor.fetchall()
+	#query = 'SELECT flight.FlightNumber, COUNT(TicketID) FROM flight, airport AS d, airport AS a, ticket WHERE ticket.FlightNumber = flight.FlightNumber AND DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE'
+	#cursor.execute(query, (departing, departing, arriving, arriving))
+	#depart_data = cursor.fetchall()
+
+	#for each in depart_data:
+	#	print(each)
+
+	
 
 	# one way search
 	#queryOneWay = 'SELECT f.FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, plane.AirlineName, a.AirportName, d.AirportName, NumSeats, SoldPrice FROM `flight` AS f, `airplane` AS plane, `ticket`, `airport` AS d, `airport` AS a WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = d.AirportID AND f.`AirplaneID` = plane.`AirplaneID` AND f.`AirlineName` = plane.`AirlineName`AND f.`FlightNumber` = `ticket`.`FlightNumber` AND f.`AirlineName` = `ticket`.`AirlineName`AND plane.`AirlineName` =`ticket`.`AirlineName` AND NumSeats > 0 AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s;'
 
-	queryOneWay = 'SELECT f.FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, f.AirlineName, d.AirportName, a.AirportName, SoldPrice FROM `flight` AS f, `airplane` AS p, `ticket` as t, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND f.AirplaneID = p.AirplaneID AND p.AirlineName = t.AirlineName AND NumSeats > 0 AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s ORDER BY DepartureDate ASC, DepartureTime ASC;'
-	cursor.execute(queryOneWay, (departing, departing, arriving, arriving, departing_date))
-	depart_data = cursor.fetchall()
-	for each in depart_data:
-		print(each)
+	#queryOneWay = 'SELECT f.FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, f.AirlineName, d.AirportName, a.AirportName, SoldPrice FROM `flight` AS f, `airplane` AS p, `ticket` as t, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND f.AirplaneID = p.AirplaneID AND p.AirlineName = t.AirlineName AND NumSeats > 0 AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s ORDER BY DepartureDate ASC, DepartureTime ASC;'
+	#queryOneWay = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, SoldPrice FROM `flight`, `ticket` as t, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND p.AirlineName = t.AirlineName AND NumSeats > 0 AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s ORDER BY DepartureDate ASC, DepartureTime ASC;'
+	#cursor.execute(queryOneWay, (departing, departing, arriving, arriving, departing_date))
+	#depart_data = cursor.fetchall()
+	#for each in depart_data:
+	#	print(each)
 
 	cursor.close()
-	return render_template('CustomerSearchFlightsOneWay.html', depart_flights=depart_data)
+	return render_template('CustomerSearchFlightsOneWay.html', depart_flights=check)
 
 
 ####################### CustomerSearchFlights -- Two Way
