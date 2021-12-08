@@ -1108,8 +1108,8 @@ def customerpurchase():
 
 	cursor = conn.cursor()
 
-	query = 'SELECT CURRENT_DATE as date WHERE CURRENT_DATE < %s'
-	cursor.execute(query, ExpirationDate)
+	query = 'SELECT CURRENT_DATE as date WHERE CURRENT_DATE < %s;'
+	cursor.execute(query, (ExpirationDate,)) # need this format or else, will crash
 	check = cursor.fetchall()
 
 	if(check == ()):
@@ -1183,7 +1183,9 @@ def customerpurchase():
 	#currTime_data = cursor.fetchall()
 		
 
-	# inserting Views
+	# inserting Views, set up for Review
+	'''queryInsertViews = 'INSERT INTO views VALUES (%s, %s, %s, %s, NULL, NULL)'
+	cursor.execute(queryInsertViews, (newTicketID, CustomerEmail, FlightNumber, departing_date, departing_time))'''
         
 
 	cursor.close()

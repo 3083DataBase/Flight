@@ -1,35 +1,36 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<h1>Payment Input</h1>
 	</head>
 
 	<body>
 		<!--Addes a new flight to the system-->
-		<br><h1>Payment Input</h1><br>
+		
 
 		<form action="/customerpurchase" method="POST">
 
 			<!--The input area for Flight Number-->
 			<label for="CardType">Card Type</label> </br>
-			<input type="Text" name="CardType" placeholder="Card Type" required/> </br>
+			<input type="Text" name="CardType" placeholder="Card Type" required/> </br></br>
 
 			<!--The input area for Departing Date-->
 			<label for="CardNumber">Card Number</label> </br>
-			<input type="number" name="CardNumber" placeholder="Card Number"required/> </br>
+			<input type="number" name="CardNumber" placeholder="Card Number"required/> </br></br>
 
 			<!--The input area for Departing Time-->
 			<label for="NameOfCard">Name Of Card</label> </br>
-			<input type="text" name="NameOfCard" placeholder="Name Of Card" required/> </br>
+			<input type="text" name="NameOfCard" placeholder="Name Of Card" required/> </br></br>
 
 			<!--The input area for Arrival Date-->
 			<label for="ExpirationDate">Expiration Date</label> </br>
-			<input type="date" name="ExpirationDate" placeholder="ExpirationDate" required/> </br>
+			<input type="date" name="ExpirationDate" placeholder="ExpirationDate" required/> </br></br>
 
 			<input type="hidden" name="FlightNumber" Value = {{FlightNumber}} required/>
 			<input type="hidden" name="AirlineName" Value = {{Airline}} required/>
 			<input type="hidden" name="SoldPrice" Value = {{Price}}  required/>
 
-			<input type="submit" Value = submit>
+			<input type="submit" Value = submit></br></br>
 
 			{% if error %}
 				<p class="error"><strong>Error:</strong> {{error}}</p>
