@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<h1>Confirm Selected Ticket Information</h1>
 	</head>
 
 	<body>
 		<!--Addes a new flight to the system-->
-		<br><h1>Price</h1><br>
-
 		<p>
-			Price for the Flight: {{Price}} {{FlightNumber}} {{Airline}}
+			<b>Flight Number:</b> {{FlightNumber}}</br>
+			<b>Airline:</b> {{Airline}}</br>
+			
+			</br>
+			<b>Price for the Flight:</b> {{Price}}</br>
 		</p>
 
-		<label for="Confirmation"><b>Confirm Your Purchase</b></label> </br>
+		</br>
+		<hr>
+		</br>
+
+		<label for="Confirmation"><b>Confirm Your Selection:</b></label> </br></br>
 		<form action="/customerinputcard" method="POST"> 
 			<input type="text" name="FlightNumber" value="{{FlightNumber}}" Style="display:none"/>
 			<input type="text" name="Airline" value="{{Airline}}" Style="display:none"/>
 			<input type="text" name="Price" value="{{Price}}" Style="display:none"/>
 			<input type="submit" value="Confirm"/>
 		</form>
+		</b>
 
-		<!--Back button to Staff-->
+		<h1></h1> <!--Add to add a gap between the Confirm and Go Back button-->
+
+		<!--Back button to Search Flights-->
 		<form action="/customersearchflightsoneway">
 			<input type="submit" value="Go Back"/>
 		</form>
