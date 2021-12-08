@@ -1183,9 +1183,20 @@ def customerpurchase():
 	#currTime_data = cursor.fetchall()
 		
 
-	# inserting Views, set up for Review
-	'''queryInsertViews = 'INSERT INTO views VALUES (%s, %s, %s, %s, NULL, NULL)'
-	cursor.execute(queryInsertViews, (newTicketID, CustomerEmail, FlightNumber, departing_date, departing_time))'''
+	# inserting Views, set up for Review -- NEED TO TEST
+	# finding departure date and time
+	queryDepartureDate = 'SELECT DepartureDate FROM `flight` WHERE FlightNumber = FlightNumber;'
+	cursor.execute(queryDepartureDate)
+	departing_date = cursor.fetchall()
+	
+	queryDepartureTime = 'SELECT DepartureTime FROM `flight` WHERE FlightNumber = FlightNumber;'
+	cursor.execute(queryDepartureTime)
+	departing_time = cursor.fetchall()
+
+	'''
+	queryInsertViews = 'INSERT INTO views VALUES (%s, %s, %s, %s, NULL, NULL)'
+	cursor.execute(queryInsertViews, (newTicketID, CustomerEmail, FlightNumber, departing_date, departing_time))
+	'''
         
 
 	cursor.close()
