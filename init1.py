@@ -910,11 +910,13 @@ def home():
 @app.route('/customerhome')
 def customerhome():
 	username = session['user'][1]
+	useremail = session['user'][0]
+
 	cursor = conn.cursor();
 
-	# need to update to limit to purchased flights
-	query = 'SELECT * FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
-	cursor.execute(query) #Runs the query
+	# limit flights display to user's purchased flights
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, AirlineName, Status FROM `flight` AS f, `purchase` AS p WHERE CustomerEmail = %s AND DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP);'
+	cursor.execute(query, (useremail,)) #Runs the query
 	flight_data = cursor.fetchall() #Gets the data from ran SQL query
 
 	#Tests
