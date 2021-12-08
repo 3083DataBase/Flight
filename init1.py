@@ -915,7 +915,7 @@ def customerhome():
 	cursor = conn.cursor();
 
 	# limit flights display to user's purchased flights
-	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, AirlineName, Status FROM `flight` AS f, `purchase` AS p WHERE CustomerEmail = %s AND DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP);'
+	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, AirlineName, Status FROM `flight`, `purchase` WHERE CustomerEmail = %s AND DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP);'
 	cursor.execute(query, (useremail,)) #Runs the query
 	flight_data = cursor.fetchall() #Gets the data from ran SQL query
 
@@ -930,13 +930,13 @@ def customerhome():
 ####################### CustomerPastFlightsView
 @app.route('/customerpastflightsview', methods=['GET', 'POST'])
 def customerpastflightsview():
-	#username = session['username']
+	useremail = session['user'][0]
 	cursor = conn.cursor();
 
 	# need to update to limit to purchased flights
 	# need to take from purchase table instead of flights table
-	query_past = 'SELECT * FROM flight WHERE DepartureDate < CURRENT_DATE or (DepartureDate = CURRENT_DATE and ArrivalTime < CURRENT_TIMESTAMP)'
-	cursor.execute(query_past) #Runs the query
+	query_past = 'SELECT FlightNumber, DepartureDate, DepartureTime, AirlineName, Status FROM `flight`, `purchase` WHERE CustomerEmail = %s AND DepartureDate < CURRENT_DATE or (DepartureDate = CURRENT_DATE and ArrivalTime < CURRENT_TIMESTAMP);'
+	cursor.execute(query_past, (useremail,)) #Runs the query
 	past_flight_data = cursor.fetchall()
 
 	#Tests
