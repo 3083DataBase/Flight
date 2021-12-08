@@ -1162,7 +1162,7 @@ def customerpurchase():
 	cursor = conn.cursor()
 
 	query = 'SELECT CURRENT_DATE as date WHERE CURRENT_DATE < %s;'
-	cursor.execute(query, (ExpirationDate,)) # need this format or else, will crash
+	cursor.execute(query, ExpirationDate) # need this format or else, will crash
 	check = cursor.fetchall()
 
 	if(check == ()):
@@ -1224,7 +1224,6 @@ def customerpurchase():
 	queryInsertPurchase = 'INSERT INTO purchase VALUES (%s, %s, %s, %s, %s, %s)'
 	cursor.execute(queryInsertPurchase, (newTicketID, CustomerEmail, CardType, CardNumber, NameOfCard, ExpirationDate))
 
-	print("test 1")
 
 	# inserting Ticket
 	#queryCurrDate = 'SELECT CURRENT_DATE();'
@@ -1238,20 +1237,19 @@ def customerpurchase():
 
 	# inserting Views, set up for Review -- NEED TO TEST
 	# finding departure date and time
-	queryDepartureDate = 'SELECT DepartureDate FROM `flight` WHERE FlightNumber = FlightNumber;'
-	cursor.execute(queryDepartureDate)
-	departing_date = cursor.fetchall()
+	#queryDepartureDate = 'SELECT DepartureDate FROM `flight` WHERE FlightNumber = FlightNumber;'
+	#cursor.execute(queryDepartureDate)
+	#departing_date = cursor.fetchall()
 	
-	queryDepartureTime = 'SELECT DepartureTime FROM `flight` WHERE FlightNumber = FlightNumber;'
-	cursor.execute(queryDepartureTime)
-	departing_time = cursor.fetchall()
+	#queryDepartureTime = 'SELECT DepartureTime FROM `flight` WHERE FlightNumber = FlightNumber;'
+	#cursor.execute(queryDepartureTime)
+	#departing_time = cursor.fetchall()
 
 	'''
 	queryInsertViews = 'INSERT INTO views VALUES (%s, %s, %s, %s, NULL, NULL)'
 	cursor.execute(queryInsertViews, (newTicketID, CustomerEmail, FlightNumber, departing_date, departing_time))
 	'''
-        
-
+	conn.commit()
 	cursor.close()
 
 	return redirect(url_for('customersearchflightsoneway'))
