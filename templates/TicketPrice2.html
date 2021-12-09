@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+
+	<body>
+		<!--Addes a new flight to the system-->
+		<br><h1>Price</h1><br>
+
+		<p>
+			Price for the Flight: {{Price}} {{FlightNumber}} {{Airline}}
+		</p>
+
+		<label for="Confirmation"><b>Confirm Your Purchase</b></label> </br>
+		<form action="/customerinputcard" method="POST"> 
+			<input type="text" name="FlightNumber" value="{{FlightNumber}}" Style="display:none"/>
+			<input type="text" name="Airline" value="{{Airline}}" Style="display:none"/>
+			<input type="text" name="Price" value="{{Price}}" Style="display:none"/>
+			<input type="submit" value="Confirm"/>
+		</form>
+
+		<!--Back button to Staff-->
+		<form action="/customersearchflightsoneway">
+			<input type="submit" value="Go Back"/>
+		</form>
+	</body>
+</html>
