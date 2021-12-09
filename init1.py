@@ -965,15 +965,7 @@ def customersearchflightsoneway():
 
 	cursor = conn.cursor()
 
-	#Checks if it should be 
-	query = 'SELECT FlightNumber, d.AirportName, a.AirportName, NumSeats, BasePrice FROM `flight` AS f, `airplane` AS air , `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND f.AirplaneID = air.AirplaneID AND f.AirlineName = air.AirlineName AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE'
-	cursor.execute(query, (departing, departing, arriving, arriving))
-	check = cursor.fetchall()
-
 	seats = []
-
-	for each in check:
-		print(each)
 
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, BasePrice FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE ORDER BY DepartureDate ASC, DepartureTime ASC'
 	cursor.execute(query, (departing, departing, arriving, arriving))
