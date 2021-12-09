@@ -19,20 +19,8 @@ conn = pymysql.connect(host='localhost',
 #Define a route to hello function
 @app.route('/', methods=['GET', 'POST'])
 def hello():
-	session['user'] = [None, 'Guest', -1]    #Creates a session, will hold [staffusername / customer email, name of the customer or just Guest if not logged in / airline, 0 for customers, 1 for flight staff]
-	#cursor = conn.cursor();
-
-	#after this Kevin needs to change for search
-	#query = 'SELECT * FROM flight WHERE DepartureDate > CURRENT_DATE or (DepartureDate = CURRENT_DATE and DepartureTime > CURRENT_TIMESTAMP)'
-	#cursor.execute(query) #Runs the query
-	#flight_data = cursor.fetchall() #Gets the data from ran SQL query
-
-	#Tests
-	#for each in flight_data:   #prints out all the flights we have THIS IS A TEST
-	#	print(each['FlightNumber'],each['DepartureDate'], each['DepartureTime'])
-
-
-	#cursor.close()
+	#Creates a session, will hold [staffusername / customer email, name of the customer or just Guest if not logged in / airline, 0 for customers, 1 for flight staff]
+	session['user'] = [None, 'Guest', -1]   
 	return render_template('flights.html', name1=session['user'][1])
 
 #Searches for the flights of the inputs (Works for guests or for people logged in)
@@ -431,62 +419,7 @@ def view_review():
 	cursor.close()
 	return render_template('staff_review_page.html', flights = airline_flights, Airline = Airline)
 
-#Staff_info gets the info that the staff should be able to see (NOT GONNA BE USED)
-#@app.route('/staff_info', methods=['GET', 'POST'])
-#def staff_info():
 
-	#if(session['user'][2] != 1):
-	#	return redirect(url_for('staffLogin'))
-
-	#print("In Staff Info")
-	#print(session['user'])
-	
-	#Airline = session['user'][1]
-	#cursor = conn.cursor()
-
-	#query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, status FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND AirlineName = %s AND DATEDIFF(DepartureDate, CURRENT_DATE) < 0'
-	
-	#cursor.execute(query, (Airline))
-	#airline_flights = cursor.fetchall()
-
-	#frequent_flyer_query = 'SELECT CustomerName FROM customer NATURAL JOIN ticket WHERE DATEDIFF(CURRENT_DATE,PurchaseDate) < 365 AND AirlineName = %s ORDER BY SoldPrice DESC'
-	
-	#cursor.execute(frequent_flyer_query, (Airline))
-	#frequent_flyer = cursor.fetchall()
-	#frequent_flyer = frequent_flyer[0]['CustomerName']
-
-	#customer_query = 'SELECT CustomerName, CustomerEmail FROM customer NATURAL JOIN ticket WHERE AirlineName = %s'
-	
-	#cursor.execute(customer_query, (Airline))
-	#customers = cursor.fetchall()
-
-	#query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 30'
-	#cursor.execute(query, Airline)
-	#total_month = cursor.fetchall()
-	#total_month = total_month[0]['SUM(SoldPrice)']
-
-	#query = 'SELECT SUM(SoldPrice) FROM ticket WHERE AirlineName = %s AND DATEDIFF(CURRENT_DATE,PurchaseDate) < 365'
-	#cursor.execute(query, Airline)
-	#total_year = cursor.fetchall()
-	#total_year= total_year[0]['SUM(SoldPrice)']
-
-	#query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 365 GROUP BY b.City ORDER BY COUNT(*) DESC'
-	#cursor.execute(query, Airline)
-	#popular_year = cursor.fetchall()
-	#popular_year = popular_year[0]['City']
-
-	#query = 'SELECT b.City FROM ticket NATURAL JOIN (flight, airport as a, airport as b) WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = b.AirportID AND AirlineName = %s AND DATEDIFF(CURRENT_DATE,DepartureDate) < 90 GROUP BY b.City ORDER BY COUNT(*) DESC'
-	#cursor.execute(query, Airline)
-	#popular_month = cursor.fetchall()
-	#if(popular_month != ()):
-	#	popular_month = popular_month[0]['City']
-	#else:
-	#	popular_month = None
-	#cursor.close()
-
-
-	#return render_template('staff_info.html', flights = airline_flights, flyer = frequent_flyer, customers = customers, Airline = Airline, Year = total_year, Month = total_month, pop_year = popular_year, pop_month = popular_month)
-	
 # Gets all the reviews for a flight and shows it
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
@@ -885,25 +818,7 @@ def staffRegisterAuth():
 		conn.commit()
 		cursor.close()
 		return render_template('staffLogin.html')
-
-
-
-
-# NOT USED
-@app.route('/home')
-def home():
-    print("hihi")
-    # username = session['username']
-    # cursor = conn.cursor();
-    # query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
-    # cursor.execute(query, (username))
-    # data1 = cursor.fetchall() 
-    # for each in data1:
-    #     print(each['blog_post'])
-    # cursor.close()
-    # return render_template('home.html', username=username, posts=data1)
-    return render_template('home.html')                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 
 
 ####################### CustomerHome
@@ -943,8 +858,6 @@ def customerpastflightsview():
 	useremail = session['user'][0]
 	cursor = conn.cursor();
 
-	# need to update to limit to purchased flights
-	# need to take from purchase table instead of flights table
 	query_past = 'SELECT FlightNumber, DepartureDate, DepartureTime, AirlineName, Status FROM `flight`, `purchase` WHERE CustomerEmail = %s AND DepartureDate < CURRENT_DATE or (DepartureDate = CURRENT_DATE and ArrivalTime < CURRENT_TIMESTAMP);'
 	cursor.execute(query_past, (useremail,)) #Runs the query
 	past_flight_data = cursor.fetchall()
@@ -965,13 +878,9 @@ def customerreview():
 	if(session['user'][2] != 0):
 		return redirect(url_for('userLogin'))
 
-	#CustomerEmail = request.form["CustomerEmail"]
 	CustomerEmail = session['user'][0]
-	#FlightNumber = request.form["FlightNumber"]
 	FlightNumber = request.form["FlightNumber"]
-	#DepartureDate = request.form["DepartureDate"]
 	DepartureDate = request.form["DepartureDate"]
-	#DepartureTime = request.form["DepartureTime"]
 	DepartureTime = request.form["DepartureTime"]
 	rate = request.form.get('rating')
 	comment = request.form.get('comment')
@@ -1009,13 +918,9 @@ def customersearchflights():
 	if(session['user'][2] != 0):
 		return redirect(url_for('userLogin'))
 
-	#checkbox = request.form["checkbox"]
 	checkbox = request.form.get("checkbox")
-	#departing = request.form["Departing"]
 	departing = request.form.get("Departing")
-	#departing_date = request.form["Departure Date"]
 	departing_date = request.form.get("Departure Date")
-	#arriving = request.form["Arriving"]
 	arriving = request.form.get("Arriving")
 
 	arriving_date = None
@@ -1068,33 +973,11 @@ def customersearchflightsoneway():
 	seats = []
 
 	for each in check:
-		#query = 'SELECT COUNT(TicketID) FROM ticket WHERE FlightNumber = %s'
-		#cursor.execute(query, each['FlightNumber'])
-		#data = cursor.fetchall()
-		#seats.append(data['COUNT(TicketID'])
 		print(each)
 
 	query = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, BasePrice FROM `flight`, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE ORDER BY DepartureDate ASC, DepartureTime ASC'
 	cursor.execute(query, (departing, departing, arriving, arriving))
 	check = cursor.fetchall()
-	#query = 'SELECT flight.FlightNumber, COUNT(TicketID) FROM flight, airport AS d, airport AS a, ticket WHERE ticket.FlightNumber = flight.FlightNumber AND DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate > CURRENT_DATE'
-	#cursor.execute(query, (departing, departing, arriving, arriving))
-	#depart_data = cursor.fetchall()
-
-	#for each in depart_data:
-	#	print(each)
-
-	
-
-	# one way search
-	#queryOneWay = 'SELECT f.FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, plane.AirlineName, a.AirportName, d.AirportName, NumSeats, SoldPrice FROM `flight` AS f, `airplane` AS plane, `ticket`, `airport` AS d, `airport` AS a WHERE DepartAirportID = a.AirportID AND ArrivalAirportID = d.AirportID AND f.`AirplaneID` = plane.`AirplaneID` AND f.`AirlineName` = plane.`AirlineName`AND f.`FlightNumber` = `ticket`.`FlightNumber` AND f.`AirlineName` = `ticket`.`AirlineName`AND plane.`AirlineName` =`ticket`.`AirlineName` AND NumSeats > 0 AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s;'
-
-	#queryOneWay = 'SELECT f.FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, f.AirlineName, d.AirportName, a.AirportName, SoldPrice FROM `flight` AS f, `airplane` AS p, `ticket` as t, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND f.AirplaneID = p.AirplaneID AND p.AirlineName = t.AirlineName AND NumSeats > 0 AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s ORDER BY DepartureDate ASC, DepartureTime ASC;'
-	#queryOneWay = 'SELECT FlightNumber, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, AirlineName, d.AirportName, a.AirportName, SoldPrice FROM `flight`, `ticket` as t, `airport` AS d, `airport` AS a WHERE DepartAirportID = d.AirportID AND ArrivalAirportID = a.AirportID AND p.AirlineName = t.AirlineName AND NumSeats > 0 AND (d.AirportName = %s or d.City = %s) AND (a.AirportName = %s or a.City = %s) AND DepartureDate = %s ORDER BY DepartureDate ASC, DepartureTime ASC;'
-	#cursor.execute(queryOneWay, (departing, departing, arriving, arriving, departing_date))
-	#depart_data = cursor.fetchall()
-	#for each in depart_data:
-	#	print(each)
 
 	cursor.close()
 	return render_template('CustomerSearchFlightsOneWay.html', depart_flights=check)
@@ -1290,11 +1173,8 @@ def customerpurchase():
 	
 	lastTicketID = allTicketID_data[counter - 1]['TicketID'] #gets the ticketID of the last ticket
 	newTicketID = int(lastTicketID) + 1
-	
-	#print("Insert into")
-	#queryInsertPurchase = 'INSERT INTO purchase VALUES (%s, %s, %s, %s, %s, CURRENT_DATE, CURRENT_TIME)'
-	#cursor.execute(queryInsertPurchase, (newTicketID, FlightNumber, Airline, CustomerEmail, Price))
 
+	# inserting Ticket
 	queryInsertPurchase = 'INSERT INTO ticket VALUES (%s, %s, %s, %s, %s, CURRENT_DATE, CURRENT_TIME)'
 	cursor.execute(queryInsertPurchase, (newTicketID, FlightNumber, Airline, CustomerEmail, Price))
 
@@ -1302,18 +1182,7 @@ def customerpurchase():
 	queryInsertPurchase = 'INSERT INTO purchase VALUES (%s, %s, %s, %s, %s, %s)'
 	cursor.execute(queryInsertPurchase, (newTicketID, CustomerEmail, CardType, CardNumber, NameOfCard, ExpirationDate))
 
-
-	# inserting Ticket
-	#queryCurrDate = 'SELECT CURRENT_DATE();'
-	#cursor.execute(queryCurrDate)
-	#currDate_data = cursor.fetchall()
-
-	#queryCurrTime = 'SELECT CURRENT_TIME();'
-	#cursor.execute(queryCurrTime)
-	#currTime_data = cursor.fetchall()
-		
-
-	# inserting Views, set up for Review -- NEED TO TEST
+	# inserting Views, set up for Review
 	# finding departure date and time
 	queryDepartureDate = 'SELECT DepartureDate FROM `flight` WHERE FlightNumber = %s AND AirlineName = %s;'
 	cursor.execute(queryDepartureDate, (FlightNumber, Airline))
