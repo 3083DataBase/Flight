@@ -744,7 +744,7 @@ def userLoginAuth():
 		session.pop('user')
 		print("POP: ", session)
 
-		session['user'] = [data['CustomerEmail'], data['CustomerName'], 1]
+		session['user'] = [data['CustomerEmail'], data['CustomerName'], 0]
 		print("POST: ", session)
 		return redirect(url_for('customerhome'))
 	else:
@@ -909,6 +909,11 @@ def home():
 ####################### CustomerHome
 @app.route('/customerhome')
 def customerhome():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	username = session['user'][1]
 	useremail = session['user'][0]
 
@@ -930,6 +935,11 @@ def customerhome():
 ####################### CustomerPastFlightsView
 @app.route('/customerpastflightsview', methods=['GET', 'POST'])
 def customerpastflightsview():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	useremail = session['user'][0]
 	cursor = conn.cursor();
 
@@ -950,6 +960,11 @@ def customerpastflightsview():
 ####################### CustomerReview
 @app.route('/customerreview', methods=['GET', 'POST'])
 def customerreview():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	#CustomerEmail = request.form["CustomerEmail"]
 	CustomerEmail = session['user'][0]
 	#FlightNumber = request.form["FlightNumber"]
@@ -989,6 +1004,11 @@ def customerreview():
 ####################### CustomerSearchFlights
 @app.route('/customersearchflights', methods=['GET', 'POST'])
 def customersearchflights():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	#checkbox = request.form["checkbox"]
 	checkbox = request.form.get("checkbox")
 	#departing = request.form["Departing"]
@@ -1026,6 +1046,11 @@ def customersearchflights():
 ####################### CustomerSearchFlights -- One Way
 @app.route('/customersearchflightsoneway', methods=['GET', 'POST'])
 def customersearchflightsoneway():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	departing = request.form.get("Departing")
 	departing_date = request.form.get("Departure Date")
 	arriving = request.form.get("Arriving")
@@ -1078,6 +1103,11 @@ def customersearchflightsoneway():
 ####################### CustomerSearchFlights -- Two Way
 @app.route('/customersearchflightstwoway', methods=['GET', 'POST'])
 def customersearchflightstwoway():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	departing = request.form.get("Departing")
 	departing_date = request.form.get("Departure Date")
 	arriving = request.form.get("Arriving")
@@ -1106,6 +1136,11 @@ def customersearchflightstwoway():
 
 @app.route('/ticketprice', methods=['GET', 'POST'])
 def ticketprice():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	print("in Ticketprice")
 	FlightNumber = request.form["FlightNumber"]
 	Airline = request.form["AirlineName"]
@@ -1135,6 +1170,11 @@ def ticketprice():
 
 @app.route('/ticketprice2', methods=['GET', 'POST'])
 def ticketprice2():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	print("in Ticketprice2")
 
 	depart_flight = request.form["departflight"]
@@ -1167,6 +1207,11 @@ def ticketprice2():
 
 @app.route('/customerinputcard', methods=['GET', 'POST'])
 def customerinputcard():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	print("in customerinputcard")
 	FlightNumber = request.form["FlightNumber"]
 	Airline = request.form["Airline"]
@@ -1178,6 +1223,11 @@ def customerinputcard():
 ####################### CustomerPurchase
 @app.route('/customerpurchase', methods=['GET', 'POST'])
 def customerpurchase():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	CustomerEmail = session['user'][0]
 	CardType = request.form["CardType"]
 	CardNumber = request.form["CardNumber"]
@@ -1287,11 +1337,21 @@ def customerpurchase():
 ####################### CustomerPurchaseResult
 @app.route('/customerpurchaseresult', methods=['GET', 'POST'])
 def customerpurchaseresult():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	return render_template('CustomerPurchaseResult.html')
 
 ####################
 @app.route('/customertrackspending', methods=['GET', 'POST'])
 def customertrackspending():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	cursor = conn.cursor();
 	user = session['user'][0]
 	# print(user)
@@ -1320,6 +1380,11 @@ def customertrackspending():
 
 @app.route('/customer_tracking_range', methods=['GET', 'POST'])
 def customer_tracking_range():
+
+	###Security Check
+	if(session['user'][2] != 0):
+		return redirect(url_for('userLogin'))
+
 	user = session['user'][0]
 	s_date = request.form.get("startDate") 
 	e_date = request.form.get("endDate")
