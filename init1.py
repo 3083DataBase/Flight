@@ -1203,7 +1203,7 @@ def ticketprice2():
 	if seats_taken > int(seats * .75):
 		dep_BasePrice = float(dep_BasePrice) * 1.25
 
-	return render_template('TicketPrice.html')
+	return render_template('TicketPrice2.html')
 
 @app.route('/customerinputcard', methods=['GET', 'POST'])
 def customerinputcard():
