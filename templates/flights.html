@@ -11,10 +11,20 @@
 			<input type="submit" value="Flight Status" />
 		</form>
 
-		<br>
+		</br>
+
+		{% if not message %}
+		<form action="/loginfork">
+			<input type="submit" value="Login" /></br></br>
+		</form>
+		<form action="/registerfork">
+			<input type="submit" value="Register" />
+		</form>
+		{% endif %}
+
+		</br><hr></br>
 
 		<form action="/search_flights" method="POST">
-
 			<!--One-way check box-->
 			<input type="radio" id = "One-Way" name = "checkbox" onclick="check();" checked value="OneWay">
 			<label for="One-Way1">One-Way</label>
@@ -43,22 +53,13 @@
 		</form>
 		<br>
 
-		{% if not message %}
-			<form action="/loginfork">
-				<input type="submit" value="Login" />
-			</form>
-			<form action="/registerfork">
-				<input type="submit" value="Register" />
-			</form>
-		{% endif %}
-
 		<style type="text/css">
 			table, th, td{
 				border: 1px solid black;
 			}
 		</style>
 
-		<h1>Departure Flights</h1>
+		<h2>Departure Flights</h2>
 
 		<table>
 			<th>Flight Number</th>
@@ -83,8 +84,9 @@
 				</tr>
 			{% endfor %}
 		</table>
-
-		<h1>Returning Flights</h1>
+		
+		</br>
+		<h2>Returning Flights</h2>
 
 		<table>
 			<th>Flight Number</th>
@@ -140,13 +142,8 @@
 				return
 			}
 		</script>
-		
-		<!-- Testcode link to Customer Home page -->
-		</br>
-		{% if not message %}
-			<a href="/customerhome">TestCustomerHome</a>
-		{% endif %}
 
-
+		</br></br>
+	
 	</body>
 </html>
