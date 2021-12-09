@@ -39,6 +39,8 @@
 
     <h1>Departure Flights</h1>
 
+    <form action="/ticketprice2" method="POST">
+
     <table>
         <th>Flight Number</th>
         <th>Departure Date</th>
@@ -64,9 +66,7 @@
             <td>{{line['SoldPrice']}}</td>
 
             <td>
-                <form action="/customerpurchase" method="POST">
-                    <input type="submit" Value="Purchase" Style="z-index :-1">
-                </form>
+                <input type="radio" name="departflight" value="{{line}}">
             </td>
         </tr>
         {% endfor %}
@@ -100,15 +100,16 @@
             <td>{{line['AirportName']}}</td>
             <td>{{line['a.AirportName']}}</td>
             <td>{{line['SoldPrice']}}</td>
-
             <td>
-                <form action="/customerpurchase" method="POST">
-                    <input type="submit" Value="Purchase" Style="z-index :-1">
-                </form>
+                <input type="radio" name="arrflight" value="{{line}}">
             </td>
+
         </tr>
         {% endfor %}
     </table>
+        
+        <input type="submit" Value="Purchase" Style="z-index :-1">
+    </form>
 
 
     </br>
